@@ -23,6 +23,7 @@ interface ArticlePageProps {
   }>;
 }
 
+
 export async function generateStaticParams() {
   const publishedArticles = getPublishedArticles();
   return publishedArticles.map((article) => ({
@@ -37,9 +38,7 @@ export async function generateMetadata({
   const article = getArticleBySlug(slug);
 
   if (!article || article.status !== "published") {
-    return {
-      title: "Article Not Found",
-    };
+    notFound();
   }
 
   return constructMetadata({

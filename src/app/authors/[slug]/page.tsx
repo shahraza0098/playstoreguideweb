@@ -26,6 +26,7 @@ interface AuthorPageProps {
   }>;
 }
 
+
 export async function generateStaticParams() {
   return authorsData.map((author) => ({
     slug: author.slug,
@@ -39,9 +40,7 @@ export async function generateMetadata({
   const author = getAuthorBySlug(slug);
 
   if (!author) {
-    return {
-      title: "Author Not Found",
-    };
+    notFound();
   }
 
   return constructMetadata({

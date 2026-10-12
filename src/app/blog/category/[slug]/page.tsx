@@ -17,6 +17,7 @@ interface CategoryPageProps {
   }>;
 }
 
+
 export async function generateStaticParams() {
   return blogCategories.map((category) => ({
     slug: category.slug,
@@ -30,9 +31,7 @@ export async function generateMetadata({
   const category = getCategoryBySlug(slug);
 
   if (!category) {
-    return {
-      title: "Category Not Found",
-    };
+    notFound();
   }
 
   return constructMetadata({

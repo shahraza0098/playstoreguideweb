@@ -18,6 +18,7 @@ interface TagPageProps {
   }>;
 }
 
+
 export async function generateStaticParams() {
   return blogTags.map((tag) => ({
     slug: tag.slug,
@@ -31,9 +32,7 @@ export async function generateMetadata({
   const tag = getTagBySlug(slug);
 
   if (!tag) {
-    return {
-      title: "Tag Not Found",
-    };
+    notFound();
   }
 
   return constructMetadata({
