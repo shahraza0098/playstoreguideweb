@@ -36,10 +36,13 @@ export function constructMetadata({
   const canonicalUrl = `${SITE_URL}${path ? (path.startsWith("/") ? path : `/${path}`) : ""}`;
 
   return {
-    title: {
-      default: `${title} | ${SITE_NAME}`,
-      template: `%s | ${SITE_NAME}`,
-    },
+    title:
+      path === "" || path === "/"
+        ? {
+            default: title,
+            template: `%s | ${SITE_NAME}`,
+          }
+        : title,
     description,
     keywords,
     authors: [{ name: "PlayStoreGuide Editorial & Advisory Team" }],
