@@ -18,6 +18,7 @@ interface TagPageProps {
   }>;
 }
 
+export const instant = false;
 
 export async function generateStaticParams() {
   return blogTags.map((tag) => ({

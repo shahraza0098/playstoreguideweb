@@ -26,6 +26,7 @@ interface AuthorPageProps {
   }>;
 }
 
+export const instant = false;
 
 export async function generateStaticParams() {
   return authorsData.map((author) => ({

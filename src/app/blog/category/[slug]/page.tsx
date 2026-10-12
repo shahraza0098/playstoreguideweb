@@ -17,6 +17,7 @@ interface CategoryPageProps {
   }>;
 }
 
+export const instant = false;
 
 export async function generateStaticParams() {
   return blogCategories.map((category) => ({

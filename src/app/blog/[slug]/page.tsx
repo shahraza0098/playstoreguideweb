@@ -23,6 +23,7 @@ interface ArticlePageProps {
   }>;
 }
 
+export const instant = false;
 
 export async function generateStaticParams() {
   const publishedArticles = getPublishedArticles();

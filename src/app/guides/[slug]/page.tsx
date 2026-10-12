@@ -22,6 +22,7 @@ interface GuidePageProps {
     slug: string;
   }>;
 }
+export const instant = false;
 
 export async function generateStaticParams() {
   return guidesData.map((guide) => ({
