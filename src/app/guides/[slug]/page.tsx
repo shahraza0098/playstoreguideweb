@@ -6,14 +6,6 @@ import {
   Clock,
   Calendar,
   User,
-  ArrowLeft,
-  ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
-  AlertTriangle,
-  HelpCircle,
-  FileText,
-  Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/JsonLd";

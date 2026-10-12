@@ -54,7 +54,7 @@ export default function TermsPage() {
               2. No Guarantee of Google Play Approval
             </h2>
             <p>
-              Google LLC retains sole and absolute authority regarding the approval, rejection, suspension, or removal of apps submitted to the Google Play Store. While PlayStoreGuide assists developers in aligning their software with Google's Developer Program Policies, PlayStoreGuide does NOT guarantee approval, nor can it override Google's editorial or automated decisions.
+              Google LLC retains sole and absolute authority regarding the approval, rejection, suspension, or removal of apps submitted to the Google Play Store. While PlayStoreGuide assists developers in aligning their software with Google&rsquo;s Developer Program Policies, PlayStoreGuide does NOT guarantee approval, nor can it override Google&rsquo;s editorial or automated decisions.
             </p>
           </section>
 

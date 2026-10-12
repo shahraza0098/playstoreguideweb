@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { HelpCircle, ChevronDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {

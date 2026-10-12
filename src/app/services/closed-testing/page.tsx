@@ -1,30 +1,12 @@
 import React from "react";
-import Link from "next/link";
-import { Metadata } from "next";
-import {
-  Users,
-  CheckCircle2,
-  Clock,
-  Smartphone,
-  ShieldCheck,
-  AlertTriangle,
-  ArrowRight,
-  Check,
-  HelpCircle,
-  Layers,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { JsonLd } from "@/components/seo/JsonLd";
-import {
-  constructMetadata,
-  generateBreadcrumbSchema,
-  generateServiceSchema,
-} from "@/lib/seo";
+import type { Metadata } from "next";
+import { ServicePageTemplate, type ServicePageData } from "@/components/services/ServicePageTemplate";
+import { constructMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Google Play 20 Testers / 14 Days Closed Testing Coordination",
+  title: "Google Play 20 Testers & 14-Day Closed Testing Coordination",
   description:
-    "Fulfill Google's mandatory 14-day closed testing requirement with 20+ verified human testers on real Android devices. Complete opt-in tracking, engagement telemetry, and feedback documentation.",
+    "Fulfill Google's mandatory 14-day closed testing requirement with 20+ verified human testers on real Android devices. Complete opt-in tracking, authentic engagement telemetry, and feedback documentation.",
   path: "/services/closed-testing",
   keywords: [
     "Google Play 20 testers",
@@ -32,216 +14,274 @@ export const metadata: Metadata = constructMetadata({
     "personal developer account closed test",
     "Google Play closed testing service",
     "Android closed testing testers",
+    "closed testing recruitment",
   ],
 });
 
-export default function ClosedTestingServicePage() {
-  const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: "Home", url: "/" },
-    { name: "Services", url: "/services" },
-    { name: "Closed Testing (20 Testers)", url: "/services/closed-testing" },
-  ]);
-
-  const serviceSchema = generateServiceSchema({
-    name: "Google Play Closed Testing Coordination (20 Testers / 14 Days)",
+const pageData: ServicePageData = {
+  slug: "closed-testing",
+  eyebrow: "Personal Account Compliance",
+  h1: "Google Play 20 Testers & 14-Day Closed Testing Coordination",
+  subtitle:
+    "Coordinate real, active Android testers on physical hardware to fulfill Google's mandatory 14-day closed testing requirement. Transparent tracking, active telemetry, qualitative feedback, and zero bot emulators.",
+  snapshot: {
+    targetAudience: "Personal Developer Accounts",
+    engagementModel: "14-Day Cohort Coordination",
+    primaryFocus: "20+ Opt-In Testers & Feedback Logs",
+    googlePolicyRule: "Mandatory for accounts created after Nov 13, 2023",
+  },
+  problem: {
+    title: "Why Satisfying Google's 20-Tester Rule Is Difficult for Solo Developers",
     description:
-      "Facilitation of Google Play's mandatory 14-day closed testing requirement using real Android devices and active opt-in testers, providing authentic engagement logs and user feedback documentation.",
-    url: "/services/closed-testing",
-  });
+      "Since November 2023, Google has mandated that personal developer accounts must recruit at least 20 testers opted in for 14 continuous days before applying for production access. Satisfying this quota without an active developer network presents serious compliance hazards.",
+    cards: [
+      {
+        title: "The 14-Day Counter Reset Risk",
+        description:
+          "If even one tester uninstalls or opts out and your active count drops below 20 for even a few hours, Google's automated counter resets to Day 1. We recruit 22 to 25 testers to maintain an active safety buffer.",
+      },
+      {
+        title: "The Inactive Tester / Bot Detection Trap",
+        description:
+          "Google monitors Play Services telemetry. When developers pay for automated bot clicks or friend installs that sit completely dormant, Google's human review team rejects the production access application.",
+      },
+      {
+        title: "Missing Qualitative Feedback Logs",
+        description:
+          "Meeting the 14-day threshold is not an automatic pass. Google requires substantive answers regarding user feedback, bug resolutions, and iteration history in the production access review questionnaire.",
+      },
+    ],
+  },
+  whoIsItFor: [
+    {
+      persona: "Solo Android Developers",
+      description:
+        "Developers with personal Play Console accounts created after November 13, 2023 who need to fulfill the mandatory 20-tester requirement.",
+    },
+    {
+      persona: "Indie Studios & Bootstrappers",
+      description:
+        "Teams without a large internal QA team or personal tester network seeking genuine device variety across Android versions.",
+    },
+    {
+      persona: "Developers Needing Real User Feedback",
+      description:
+        "Engineers looking for actionable UI/UX insights, edge-case bug catches, and device compatibility telemetry before public rollout.",
+    },
+    {
+      persona: "Teams Recovering from Denied Production Access",
+      description:
+        "Developers whose previous production request was turned down by Google due to insufficient testing activity or feedback depth.",
+    },
+  ],
+  deliverables: [
+    {
+      title: "20+ Verified Real Android Testers (22-25 Buffer)",
+      description:
+        "Recruitment of real individuals with physical Android devices running Android 11 through Android 15. Zero automated bot farms or virtualized emulators.",
+    },
+    {
+      title: "14 Continuous Days of Opt-In Retention Monitoring",
+      description:
+        "Daily tracking of active tester opt-in status in Play Console to guarantee your counter never dips below Google's 20-tester minimum threshold.",
+    },
+    {
+      title: "Periodic App Launches & Interaction Telemetry",
+      description:
+        "Testers launch and interact with your app builds across the 14-day testing window, generating genuine Play Services sessions and Android Vitals data.",
+    },
+    {
+      title: "Structured Qualitative Feedback & Bug Report Dossier",
+      description:
+        "Compilation of user feedback, usability notes, device specifics, and bug catches ready to cite directly in your production access application form.",
+    },
+    {
+      title: "Production Access Questionnaire Preparation Guidance",
+      description:
+        "Review of your responses to Google's 5 human-review questions, aligning your answers with real testing logs and changelogs.",
+    },
+  ],
+  exclusions: [
+    {
+      title: "No Guaranteed Production Approval from Google",
+      description:
+        "Google's human operations team retains sole, independent discretion over production access decisions. No legitimate service can sell or guarantee approval.",
+    },
+    {
+      title: "No Public Store Reviews or Ratings",
+      description:
+        "Closed testing feedback is submitted privately to the developer via Google Play Console. We do not generate public 5-star reviews or store ratings.",
+    },
+    {
+      title: "No Core Application Code Rewrites",
+      description:
+        "We identify bugs, crashes, and UX confusion from a testing perspective, but fixing internal code logic remains the developer's responsibility.",
+    },
+    {
+      title: "No Policy Circumvention Schemes",
+      description:
+        "We operate strictly within the Google Play Developer Distribution Agreement. We do not offer workarounds to bypass Google's mandatory testing rules.",
+    },
+  ],
+  workflow: [
+    {
+      step: "01",
+      title: "Track Setup & AAB Audit",
+      description:
+        "We inspect your Closed Testing track, verify that your release status is 'Completed', and confirm your Google Group or email list invitation link.",
+      duration: "Day 1",
+    },
+    {
+      step: "02",
+      title: "Cohort Invitation & Opt-In Onboarding",
+      description:
+        "22-25 real Android testers accept your Play Store invitation link, download the build, and confirm active installation.",
+      duration: "Days 1-2",
+    },
+    {
+      step: "03",
+      title: "14-Day Testing & Feedback Cycles",
+      description:
+        "Testers maintain active opt-ins, test user flows, generate telemetry, and report qualitative feedback and bug observations.",
+      duration: "Days 3-15",
+    },
+    {
+      step: "04",
+      title: "Feedback Dossier & Production Access Prep",
+      description:
+        "We compile all feedback logs into a structured document and guide your answers to Google's Production Access Review Questionnaire.",
+      duration: "Day 15+",
+    },
+  ],
+  prerequisites: [
+    {
+      title: "Active Google Play Console Account",
+      description:
+        "A registered personal developer account in good standing with identity verification completed.",
+    },
+    {
+      title: "Signed Android App Bundle (AAB)",
+      description:
+        "A completed release uploaded to a Closed Testing track with Target SDK 34+ and passing automated pre-launch checks.",
+    },
+    {
+      title: "Test Login Credentials (If Applicable)",
+      description:
+        "If your app requires user authentication, valid test account credentials must be provided so testers can access core features.",
+    },
+    {
+      title: "Google Group or Email Track Access",
+      description:
+        "The ability to add our testing cohort Google Group or email list to your closed testing track inside Play Console.",
+    },
+  ],
+  timeline: {
+    headline: "14 to 16 Days Total Engagement",
+    description:
+      "Google's 14-day requirement is strictly enforced by Play Console timers. We build in a brief onboarding and wrap-up window.",
+    milestones: [
+      {
+        name: "Cohort Invitation & Opt-In",
+        estimate: "Days 1 to 2",
+        detail: "Testers join your closed track, accept the web or Android invitation, and install the build.",
+      },
+      {
+        name: "14-Day Closed Testing Window",
+        estimate: "Days 2 to 16",
+        detail: "Continuous 14-day opt-in retention tracked in Play Console, with periodic testing sessions.",
+      },
+      {
+        name: "Dossier Delivery & Review Application",
+        estimate: "Day 16+",
+        detail: "Feedback compilation delivered, answers drafted, and 'Apply for production' button unlocked.",
+      },
+    ],
+  },
+  pricing: {
+    model: "Fixed Project Fee",
+    headline: "Transparent Cohort Pricing",
+    description:
+      "Our closed testing coordination is charged as a transparent flat fee per testing cohort. Pricing covers recruitment, daily retention tracking, and qualitative feedback synthesis across the full 14-day window.",
+    highlights: [
+      "22-25 real human testers (surplus buffer to prevent counter resets)",
+      "Daily opt-in retention monitoring in Play Console",
+      "Documented qualitative user feedback and bug report summary",
+      "Production Access questionnaire drafting guidance",
+      "No recurring subscriptions or hidden retention fees",
+    ],
+    note:
+      "We never promise 'guaranteed approval'. Testing coordination provides legitimate, verifiable policy compliance; Google independently reviews production access applications.",
+  },
+  faqs: [
+    {
+      question: "Do testers need to open the app every single day for 14 days?",
+      answer:
+        "Google's explicit policy states that testers must remain opted in to your closed testing track for 14 continuous days. While opening the app every single day is not legally mandated, completely dormant apps with zero launches or session telemetry often raise red flags during the production access review. Our testers periodically launch and interact with the app throughout the 14 days to generate natural Play Services telemetry.",
+    },
+    {
+      question: "What happens if a tester uninstalls the app during the 14-day window?",
+      answer:
+        "If your active opted-in tester count drops below 20 at any point, Google's dashboard counter resets to Day 1. To prevent this, we onboard 22 to 25 testers to provide a 10-25% safety margin, guaranteeing your active opted-in count never falls below the mandatory threshold.",
+    },
+    {
+      question: "Are virtual devices, emulators, or click farms used?",
+      answer:
+        "No, absolutely not. Google Play monitors physical device hardware identifiers and Google account authenticity. Using virtual device farms or automated emulator scripts triggers Google fraud detection and can lead to immediate developer account suspension. All PlayStoreGuide testers use real physical Android hardware.",
+    },
+    {
+      question: "Does completing closed testing guarantee production access approval?",
+      answer:
+        "No legitimate service can guarantee production access approval. Google's review operations team evaluates your app quality, Android Vitals, and the answers you provide in your production questionnaire. Our service ensures your 14-day test is compliant and provides genuine feedback logs so you can submit a substantive application.",
+    },
+    {
+      question: "How do I add the testers into my Google Play Console?",
+      answer:
+        "You retain complete ownership of your console. We provide either a dedicated Google Group link or a list of tester email addresses. You simply navigate to Release > Testing > Closed testing in Play Console, paste the group or emails into your testers list, and provide the opt-in URL to us. We never ask for your account password.",
+    },
+  ],
+  officialDocs: [
+    {
+      title: "Set Up an Open, Closed, or Internal Test",
+      url: "https://support.google.com/googleplay/android-developer/answer/9845334",
+      description: "Official Google Play Console guide on creating closed testing tracks and managing tester lists.",
+    },
+    {
+      title: "Testing Requirements for Personal Developer Accounts",
+      url: "https://support.google.com/googleplay/android-developer/answer/14151465",
+      description: "Google's formal policy documentation detailing the 20-tester, 14-day closed testing rule for personal accounts.",
+    },
+  ],
+  relatedGuides: [
+    {
+      title: "Google Play 20 Testers Requirement: The Complete 14-Day Closed Testing Playbook",
+      slug: "google-play-20-testers-requirement-playbook",
+      category: "Closed Testing",
+      readTime: "9 min read",
+      summary:
+        "A step-by-step technical guide to structuring your closed testing track, recruiting compliant testers, tracking engagement, and compiling required feedback.",
+    },
+    {
+      title: "How to Pass Google Play Production Access Review: Questions & Best Practices",
+      slug: "how-to-pass-production-access-review",
+      category: "Production Access",
+      readTime: "11 min read",
+      summary:
+        "An in-depth breakdown of Google's production access questionnaire. Learn what human reviewers look for in your testing feedback and iteration history.",
+    },
+    {
+      title: "Google Play Developer Account Verification: D-U-N-S, Identity & Common Pitfalls",
+      slug: "google-play-account-verification-guide",
+      category: "Account Verification",
+      readTime: "8 min read",
+      summary:
+        "Avoid fatal verification mistakes. Practical steps for personal vs organization accounts, document formatting, and D-U-N-S synchronization.",
+    },
+  ],
+  ctaHeadline: "Need a Compliant 20-Tester Cohort for Your Android App?",
+  ctaDescription:
+    "Contact our technical advisory team with your app details and target release timeline. We will review your track configuration and coordinate an active tester cohort.",
+};
 
-  return (
-    <div className="py-12 sm:py-16">
-      <JsonLd data={breadcrumbSchema} />
-      <JsonLd data={serviceSchema} />
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-6 text-xs text-zinc-500">
-          <ol className="flex items-center gap-1.5">
-            <li>
-              <Link href="/" className="hover:text-emerald-600 transition-colors">
-                Home
-              </Link>
-            </li>
-            <li>/</li>
-            <li>
-              <Link href="/services" className="hover:text-emerald-600 transition-colors">
-                Services
-              </Link>
-            </li>
-            <li>/</li>
-            <li className="font-semibold text-zinc-900 dark:text-zinc-200">
-              Closed Testing (20 Testers)
-            </li>
-          </ol>
-        </nav>
-
-        {/* Hero */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-8">
-            <span className="inline-block rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-              Personal Account Requirement
-            </span>
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-100">
-              Google Play 20 Testers &amp; 14-Day Closed Testing Coordination
-            </h1>
-            <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Google mandates that all personal developer accounts created after November 2023 must have a minimum of 20 testers opted in for 14 continuous days before applying for production access. We coordinate real, active Android testers so you meet this requirement legitimately.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-4">
-              <Link href="/contact">
-                <Button size="lg" className="bg-emerald-600 text-white hover:bg-emerald-500 font-semibold px-6">
-                  Inquire About Closed Testing Cohort
-                </Button>
-              </Link>
-              <Link href="/guides/google-play-20-testers-requirement-playbook">
-                <Button variant="outline" size="lg" className="border-zinc-300 dark:border-zinc-700">
-                  Read Testing Guide
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="lg:col-span-4 rounded-2xl border border-zinc-200 bg-zinc-50/70 p-6 dark:border-zinc-800 dark:bg-zinc-900/60 space-y-4">
-            <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider">
-              Cohort Snapshot
-            </h2>
-            <div className="space-y-3 text-xs text-zinc-600 dark:text-zinc-400">
-              <div className="flex justify-between py-2 border-b border-zinc-200 dark:border-zinc-800">
-                <span className="font-medium text-zinc-900 dark:text-zinc-200">Required Testers:</span>
-                <span className="font-semibold text-emerald-600 dark:text-emerald-400">20+ verified devices</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-zinc-200 dark:border-zinc-800">
-                <span className="font-medium text-zinc-900 dark:text-zinc-200">Required Duration:</span>
-                <span className="font-semibold">14 continuous days</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-zinc-200 dark:border-zinc-800">
-                <span className="font-medium text-zinc-900 dark:text-zinc-200">Devices:</span>
-                <span>Real Android 11 to 15 hardware</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="font-medium text-zinc-900 dark:text-zinc-200">Deliverable:</span>
-                <span>Structured feedback report</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* The Technical Challenge */}
-        <div className="mt-16 border-t border-zinc-200 pt-12 dark:border-zinc-800">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-            Why Recruiting Random or Bot Testers Fails Google Review
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed">
-            Many developers attempt to meet the requirement by inviting friends who install the app once and immediately delete it, or by paying for automated bot clicks. Google monitors Play Console analytics: if 20 testers opt in but zero sessions, installs, or crash logs are recorded, the production access application is rejected.
-          </p>
-
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300">
-                <AlertTriangle className="h-5 w-5" />
-              </div>
-              <h3 className="mt-3 text-base font-bold text-zinc-900 dark:text-zinc-100">
-                The 14-Day Reset Risk
-              </h3>
-              <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                If even one tester opts out and your total count drops below 20 for even a few hours, the 14-day timer can reset back to Day 1. We recruit surplus testers (22-25) to provide a safety margin.
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-                <Clock className="h-5 w-5" />
-              </div>
-              <h3 className="mt-3 text-base font-bold text-zinc-900 dark:text-zinc-100">
-                Lack of User Telemetry
-              </h3>
-              <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                Google checks active device interaction. Our testers genuinely launch the app periodically, allowing Play Console to register genuine active engagement and ANR tracking.
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                <CheckCircle2 className="h-5 w-5" />
-              </div>
-              <h3 className="mt-3 text-base font-bold text-zinc-900 dark:text-zinc-100">
-                Questionnaire Evidence
-              </h3>
-              <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                Google asks: <em>&ldquo;Summarize the feedback you received during testing and how you decided your app was ready for production.&rdquo;</em> We provide real feedback logs and bug tickets to substantiate your answers.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Step-by-Step Workflow */}
-        <div className="mt-16 rounded-2xl border border-zinc-200 bg-zinc-50/50 p-8 dark:border-zinc-800 dark:bg-zinc-900/50">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-            Our Closed Testing Process
-          </h2>
-
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="space-y-2">
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                PHASE 01
-              </span>
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Track Setup &amp; AAB</h3>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                We review your closed testing release track, Google Group setup, and opt-in join links to ensure everything is configured properly.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                PHASE 02
-              </span>
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Cohort Onboarding</h3>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                22-25 real Android users join via your web/Android opt-in link, install the build from Google Play, and confirm active installation.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                PHASE 03
-              </span>
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">14-Day Monitoring</h3>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                We monitor tester opt-in retention daily, conduct periodic testing cycles, and collect structured feedback regarding UI, stability, and edge cases.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                PHASE 04
-              </span>
-              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Production Dossier</h3>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                At day 14+, we compile all qualitative feedback and bug resolution notes so you can confidently submit the Production Access questionnaire.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-16 text-center">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-            Need a Compliant 20-Tester Cohort for Your App?
-          </h2>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
-            Contact us with your app details and release timeline. We will help ensure your closed testing track meets every Google Play standard.
-          </p>
-          <div className="mt-6 flex justify-center gap-4">
-            <Link href="/contact">
-              <Button size="lg" className="bg-emerald-600 text-white hover:bg-emerald-500 font-semibold px-8">
-                Inquire About Testing Coordination
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+export default function ClosedTestingPage() {
+  return <ServicePageTemplate data={pageData} />;
 }

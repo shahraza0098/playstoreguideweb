@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   Users,
   ShieldCheck,
@@ -9,435 +10,556 @@ import {
   ArrowRight,
   Check,
   FileCheck,
-  Smartphone,
-  HelpCircle,
   Clock,
   Layers,
-  ChevronRight,
-  BookOpen,
+  FileText,
+  Smartphone,
+  ChevronDown,
+  UserCheck,
+  Building2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { constructMetadata, generateFAQSchema } from "@/lib/seo";
+import { getPublishedArticles } from "@/data/articles";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Google Play Publishing & Closed Testing Assistance for Android Developers",
+  description:
+    "Expert technical guidance for Android developers: 14-day 20-tester closed testing coordination, Play Console account verification, production access reviews, and policy rejection troubleshooting.",
+  path: "/",
+});
+
+const homeFaqs = [
+  {
+    question: "Can you guarantee that Google will approve my app for production access?",
+    answer:
+      "No legitimate consultancy or testing service can guarantee approval. Google's review operations team retains exclusive, independent authority over all production access approvals. What PlayStoreGuide delivers is complete technical and policy readiness: 20 real testers maintaining continuous 14-day opt-in, documented qualitative feedback, crash and ANR rates within acceptable Android Vitals thresholds, and comprehensive questionnaire responses that present your app's testing history accurately and persuasively.",
+  },
+  {
+    question: "How does the 14-day closed testing coordination service work?",
+    answer:
+      "We coordinate a cohort of 20+ real, active opt-in Android testers using physical hardware. You configure your Google Play Console closed testing track using either an email list or a Google Group. Our testers accept the invitation, install your app build, and maintain active opt-in status across 14 consecutive days while providing qualitative feedback, UX notes, and bug reports that you can cite in your production access application.",
+  },
+  {
+    question: "Do you need direct login credentials to my Google Play Console account?",
+    answer:
+      "Never. We will never ask for your Google account password or two-factor authentication codes. For closed testing, we provide email addresses or a Google Group link that you invite directly through your own Play Console track. For policy audits or questionnaire preparation, we work via screenshots, video recordings, or scoped, read-only console permissions that you control and can revoke at any time.",
+  },
+  {
+    question: "Who is subject to the mandatory 20-tester closed testing rule?",
+    answer:
+      "Under Google Play policy enacted in November 2023, developers with personal Play Console accounts created on or after November 13, 2023 must run a closed testing track with at least 20 testers who have remained opted in for at least 14 continuous days before becoming eligible to apply for production access. Organization accounts verified with a D-U-N-S number are exempt from this requirement, though running closed tests is still strongly recommended.",
+  },
+  {
+    question: "What happens if Google rejects my production access application?",
+    answer:
+      "If Google denies production access, your console dashboard remains restricted to testing tracks, and Google will send an email indicating that your app requires more testing before production rollout. We assist developers in reviewing the specific rejection feedback, identifying testing or stability gaps, pushing an incremental build, capturing fresh tester telemetry, and submitting a reinforced application.",
+  },
+  {
+    question: "Is working with PlayStoreGuide compliant with Google Play Developer Policies?",
+    answer:
+      "Yes, 100%. Our advisory and testing coordination operates strictly within the Google Play Developer Distribution Agreement. We do not use automated bot farms, virtualized emulator instances, or fake public 5-star reviews. All testers are real individuals testing your software on physical Android devices, providing genuine feedback and authentic Play Services telemetry.",
+  },
+];
 
 const services = [
   {
     icon: Users,
-    title: "14-Day Closed Testing (20 Testers)",
+    title: "14-Day Closed Testing Coordination",
     badge: "Personal Accounts",
-    description:
-      "Fulfill Google's mandatory requirement with real, active testers. We coordinate opt-ins, genuine feedback logs, and device variety across Android versions.",
     href: "/services/closed-testing",
-    benefits: [
-      "20+ real opt-in Android devices",
-      "Continuous 14-day engagement tracking",
-      "Documented qualitative user feedback",
+    description:
+      "Fulfill Google's mandatory 20-tester requirement with real, active opt-in users across physical Android devices. Maintain continuous 14-day engagement with a safety buffer against drop-offs.",
+    deliverables: [
+      "20+ verified real Android testers (no bots or emulators)",
+      "14 continuous days of opt-in cohort tracking",
+      "Qualitative feedback log & bug report documentation",
     ],
+    policyNote: "Real physical devices generating authentic Play Services telemetry.",
+    ctaText: "Explore closed testing service",
   },
   {
     icon: ShieldCheck,
     title: "Play Console Account Verification",
-    badge: "Identity & Organization",
+    badge: "Identity & D-U-N-S",
+    href: "/services/play-console-account-setup",
     description:
-      "Avoid account suspension during verification. We guide you through personal identity checks, D-U-N-S registration, and organizational documentation.",
-    href: "/services/account-setup",
-    benefits: [
-      "D-U-N-S matching validation",
-      "Official entity documentation audit",
-      "Payment profile & tax form assistance",
+      "Avoid developer account termination during mandatory identity verification. We guide personal developers and organizations through document audits, payments profiles, and D-U-N-S record alignment.",
+    deliverables: [
+      "Dun & Bradstreet (D-U-N-S) matching & validation",
+      "Identity and proof-of-address document pre-flight review",
+      "Payments profile and tax documentation assistance",
     ],
+    policyNote: "Prevents irreversible account closures due to name/address mismatches.",
+    ctaText: "Learn about console verification",
   },
   {
     icon: CheckCircle2,
     title: "Production Access Advisory",
-    badge: "Crucial Step",
+    badge: "Crucial Review Step",
+    href: "/services/production-access-guidance",
     description:
-      "Prepare thorough, compelling responses for Google's production access questionnaire. We help you demonstrate real testing and product iteration.",
-    href: "/services/production-access",
-    benefits: [
-      "Question-by-question review & guidance",
-      "Synthesized testing feedback logs",
-      "Demonstration of bug fixes & updates",
+      "Prepare thorough, evidence-based answers for Google's 5-prompt production access questionnaire. Demonstrate genuine testing iteration, bug triage, and Android Vitals stability to human reviewers.",
+    deliverables: [
+      "Question-by-question response review and structuring",
+      "Synthesis of closed testing feedback into actionable logs",
+      "Android Vitals crash rate & ANR threshold checks",
     ],
+    policyNote: "Showcases real iteration; final approval is evaluated by Google.",
+    ctaText: "Prepare for production review",
   },
   {
     icon: Layers,
     title: "App Publishing & Compliance Audit",
-    badge: "End-to-End",
+    badge: "Pre-Launch Audit",
+    href: "/services/app-publishing-assistance",
     description:
-      "Comprehensive review before your initial release. We audit Target SDK compliance, Data Safety declarations, privacy policies, and app credentials.",
-    href: "/services/app-publishing",
-    benefits: [
-      "Target API level compliance checks",
-      "Accurate Data Safety declaration",
-      "App access credential configuration",
+      "Comprehensive technical and policy audit before your first store submission. We verify Target SDK compliance, sensitive permissions, reviewer access credentials, and Data Safety forms.",
+    deliverables: [
+      "Target API level compliance (Android 14/15 standards)",
+      "Data Safety declaration vs embedded SDK discrepancy audit",
+      "Reviewer login credentials & demo account configuration",
     ],
+    policyNote: "Identifies automated policy traps before submitting your release bundle.",
+    ctaText: "View publishing audit details",
   },
   {
     icon: AlertTriangle,
     title: "App Rejection Troubleshooting",
     badge: "Recovery & Appeals",
+    href: "/services/app-rejection-help",
     description:
-      "Deconstruct vague Google Play rejection emails. We identify root policy causes, prepare corrective code/metadata updates, and draft formal appeals.",
-    href: "/services/rejection-troubleshooting",
-    benefits: [
-      "Policy violation root-cause analysis",
-      "Actionable code/metadata fix checklist",
-      "Structured appeal correspondence",
+      "Deconstruct vague Google Play rejection notices. We identify the root policy violation, formulate actionable code and metadata updates, and draft formal, evidence-backed developer appeals.",
+    deliverables: [
+      "Policy violation root-cause technical diagnosis",
+      "Actionable code, manifest, or metadata fix checklist",
+      "Formally structured developer appeal letter with proof evidence",
     ],
+    policyNote: "Focuses on legitimate policy compliance and dispute resolution.",
+    ctaText: "Get rejection recovery guidance",
   },
   {
     icon: Sparkles,
     title: "Store Listing Optimization (ASO)",
-    badge: "Growth & Conversion",
+    badge: "Organic Discoverability",
+    href: "/services/play-store-aso",
     description:
-      "Maximize conversion rates while adhering to Google's strict metadata and graphic asset policies. Avoid spam penalties and optimize discoverability.",
-    href: "/services/listing-optimization",
-    benefits: [
-      "Policy-safe titles & descriptions",
-      "Screenshot & feature graphic specs",
-      "Localization & keyword relevance",
+      "Improve conversion rates and organic store visibility while adhering strictly to Google's metadata policy, graphic asset guidelines, and keyword spam regulations.",
+    deliverables: [
+      "Policy-safe titles, short descriptions, and full descriptions",
+      "Screenshot storyboarding & feature graphic spec checks",
+      "Keyword discovery & regional localization review",
     ],
+    policyNote: "Strictly compliant with Google Play metadata spam and claim rules.",
+    ctaText: "Optimize your store listing",
   },
 ];
 
-const challenges = [
+const whoWeHelp = [
+  {
+    icon: UserCheck,
+    title: "Solo Android Developers",
+    badge: "Personal Accounts",
+    challenge:
+      "Facing the mandatory 14-day 20-tester closed testing hurdle without an existing network of Android testers.",
+    solution:
+      "We coordinate active cohorts of real, opted-in testers with varied Android devices to satisfy Google's criteria safely.",
+  },
+  {
+    icon: Smartphone,
+    title: "Early-Stage App Startups",
+    badge: "First Production Release",
+    challenge:
+      "Preparing for the production access questionnaire without documented tester feedback, changelogs, or vitals evidence.",
+    solution:
+      "We help you gather qualitative user feedback, log bug fixes across versions, and draft compelling review answers.",
+  },
+  {
+    icon: Building2,
+    title: "Companies & Studios",
+    badge: "Organization Accounts",
+    challenge:
+      "Navigating complex D-U-N-S matching, corporate verification deadlines, or Target SDK compliance transitions.",
+    solution:
+      "We audit organizational records against Dun & Bradstreet registries to avoid verification rejections.",
+  },
+  {
+    icon: AlertTriangle,
+    title: "Teams Facing Policy Flags",
+    badge: "Rejections & Removals",
+    challenge:
+      "Stuck with ambiguous rejection emails regarding Data Safety, background permissions, or rejected production access.",
+    solution:
+      "We perform root-cause technical audits to isolate the exact policy conflict and prepare structured appeals.",
+  },
+];
+
+const workflowSteps = [
   {
     step: "01",
-    title: "The 20-Tester / 14-Day Closed Testing Rule",
-    detail:
-      "Since late 2023, personal developer accounts must recruit at least 20 testers who remain opted in for 14 continuous days. Inactive testers or bot rings trigger rejections.",
+    title: "Pre-Engagement App & Policy Audit",
+    description:
+      "We inspect your Android App Bundle (AAB), target SDK level, manifest permissions, and current Play Console status to identify potential policy blockers before you submit.",
   },
   {
     step: "02",
-    title: "Production Access Application Rejections",
-    detail:
-      "Meeting the 14-day threshold is not enough. Google human reviewers assess your answers to 5+ critical questions regarding user feedback, testing methodology, and improvements.",
+    title: "Structured Track Setup & Execution",
+    description:
+      "We configure compliant closed testing distribution (Google Group or email list) with 20+ verified real testers or guide you through required documentation changes.",
   },
   {
     step: "03",
-    title: "Strict Account Verification & D-U-N-S Numbers",
-    detail:
-      "Mismatched business names, unrecognized utility bills, or incorrect D-U-N-S registry records lead to prompt Play Console termination without refund.",
+    title: "Telemetry, Testing & Feedback Logging",
+    description:
+      "Over the 14-day testing period, testers use your app on real devices, reporting qualitative UI/UX feedback, crashes, and performance logs for review evidence.",
   },
   {
     step: "04",
-    title: "Data Safety & Background Permission Scrutiny",
-    detail:
-      "Google Play policies evolve constantly. Declaring incorrect tracking data or requesting unnecessary permissions triggers instant automated rejections.",
-  },
-];
-
-const featuredGuides = [
-  {
-    title: "Google Play 20 Testers Requirement: The Complete 14-Day Closed Testing Playbook",
-    category: "Closed Testing",
-    readTime: "8 min read",
-    slug: "google-play-20-testers-requirement-playbook",
-    summary:
-      "A step-by-step technical guide to structuring your closed testing track, recruiting compliant testers, tracking engagement, and compiling required feedback.",
-  },
-  {
-    title: "How to Pass Google Play Production Access Review: Questions & Best Practices",
-    category: "Production Access",
-    readTime: "10 min read",
-    slug: "how-to-pass-production-access-review",
-    summary:
-      "An in-depth breakdown of Google's production access questionnaire. Learn what human reviewers look for in your testing feedback and iteration history.",
-  },
-  {
-    title: "Google Play Developer Account Verification: D-U-N-S, Identity & Common Pitfalls",
-    category: "Account Setup",
-    readTime: "7 min read",
-    slug: "google-play-account-verification-guide",
-    summary:
-      "Avoid fatal verification mistakes. Practical steps for personal vs organization accounts, document formatting, and D-U-N-S synchronization.",
+    title: "Production Questionnaire Prep & Review",
+    description:
+      "We assist you in drafting clear, evidence-based answers for Google's production access questionnaire, documenting iteration history and Android Vitals stability.",
   },
 ];
 
 export default function Home() {
+  const faqSchema = generateFAQSchema(homeFaqs);
+
+  // Take the first 3 guides from getPublishedArticles() for featured educational guides
+  const featuredGuides = getPublishedArticles().slice(0, 3);
+
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-zinc-200 bg-gradient-to-b from-zinc-50 via-white to-white py-16 sm:py-24 lg:py-28 dark:border-zinc-800 dark:from-zinc-950 dark:via-zinc-900/50 dark:to-zinc-950">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.12),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.15),rgba(0,0,0,0))] pointer-events-none" />
+      <JsonLd data={faqSchema} />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      {/* 1. Hero Section: Compelling, Truthful H1, Value Prop, Two CTAs */}
+      <section className="border-b border-border bg-card/50 py-16 sm:py-24 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           {/* Eyebrow Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-600/20 bg-emerald-50 px-3.5 py-1 text-xs font-semibold text-emerald-800 shadow-sm dark:border-emerald-500/30 dark:bg-emerald-950/60 dark:text-emerald-300">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Google Play 2026 Developer Guidance • Policy Compliant</span>
+          <div className="inline-flex items-center gap-2">
+            <Badge variant="default" className="py-1 px-3 text-xs font-semibold">
+              Independent Technical Advisory • Google Play 2026 Compliant
+            </Badge>
           </div>
 
-          {/* Main Headline */}
-          <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl dark:text-zinc-50 max-w-4xl mx-auto leading-tight sm:leading-tight">
-            Publish on Google Play with{" "}
-            <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400">
-              Confidence, Not Guesswork.
+          {/* Main H1 Headline */}
+          <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl max-w-4xl mx-auto leading-tight sm:leading-tight">
+            Google Play Publishing &amp; Closed Testing Assistance for{" "}
+            <span className="text-primary underline decoration-primary/30 underline-offset-8">
+              Android Developers
             </span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="mt-6 text-lg sm:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            From the mandatory 14-day 20-tester closed testing requirement to Play Console verification and production access reviews — get legitimate, structured technical guidance to launch your Android app.
+          {/* Value Proposition */}
+          <p className="mt-6 text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Navigate Google&rsquo;s mandatory 14-day 20-tester closed testing requirement, Play Console account verification, and production access reviews with genuine, policy-compliant technical guidance.
           </p>
 
-          {/* Action CTAs */}
+          {/* Two CTAs: Explore Services & Read Developer Guides */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/services">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-emerald-600 text-white hover:bg-emerald-500 shadow-md shadow-emerald-600/20 px-6 py-6 text-base font-semibold"
-              >
-                <span>Explore Publishing Services</span>
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Button>
+            <Link
+              href="/services"
+              className={buttonVariants({
+                variant: "default",
+                size: "lg",
+                className:
+                  "w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm px-6 py-6 text-base font-semibold",
+              })}
+            >
+              <span>Explore Publishing Services</span>
+              <ArrowRight className="h-4 w-4 ml-1.5" />
             </Link>
 
-            <Link href="/tools/policy-readiness-checklist">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto border-zinc-300 bg-white hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800 px-6 py-6 text-base font-medium"
-              >
-                <FileCheck className="h-4 w-4 mr-1 text-emerald-600 dark:text-emerald-400" />
-                <span>Pre-Launch Readiness Checklist</span>
-              </Button>
+            <Link
+              href="/guides"
+              className={buttonVariants({
+                variant: "outline",
+                size: "lg",
+                className:
+                  "w-full sm:w-auto border-border px-6 py-6 text-base font-medium",
+              })}
+            >
+              <FileText className="h-4 w-4 mr-1.5 text-primary" />
+              <span>Read Developer Guides</span>
             </Link>
           </div>
 
-          {/* Value Props Bar */}
-          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80 text-left">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300">
+          {/* Value & Trust Signals Bar */}
+          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto pt-8 border-t border-border/80 text-left">
+            <div className="flex items-start gap-3 p-2 rounded-lg bg-card/60 border border-border/50">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
                 <Users className="h-4 w-4" />
               </div>
-              <span className="text-xs font-medium text-zinc-800 dark:text-zinc-200">
-                20 Real Android Testers (No Bots)
-              </span>
+              <div>
+                <span className="text-xs font-bold text-foreground block">
+                  20 Real Android Testers
+                </span>
+                <span className="text-[11px] text-muted-foreground leading-tight block">
+                  Physical devices, genuine opt-ins, no bot emulators
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-teal-700 dark:bg-teal-950/70 dark:text-teal-300">
+            <div className="flex items-start gap-3 p-2 rounded-lg bg-card/60 border border-border/50">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
                 <ShieldCheck className="h-4 w-4" />
               </div>
-              <span className="text-xs font-medium text-zinc-800 dark:text-zinc-200">
-                D-U-N-S & Console Verification
-              </span>
+              <div>
+                <span className="text-xs font-bold text-foreground block">
+                  Console Verification
+                </span>
+                <span className="text-[11px] text-muted-foreground leading-tight block">
+                  D-U-N-S matching &amp; identity document audits
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300">
+            <div className="flex items-start gap-3 p-2 rounded-lg bg-card/60 border border-border/50">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
                 <CheckCircle2 className="h-4 w-4" />
               </div>
-              <span className="text-xs font-medium text-zinc-800 dark:text-zinc-200">
-                Production Questionnaire Prep
-              </span>
+              <div>
+                <span className="text-xs font-bold text-foreground block">
+                  Production Review Prep
+                </span>
+                <span className="text-[11px] text-muted-foreground leading-tight block">
+                  Questionnaire answers backed by real feedback logs
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-950/70 dark:text-rose-300">
+            <div className="flex items-start gap-3 p-2 rounded-lg bg-card/60 border border-border/50">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
                 <AlertTriangle className="h-4 w-4" />
               </div>
-              <span className="text-xs font-medium text-zinc-800 dark:text-zinc-200">
-                Rejection Diagnosis & Appeals
-              </span>
+              <div>
+                <span className="text-xs font-bold text-foreground block">
+                  Rejection Diagnosis
+                </span>
+                <span className="text-[11px] text-muted-foreground leading-tight block">
+                  Root-cause analysis &amp; structured policy appeals
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* The 2026 Policy Reality Section */}
-      <section className="py-16 sm:py-20 bg-zinc-50 dark:bg-zinc-900/40 border-b border-zinc-200 dark:border-zinc-800">
+      {/* 2. Who PlayStoreGuide Helps & The Problems It Solves */}
+      <section className="py-16 sm:py-20 bg-muted/30 border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-              The Google Play Reality
-            </span>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-              Why 60%+ of New Android Developers Face Rejections or Delays
-            </h2>
-            <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Google has significantly elevated requirements for Google Play Console developers. Automated submission without structured testing or policy alignment results in closed testing failure or rejected production access.
-            </p>
-          </div>
+          <SectionHeading
+            eyebrow="Who We Help"
+            title="Solving the Real Roadblocks in Modern Google Play Publishing"
+            description="Since Google elevated developer requirements for personal accounts and organization verification, publishing an Android app requires rigorous testing and strict policy compliance. Here is who we support and the specific challenges we solve."
+          />
 
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {challenges.map((c) => (
-              <div
-                key={c.step}
-                className="relative rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80 flex flex-col justify-between"
-              >
-                <div>
-                  <span className="text-3xl font-extrabold text-emerald-600/40 dark:text-emerald-400/30">
-                    {c.step}
-                  </span>
-                  <h3 className="mt-2 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                    {c.title}
-                  </h3>
-                  <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                    {c.detail}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Core Services Section */}
-      <section className="py-16 sm:py-24 bg-white dark:bg-zinc-950">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-              Technical Advisory Services
-            </span>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-              Structured Solutions Across Every Stage of Publishing
-            </h2>
-            <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400">
-              We work alongside developers to ensure their apps meet all technical, functional, and policy standards before requesting Google Play production rollout.
-            </p>
-          </div>
-
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service) => {
-              const Icon = service.icon;
+            {whoWeHelp.map((item) => {
+              const Icon = item.icon;
               return (
-                <div
-                  key={service.title}
-                  className="group relative rounded-2xl border border-zinc-200 bg-white p-7 shadow-sm hover:shadow-lg transition-all hover:border-emerald-500/40 dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-emerald-500/40 flex flex-col justify-between"
+                <Card
+                  key={item.title}
+                  className="p-6 flex flex-col justify-between hover:border-primary/40 transition-colors"
                 >
-                  <div>
+                  <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 group-hover:scale-105 transition-transform">
-                        <Icon className="h-6 w-6" />
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300">
+                        <Icon className="h-4 w-4" />
                       </div>
-                      <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                        {service.badge}
-                      </span>
+                      <Badge variant="secondary" className="text-[10px]">
+                        {item.badge}
+                      </Badge>
                     </div>
 
-                    <h3 className="mt-5 text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                      {service.description}
+                    <div>
+                      <h3 className="text-base font-bold text-foreground">
+                        {item.title}
+                      </h3>
+                      <div className="mt-3 pt-3 border-t border-border/60">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block mb-1">
+                          The Challenge
+                        </span>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                          {item.challenge}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-border/60">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-primary block mb-1">
+                      How We Help
+                    </span>
+                    <p className="text-xs text-foreground leading-relaxed">
+                      {item.solution}
                     </p>
-
-                    <div className="mt-6 border-t border-zinc-100 pt-4 dark:border-zinc-800/80">
-                      <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 uppercase tracking-wider mb-2.5">
-                        Key Deliverables
-                      </p>
-                      <ul className="space-y-2">
-                        {service.benefits.map((b) => (
-                          <li
-                            key={b}
-                            className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400"
-                          >
-                            <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                            <span>{b}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
                   </div>
-
-                  <div className="mt-8 pt-4">
-                    <Link
-                      href={service.href}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
-                    >
-                      <span>Explore details</span>
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </div>
+                </Card>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Free Interactive Readiness Tool Highlight */}
-      <section className="py-16 bg-gradient-to-r from-emerald-950 via-teal-950 to-zinc-950 text-white border-y border-emerald-900/50">
+      {/* 3. Service Cards for All 6 Services */}
+      <section className="py-16 sm:py-24 bg-card border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-4">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-300 border border-emerald-500/30">
-                <Sparkles className="h-3.5 w-3.5" /> Free Self-Assessment Tool
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-                Evaluate Your App Against Google Play's 2026 Checklist
-              </h2>
-              <p className="text-zinc-300 text-base leading-relaxed max-w-xl">
-                Before submitting for closed testing or applying for production access, verify that your Target SDK, Data Safety form, tester cohort duration, and privacy policies align with Google Play developer guidelines.
-              </p>
-              <div className="pt-2">
-                <Link href="/tools/policy-readiness-checklist">
-                  <Button
-                    size="lg"
-                    className="bg-emerald-500 text-zinc-950 hover:bg-emerald-400 font-bold px-6 py-6"
-                  >
-                    Launch Interactive Readiness Checklist &rarr;
-                  </Button>
-                </Link>
-              </div>
-            </div>
+          <SectionHeading
+            align="center"
+            eyebrow="Technical Advisory Services"
+            title="Structured Guidance Across Every Stage of Publishing"
+            description="We work alongside Android developers to ensure apps meet all functional, stability, and policy requirements before requesting Google Play production rollout."
+          />
 
-            <div className="lg:col-span-5">
-              <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 space-y-4 shadow-2xl">
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <span className="text-sm font-semibold text-white">Pre-Launch Audit Sample</span>
-                  <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">
-                    VERIFIED
-                  </span>
-                </div>
-                <div className="space-y-3 text-xs">
-                  <div className="flex items-center justify-between p-2 rounded bg-white/5">
-                    <span className="text-zinc-300">Target API Level (Android 14/15)</span>
-                    <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                      <Check className="h-3 w-3" /> Pass
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded bg-white/5">
-                    <span className="text-zinc-300">Closed Testing Track Active (14 Days)</span>
-                    <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                      <Check className="h-3 w-3" /> 20/20 Active
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded bg-white/5">
-                    <span className="text-zinc-300">Data Safety vs Manifest Permissions</span>
-                    <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                      <Check className="h-3 w-3" /> Synchronized
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded bg-white/5">
-                    <span className="text-zinc-300">Production Questionnaire Feedback Log</span>
-                    <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                      <Check className="h-3 w-3" /> Structured
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service) => {
+              const Icon = service.icon;
+              return (
+                <Card
+                  key={service.title}
+                  className="flex flex-col justify-between hover:border-primary/50 hover:shadow-md transition-all"
+                >
+                  <CardHeader className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-800 dark:bg-teal-950/80 dark:text-teal-300">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <Badge variant="secondary">{service.badge}</Badge>
+                    </div>
+
+                    <CardTitle className="text-xl">
+                      {service.title}
+                    </CardTitle>
+                    <CardDescription>
+                      {service.description}
+                    </CardDescription>
+
+                    <div className="pt-2 border-t border-border/60">
+                      <p className="text-xs font-bold uppercase tracking-wider text-foreground mb-2">
+                        Key Deliverables
+                      </p>
+                      <ul className="space-y-1.5">
+                        {service.deliverables.map((b) => (
+                          <li
+                            key={b}
+                            className="flex items-start gap-2 text-xs text-muted-foreground"
+                          >
+                            <Check className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="pt-0">
+                    <div className="rounded-lg bg-muted/50 p-2.5 text-[11px] text-muted-foreground border border-border/40">
+                      <span className="font-semibold text-foreground">Policy Note: </span>
+                      {service.policyNote}
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="pt-0">
+                    <Link
+                      href={service.href}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
+                    >
+                      <span>{service.ctaText}</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/services"
+              className={buttonVariants({
+                variant: "outline",
+                size: "lg",
+                className: "border-border px-8 py-5 text-sm font-semibold",
+              })}
+            >
+              <span>View Detailed Breakdown of All 6 Publishing Services</span>
+              <ArrowRight className="h-4 w-4 ml-1.5" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Featured Educational Guides */}
-      <section className="py-16 sm:py-24 bg-white dark:bg-zinc-950">
+      {/* 4. Step-by-Step Explanation of How the Service Engagement Works */}
+      <section className="py-16 sm:py-20 bg-muted/40 border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            align="center"
+            eyebrow="Engagement Workflow"
+            title="How Our Technical Publishing Advisory Works"
+            description="A transparent, step-by-step workflow designed to verify technical readiness, maintain tester retention, and compile documentation before requesting Google Play production rollout."
+          />
+
+          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {workflowSteps.map((stepItem) => (
+              <Card
+                key={stepItem.step}
+                className="p-6 relative flex flex-col justify-between bg-card"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-3xl font-extrabold text-primary/40 font-mono">
+                      {stepItem.step}
+                    </span>
+                    <Badge variant="outline" className="text-[10px]">
+                      Phase {stepItem.step}
+                    </Badge>
+                  </div>
+                  <h3 className="text-base font-bold text-foreground">
+                    {stepItem.title}
+                  </h3>
+                  <p className="mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    {stepItem.description}
+                  </p>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mt-10 rounded-xl border border-border bg-card p-4 sm:p-6 text-center max-w-3xl mx-auto">
+            <div className="flex items-center justify-center gap-2 text-xs font-bold text-foreground">
+              <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+              <span>Full Policy Transparency</span>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground max-w-2xl mx-auto">
+              We never ask for your Google account credentials or charge for fabricated approvals. You maintain complete ownership of your Google Play Console account throughout every stage.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Featured Educational Guides Backed by Actual Published Content */}
+      <section className="py-16 sm:py-24 bg-card border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                Educational Knowledge Base
-              </span>
-              <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
-                Latest Google Play Publishing Guides
-              </h2>
-            </div>
+            <SectionHeading
+              eyebrow="Educational Knowledge Base"
+              title="Featured Google Play Developer Guides"
+              description="In-depth, technical guides covering closed testing recruitment, production access review questionnaires, and Play Console account verification."
+            />
             <Link
               href="/guides"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline shrink-0"
             >
               Browse all developer guides <ArrowRight className="h-4 w-4" />
             </Link>
@@ -445,111 +567,267 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featuredGuides.map((guide) => (
-              <article
+              <Card
                 key={guide.slug}
-                className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6 shadow-sm hover:shadow-md transition-shadow dark:border-zinc-800 dark:bg-zinc-900/50"
+                className="flex flex-col justify-between hover:border-primary/50 hover:shadow-md transition-all"
               >
-                <div>
-                  <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 mb-3">
-                    <span className="rounded bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300">
-                      {guide.category}
-                    </span>
-                    <span className="flex items-center gap-1">
+                <CardHeader className="space-y-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <Badge variant="default">{guide.category}</Badge>
+                    <span className="flex items-center gap-1 text-muted-foreground text-[11px]">
                       <Clock className="h-3 w-3" /> {guide.readTime}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors leading-snug">
-                    <Link href={`/guides/${guide.slug}`}>{guide.title}</Link>
-                  </h3>
-                  <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                    {guide.summary}
-                  </p>
-                </div>
+                  <CardTitle className="text-lg">
+                    <Link
+                      href={`/blog/${guide.slug}`}
+                      className="hover:text-primary transition-colors line-clamp-2"
+                    >
+                      {guide.title}
+                    </Link>
+                  </CardTitle>
+                  <CardDescription className="line-clamp-3">
+                    {guide.excerpt}
+                  </CardDescription>
+                </CardHeader>
 
-                <div className="mt-6 pt-4 border-t border-zinc-200/80 dark:border-zinc-800">
+                <CardFooter className="pt-0">
                   <Link
-                    href={`/guides/${guide.slug}`}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+                    href={`/blog/${guide.slug}`}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
                   >
-                    Read complete playbook &rarr;
+                    <span>Read technical playbook</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
-                </div>
-              </article>
+                </CardFooter>
+              </Card>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Trust, Integrity & Policy Standard */}
-      <section className="py-16 bg-zinc-50 dark:bg-zinc-900/60 border-t border-zinc-200 dark:border-zinc-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-8 sm:p-12 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-8 space-y-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                  Our Developer Commitment
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">
-                  No Shortcuts. No Fake Metrics. Legitimate Compliance.
-                </h2>
-                <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  We believe in upholding developer integrity. We never fabricate reviews, deploy automated emulator farms, or promise &ldquo;guaranteed 100% approval&rdquo; (which Google strictly prohibits). Our value lies in rigorous technical auditing, genuine tester feedback collection, and ensuring your app satisfies every legitimate policy requirement.
-                </p>
-              </div>
-
-              <div className="lg:col-span-4 flex flex-col gap-3">
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 dark:border-emerald-900/60 dark:bg-emerald-950/40">
-                  <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    <span>Real Devices & Real People</span>
-                  </div>
-                  <p className="mt-1 text-xs text-emerald-800/80 dark:text-emerald-400/80">
-                    Active opt-in testers providing genuine user telemetry and bug reports.
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-800/50">
-                  <div className="flex items-center gap-2 text-xs font-bold text-zinc-900 dark:text-zinc-200">
-                    <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    <span>Zero Policy Infringements</span>
-                  </div>
-                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                    Full alignment with Google Play Developer Distribution Agreement.
-                  </p>
-                </div>
-              </div>
+          <div className="mt-12 p-6 rounded-xl border border-border bg-muted/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <h4 className="text-sm font-bold text-foreground">
+                Need guidance on app rejections or the Data Safety form?
+              </h4>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                We also publish comprehensive walkthroughs on solving Play Store policy rejections and synchronizing third-party SDK telemetry.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <Link
+                href="/blog/common-google-play-app-rejection-reasons"
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                Rejection Recovery Guide &rarr;
+              </Link>
+              <span className="text-muted-foreground text-xs">•</span>
+              <Link
+                href="/blog/android-app-publishing-checklist-2026"
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                Publishing Checklist &rarr;
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Consultation Intake CTA */}
-      <section className="py-16 sm:py-24 bg-white dark:bg-zinc-950 text-center">
+      {/* 6. Helpful Developer Resources & Publishing Checklists */}
+      <section className="py-16 sm:py-20 bg-muted/30 border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 space-y-4">
+              <Badge variant="default" className="py-0.5 px-2.5 text-xs font-semibold">
+                Free Developer Tools
+              </Badge>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
+                Pre-Launch Developer Checklists &amp; Utilities
+              </h2>
+              <p className="text-muted-foreground text-sm sm:text-base leading-relaxed max-w-xl">
+                Before submitting your closed testing release or applying for production access, evaluate your app against Google Play&rsquo;s 2026 checklist. Verify Target SDK 34/35 compliance, Data Safety declarations, and test account credentials.
+              </p>
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/tools/policy-readiness-checklist"
+                  className={buttonVariants({
+                    variant: "default",
+                    size: "lg",
+                    className:
+                      "bg-primary text-primary-foreground hover:bg-primary/90 font-bold px-6 py-6 shadow-sm w-full sm:w-auto",
+                  })}
+                >
+                  <FileCheck className="h-4 w-4 mr-2" />
+                  <span>Launch Interactive Checklist</span>
+                </Link>
+
+                <Link
+                  href="/resources"
+                  className={buttonVariants({
+                    variant: "outline",
+                    size: "lg",
+                    className: "border-border px-6 py-6 text-sm font-medium w-full sm:w-auto",
+                  })}
+                >
+                  <span>Explore Developer Resources</span>
+                  <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5">
+              <Card className="p-6 space-y-4 shadow-sm bg-card border-border">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <div>
+                    <span className="text-sm font-bold text-foreground block">
+                      Google Play Audit Checklist
+                    </span>
+                    <span className="text-[11px] text-muted-foreground">
+                      Core criteria verified prior to production
+                    </span>
+                  </div>
+                  <Badge variant="success">READY</Badge>
+                </div>
+
+                <div className="space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border/40">
+                    <span className="text-foreground font-medium">Target SDK Level (Android 14/15)</span>
+                    <span className="text-primary font-semibold flex items-center gap-1 shrink-0">
+                      <Check className="h-3 w-3" /> API 34+
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border/40">
+                    <span className="text-foreground font-medium">Closed Track Active (14 Days)</span>
+                    <span className="text-primary font-semibold flex items-center gap-1 shrink-0">
+                      <Check className="h-3 w-3" /> 20/20 Testers
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border/40">
+                    <span className="text-foreground font-medium">Data Safety vs. SDK Manifest</span>
+                    <span className="text-primary font-semibold flex items-center gap-1 shrink-0">
+                      <Check className="h-3 w-3" /> Synchronized
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border/40">
+                    <span className="text-foreground font-medium">Production Questionnaire Prep</span>
+                    <span className="text-primary font-semibold flex items-center gap-1 shrink-0">
+                      <Check className="h-3 w-3" /> Documented
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/50 border border-border/40">
+                    <span className="text-foreground font-medium">App Reviewer Test Credentials</span>
+                    <span className="text-primary font-semibold flex items-center gap-1 shrink-0">
+                      <Check className="h-3 w-3" /> Configured
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Transparent FAQ Section Addressing Common Concerns */}
+      <section className="py-16 sm:py-24 bg-card border-b border-border">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Ready to Prepare Your App for Google Play Release?
-          </h2>
-          <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
-            Whether you need closed testing coordination, production questionnaire guidance, or rejection recovery, we are here to support your Android launch.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/contact">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-emerald-600 text-white hover:bg-emerald-500 px-8 py-6 text-base font-semibold shadow-md"
+          <SectionHeading
+            align="center"
+            eyebrow="Frequently Asked Questions"
+            title="Clear, Honest Answers About Google Play Publishing &amp; Advisory"
+            description="We believe in complete transparency. Here is how our services operate, our policy compliance standards, and the realities of Google Play's review process."
+          />
+
+          <div className="mt-12 space-y-4">
+            {homeFaqs.map((faq, index) => (
+              <details
+                key={faq.question}
+                className="group rounded-xl border border-border bg-card p-5 sm:p-6 transition-all hover:border-border/80"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-md">
+                  <span className="text-sm sm:text-base pr-4">
+                    {index + 1}. {faq.question}
+                  </span>
+                  <ChevronDown className="h-5 w-5 text-muted-foreground transition-transform duration-200 group-open:rotate-180 shrink-0" />
+                </summary>
+                <div className="mt-4 pt-4 border-t border-border/60 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  {faq.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <p className="text-xs text-muted-foreground">
+              Have a question not listed here? Visit our{" "}
+              <Link href="/faq" className="text-primary font-semibold hover:underline">
+                comprehensive FAQ page
+              </Link>{" "}
+              or{" "}
+              <Link href="/contact" className="text-primary font-semibold hover:underline">
+                send us an enquiry directly
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Final Enquiry CTA Section */}
+      <section className="py-16 sm:py-24 bg-muted/40 text-center">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-border bg-card p-8 sm:p-14 shadow-sm">
+            <Badge variant="default" className="py-1 px-3 text-xs font-semibold mb-4">
+              Get Started with PlayStoreGuide
+            </Badge>
+
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+              Ready to Prepare Your Android App for Google Play Release?
+            </h2>
+
+            <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Whether you need 14-day closed testing coordination, production review questionnaire guidance, or rejection recovery assistance, our technical team is ready to support your launch.
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/contact"
+                className={buttonVariants({
+                  variant: "default",
+                  size: "lg",
+                  className:
+                    "w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-base font-semibold shadow-sm",
+                })}
               >
                 Schedule Publishing Consultation
-              </Button>
-            </Link>
-            <Link href="/faq">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto px-6 py-6 text-base font-medium"
+              </Link>
+
+              <Link
+                href="/services"
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "lg",
+                  className: "w-full sm:w-auto px-6 py-6 text-base font-medium border-border",
+                })}
               >
-                Read Publishing FAQ
-              </Button>
-            </Link>
+                Explore Publishing Services
+              </Link>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-border/60 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Check className="h-4 w-4 text-primary" />
+                <span>No long-term contracts</span>
+              </div>
+              <span className="hidden sm:inline">•</span>
+              <div className="flex items-center gap-1.5">
+                <Check className="h-4 w-4 text-primary" />
+                <span>Direct developer support</span>
+              </div>
+              <span className="hidden sm:inline">•</span>
+              <div className="flex items-center gap-1.5">
+                <Check className="h-4 w-4 text-primary" />
+                <span>Response within 24 business hours</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { ShieldAlert, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { constructMetadata, generateBreadcrumbSchema } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
 

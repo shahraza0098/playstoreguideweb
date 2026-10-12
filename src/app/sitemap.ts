@@ -1,6 +1,9 @@
 import { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
-import { guidesData } from "@/data/guides";
+import { getPublishedArticles } from "@/data/articles";
+import { blogCategories } from "@/data/categories";
+import { blogTags } from "@/data/tags";
+import { authorsData } from "@/data/authors";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -26,34 +29,46 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/services/account-setup`,
+      url: `${SITE_URL}/services/play-console-account-setup`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${SITE_URL}/services/production-access`,
+      url: `${SITE_URL}/services/production-access-guidance`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/services/app-publishing`,
+      url: `${SITE_URL}/services/app-publishing-assistance`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${SITE_URL}/services/rejection-troubleshooting`,
+      url: `${SITE_URL}/services/app-rejection-help`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${SITE_URL}/services/listing-optimization`,
+      url: `${SITE_URL}/services/play-store-aso`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/blog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/guides`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
     },
     {
       url: `${SITE_URL}/tools`,
@@ -68,10 +83,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
-      url: `${SITE_URL}/guides`,
+      url: `${SITE_URL}/resources`,
       lastModified: now,
       changeFrequency: "weekly",
-      priority: 0.9,
+      priority: 0.85,
     },
     {
       url: `${SITE_URL}/about`,
@@ -111,13 +126,43 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Dynamic guide articles
-  const guideRoutes: MetadataRoute.Sitemap = guidesData.map((guide) => ({
-    url: `${SITE_URL}/guides/${guide.slug}`,
-    lastModified: new Date(guide.updatedAt),
+  // Dynamic published blog articles (Excludes drafts!)
+  const articleRoutes: MetadataRoute.Sitemap = getPublishedArticles().map((article) => ({
+    url: `${SITE_URL}/blog/${article.slug}`,
+    lastModified: new Date(article.updatedAt),
     changeFrequency: "monthly",
     priority: 0.85,
   }));
 
-  return [...staticRoutes, ...guideRoutes];
+  // Dynamic blog category archives
+  const categoryRoutes: MetadataRoute.Sitemap = blogCategories.map((cat) => ({
+    url: `${SITE_URL}/blog/category/${cat.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.75,
+  }));
+
+  // Dynamic high-value tag archives
+  const tagRoutes: MetadataRoute.Sitemap = blogTags.map((tag) => ({
+    url: `${SITE_URL}/blog/tag/${tag.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.65,
+  }));
+
+  // Dynamic author profiles
+  const authorRoutes: MetadataRoute.Sitemap = authorsData.map((author) => ({
+    url: `${SITE_URL}/authors/${author.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...articleRoutes,
+    ...categoryRoutes,
+    ...tagRoutes,
+    ...authorRoutes,
+  ];
 }

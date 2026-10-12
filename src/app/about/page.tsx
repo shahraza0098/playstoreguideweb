@@ -4,11 +4,8 @@ import { Metadata } from "next";
 import {
   ShieldCheck,
   Users,
-  CheckCircle2,
-  AlertTriangle,
   HeartHandshake,
   Target,
-  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/JsonLd";

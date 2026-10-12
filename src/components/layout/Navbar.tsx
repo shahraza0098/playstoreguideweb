@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -12,47 +12,46 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sparkles,
-  FileText,
   Layers,
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const serviceLinks = [
+const services = [
   {
     title: "Closed Testing (20 Testers / 14 Days)",
     href: "/services/closed-testing",
-    desc: "Coordinated tester cohort & structured feedback compliance.",
+    desc: "Coordinated opt-in cohort & qualitative feedback logs.",
     icon: Users,
   },
   {
-    title: "Account Setup & Verification",
-    href: "/services/account-setup",
-    desc: "Personal & organization D-U-N-S verification advisory.",
+    title: "Account Setup & D-U-N-S",
+    href: "/services/play-console-account-setup",
+    desc: "Personal & organization Console identity verification.",
     icon: ShieldCheck,
   },
   {
     title: "Production Access Advisory",
-    href: "/services/production-access",
-    desc: "Questionnaire guidance & reviewer readiness prep.",
+    href: "/services/production-access-guidance",
+    desc: "Questionnaire response review & reviewer readiness prep.",
     icon: CheckCircle2,
   },
   {
     title: "App Publishing & Compliance",
-    href: "/services/app-publishing",
-    desc: "Target SDK, Data Safety form & policy audits.",
+    href: "/services/app-publishing-assistance",
+    desc: "Target SDK 34/35, Data Safety form & credentials audit.",
     icon: Layers,
   },
   {
     title: "Rejection Troubleshooting",
-    href: "/services/rejection-troubleshooting",
-    desc: "Root-cause diagnostics, policy fixes & appeal guidance.",
+    href: "/services/app-rejection-help",
+    desc: "Root-cause diagnostics, policy remediation & appeals.",
     icon: AlertTriangle,
   },
   {
     title: "Store Listing Optimization (ASO)",
-    href: "/services/listing-optimization",
-    desc: "Metadata, visual asset guidelines & conversion tuning.",
+    href: "/services/play-store-aso",
+    desc: "Policy-safe metadata structuring & conversion assets.",
     icon: Sparkles,
   },
 ];
@@ -60,15 +59,43 @@ const serviceLinks = [
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const [prevPathname, setPrevPathname] = useState(pathname);
 
-  // Close menus when route changes
-  useEffect(() => {
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setMobileMenuOpen(false);
     setServicesDropdownOpen(false);
-  }, [pathname]);
+  }
 
-  // Prevent background scrolling when mobile menu is open
+  // Close dropdown on Escape key or outside click
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setServicesDropdownOpen(false);
+        setMobileMenuOpen(false);
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setServicesDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Prevent body scrolling when mobile drawer is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -81,85 +108,96 @@ export function Navbar() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/90 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/90 transition-colors">
+    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/95 backdrop-blur-md transition-colors">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <Link
           href="/"
-          className="group flex items-center gap-2.5 transition-opacity hover:opacity-95"
-          aria-label="PlayStoreGuide Home"
+          className="group flex items-center gap-2.5 transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-1 -ml-1"
+          aria-label="PlayStoreGuide Homepage"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 via-teal-600 to-indigo-600 text-white shadow-sm shadow-emerald-500/20 ring-1 ring-white/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm ring-1 ring-border">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-none">
-              PlayStore<span className="text-emerald-600 dark:text-emerald-400">Guide</span>
+            <span className="text-base font-extrabold tracking-tight text-foreground leading-none">
+              PlayStore<span className="text-primary">Guide</span>
             </span>
-            <span className="text-[10px] font-medium tracking-wide text-zinc-500 dark:text-zinc-400 uppercase mt-0.5">
-              Android Publishing Hub
+            <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase mt-0.5">
+              Developer Resource
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1 text-sm font-medium" aria-label="Main Navigation">
+        <nav
+          className="hidden md:flex items-center gap-1 text-sm font-medium"
+          aria-label="Main Navigation"
+        >
           {/* Services Dropdown */}
           <div
+            ref={dropdownRef}
             className="relative"
             onMouseEnter={() => setServicesDropdownOpen(true)}
             onMouseLeave={() => setServicesDropdownOpen(false)}
           >
             <button
               type="button"
-              className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${
+              onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 pathname.startsWith("/services")
-                  ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                  : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+                  ? "text-primary font-semibold"
+                  : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
               }`}
               aria-expanded={servicesDropdownOpen}
               aria-haspopup="true"
+              aria-controls="services-menu"
             >
               <span>Services</span>
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-200 ${
                   servicesDropdownOpen ? "rotate-180" : ""
                 }`}
+                aria-hidden="true"
               />
             </button>
 
-            {/* Dropdown Card */}
+            {/* Dropdown Panel */}
             {servicesDropdownOpen && (
-              <div className="absolute left-0 top-full pt-1 w-96 origin-top-left transition-all">
-                <div className="rounded-xl border border-zinc-200 bg-white p-2 shadow-xl ring-1 ring-black/5 dark:border-zinc-800 dark:bg-zinc-900">
-                  <div className="p-2 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
-                    <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              <div
+                id="services-menu"
+                className="absolute left-0 top-full pt-1.5 w-[380px] origin-top-left transition-all z-50"
+              >
+                <div className="rounded-xl border border-border bg-card p-2 shadow-xl ring-1 ring-black/5 dark:ring-white/10">
+                  <div className="flex items-center justify-between px-3 py-2 border-b border-border/60">
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                       Publishing Advisory
                     </span>
                     <Link
                       href="/services"
-                      className="text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-0.5"
+                      className="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1"
                     >
                       All Services <ArrowRight className="h-3 w-3" />
                     </Link>
                   </div>
-                  <div className="grid gap-1 pt-1">
-                    {serviceLinks.map((item) => {
+
+                  <div className="grid gap-1 pt-1.5">
+                    {services.map((item) => {
                       const Icon = item.icon;
                       return (
                         <Link
                           key={item.href}
                           href={item.href}
-                          className="flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800/80 group"
+                          className="flex items-start gap-3 rounded-lg p-2.5 transition-colors hover:bg-muted/70 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         >
-                          <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-950/60 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">
+                          <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                             <Icon className="h-4 w-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                            <div className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
                               {item.title}
                             </div>
-                            <div className="text-[11px] text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                            <div className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
                               {item.desc}
                             </div>
                           </div>
@@ -173,139 +211,121 @@ export function Navbar() {
           </div>
 
           <Link
-            href="/guides"
-            className={`px-3 py-2 rounded-md transition-colors ${
-              pathname.startsWith("/guides")
-                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+            href="/blog"
+            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              pathname.startsWith("/blog") || pathname.startsWith("/guides")
+                ? "text-primary font-semibold"
+                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            Guides
+            Blog
           </Link>
 
           <Link
-            href="/tools/policy-readiness-checklist"
-            className={`px-3 py-2 rounded-md transition-colors flex items-center gap-1.5 ${
-              pathname.startsWith("/tools")
-                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+            href="/resources"
+            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              pathname.startsWith("/resources") || pathname.startsWith("/tools")
+                ? "text-primary font-semibold"
+                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
             }`}
           >
-            <span>Readiness Checklist</span>
-            <span className="rounded-full bg-emerald-100 px-1.5 py-0.2 text-[10px] font-semibold text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300">
-              Free Tool
-            </span>
-          </Link>
-
-          <Link
-            href="/faq"
-            className={`px-3 py-2 rounded-md transition-colors ${
-              pathname === "/faq"
-                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
-            }`}
-          >
-            FAQ
+            Resources
           </Link>
 
           <Link
             href="/about"
-            className={`px-3 py-2 rounded-md transition-colors ${
+            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               pathname === "/about"
-                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
-                : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+                ? "text-primary font-semibold"
+                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
             }`}
           >
             About
           </Link>
         </nav>
 
-        {/* CTA Buttons */}
+        {/* Primary Contact CTA */}
         <div className="hidden md:flex items-center gap-3">
           <Link href="/contact">
             <Button
-              variant="default"
               size="sm"
-              className="bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500 shadow-sm"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-4 shadow-sm"
             >
-              Request Consultation
+              Enquire Now
             </Button>
           </Link>
         </div>
 
-        {/* Mobile menu trigger */}
+        {/* Mobile menu button */}
         <div className="flex md:hidden">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-lg p-2 text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-lg p-2 text-foreground/80 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-expanded={mobileMenuOpen}
-            aria-label="Toggle navigation menu"
+            aria-controls="mobile-navigation"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Accessible Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-zinc-200 bg-white px-4 pt-2 pb-6 dark:border-zinc-800 dark:bg-zinc-950">
-          <div className="flex flex-col space-y-3">
-            <div className="py-2 text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Publishing Services
-            </div>
-            <div className="grid grid-cols-1 gap-2 pl-2">
-              {serviceLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:text-emerald-600 py-1"
-                >
-                  {item.title}
-                </Link>
-              ))}
-              <Link
-                href="/services"
-                className="text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:underline pt-1"
-              >
-                View all services &rarr;
-              </Link>
+        <div
+          id="mobile-navigation"
+          className="md:hidden border-b border-border bg-background px-4 pt-3 pb-6 animate-in fade-in-20 duration-150"
+        >
+          <div className="flex flex-col space-y-4">
+            <div>
+              <div className="px-2 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Services
+              </div>
+              <div className="grid grid-cols-1 gap-1.5 pl-2 pt-1">
+                {services.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="text-sm font-medium text-foreground hover:text-primary py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1"
+                  >
+                    {item.title}
+                  </Link>
+                ))}
+              </div>
             </div>
 
-            <div className="border-t border-zinc-100 dark:border-zinc-800 pt-3 flex flex-col space-y-2">
+            <div className="border-t border-border/60 pt-3 flex flex-col space-y-1.5">
               <Link
-                href="/guides"
-                className="text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:text-emerald-600 py-1"
+                href="/blog"
+                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                Educational Guides
+                Blog
               </Link>
               <Link
-                href="/tools/policy-readiness-checklist"
-                className="text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:text-emerald-600 py-1 flex items-center justify-between"
+                href="/resources"
+                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <span>Readiness Checklist</span>
-                <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                  Tool
-                </span>
-              </Link>
-              <Link
-                href="/faq"
-                className="text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:text-emerald-600 py-1"
-              >
-                FAQ
+                Resources &amp; Tools
               </Link>
               <Link
                 href="/about"
-                className="text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:text-emerald-600 py-1"
+                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 About Us
               </Link>
+              <Link
+                href="/faq"
+                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                FAQ
+              </Link>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-2">
               <Link href="/contact" className="w-full block">
-                <Button className="w-full bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-emerald-600 dark:hover:bg-emerald-500">
-                  Request Consultation
+                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-5">
+                  Enquire Now &rarr;
                 </Button>
               </Link>
             </div>

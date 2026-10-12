@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { Mail, ShieldCheck, Clock, MessageSquare } from "lucide-react";
+import { Mail, ShieldCheck, Clock } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { constructMetadata, generateBreadcrumbSchema } from "@/lib/seo";
 import { ContactForm } from "@/components/contact/ContactForm";

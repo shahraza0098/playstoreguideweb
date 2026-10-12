@@ -1,94 +1,101 @@
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck, Mail, ArrowUpRight } from "lucide-react";
+import { ShieldCheck, Mail, Clock, ArrowUpRight } from "lucide-react";
 
 export function Footer() {
   const currentYear = 2026;
 
   return (
-    <footer className="border-t border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400">
-      {/* Main Footer Links */}
+    <footer className="border-t border-border bg-card text-muted-foreground transition-colors">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
           {/* Brand & Purpose */}
           <div className="lg:col-span-2 space-y-4">
             <Link
               href="/"
-              className="flex items-center gap-2.5 text-zinc-900 dark:text-zinc-50"
-              aria-label="PlayStoreGuide Home"
+              className="flex items-center gap-2.5 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg w-fit"
+              aria-label="PlayStoreGuide Homepage"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 via-teal-600 to-indigo-600 text-white shadow-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
                 <ShieldCheck className="h-4.5 w-4.5" />
               </div>
-              <span className="text-lg font-bold tracking-tight">
-                PlayStore<span className="text-emerald-600 dark:text-emerald-400">Guide</span>
+              <span className="text-lg font-extrabold tracking-tight">
+                PlayStore<span className="text-primary">Guide</span>
               </span>
             </Link>
-            <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 max-w-sm">
-              Independent technical consultancy providing legitimate, policy-compliant guidance for Android developers navigating Google Play Console requirements, 14-day closed testing, and production access reviews.
+
+            <p className="text-sm leading-relaxed text-muted-foreground max-w-sm">
+              Independent technical consultancy providing legitimate, policy-compliant guidance for Android developers navigating Google Play Console requirements, 14-day closed testing cohorts, and production access reviews.
             </p>
-            <div className="pt-2 flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-              <Mail className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>Direct inquiries: </span>
-              <a
-                href="mailto:support@playstoreguide.com"
-                className="font-medium text-zinc-900 dark:text-zinc-200 hover:underline"
-              >
-                support@playstoreguide.com
-              </a>
+
+            <div className="pt-2 space-y-2 text-xs">
+              <div className="flex items-center gap-2">
+                <Mail className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span>Enquiries: </span>
+                <a
+                  href="mailto:support@playstoreguide.com"
+                  className="font-medium text-foreground hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                >
+                  support@playstoreguide.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span>Response window: Within 12–24 business hours</span>
+              </div>
             </div>
           </div>
 
-          {/* Services Column */}
+          {/* Publishing Services */}
           <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-900 dark:text-zinc-200">
-              Publishing Services
+            <p className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Services
             </p>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/services/closed-testing"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
                   20 Testers / 14 Days
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/services/account-setup"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/services/play-console-account-setup"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  Account Setup & D-U-N-S
+                  Account Setup &amp; D-U-N-S
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/services/production-access"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/services/production-access-guidance"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
                   Production Access Advisory
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/services/app-publishing"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/services/app-publishing-assistance"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  Publishing & Compliance
+                  App Publishing &amp; Compliance
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/services/rejection-troubleshooting"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/services/app-rejection-help"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
                   Rejection Troubleshooting
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/services/listing-optimization"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/services/play-store-aso"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
                   Store Listing (ASO)
                 </Link>
@@ -96,40 +103,40 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Guides & Resources Column */}
+          {/* Blog & Resources */}
           <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-900 dark:text-zinc-200">
-              Developer Guides
+            <p className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Blog Categories
             </p>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  href="/guides/google-play-20-testers-requirement-playbook"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/blog/google-play-closed-testing-requirements-guide"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  20 Testers Playbook
+                  Closed Testing Playbook
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/guides/how-to-pass-production-access-review"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/blog/how-to-prepare-for-google-play-production-access"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  Production Access Questions
+                  Production Access Guide
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/guides/google-play-account-verification-guide"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/blog/google-play-developer-account-verification-guide"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  Account Verification & D-U-N-S
+                  Account Verification &amp; D-U-N-S
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/guides/google-play-app-rejection-recovery-guide"
-                  className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  href="/blog/common-google-play-app-rejection-reasons"
+                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
                   App Rejection Appeals
                 </Link>
@@ -137,47 +144,47 @@ export function Footer() {
               <li>
                 <Link
                   href="/tools/policy-readiness-checklist"
-                  className="inline-flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400 hover:underline"
+                  className="inline-flex items-center gap-1 font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  Readiness Checklist <ArrowUpRight className="h-3 w-3" />
+                  Policy Checklist Tool <ArrowUpRight className="h-3 w-3" />
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Company & Legal Column */}
+          {/* Company & Legal */}
           <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-900 dark:text-zinc-200">
-              Trust & Legal
+            <p className="text-xs font-bold uppercase tracking-wider text-foreground">
+              About &amp; Trust
             </p>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/about" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <Link href="/about" className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
                   About PlayStoreGuide
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                  Contact Consultation
+                <Link href="/contact" className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
+                  Contact Advisory
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <Link href="/faq" className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
                   Frequently Asked Questions
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <Link href="/privacy" className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <Link href="/terms" className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/disclaimer" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                <Link href="/disclaimer" className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
                   Independent Disclaimer
                 </Link>
               </li>
@@ -185,20 +192,20 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Independent Trademark Disclaimer Box (Required for Legal & Policy Safety) */}
-        <div className="mt-12 rounded-xl border border-zinc-200/90 bg-white/60 p-4 dark:border-zinc-800/80 dark:bg-zinc-900/50">
-          <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-            <strong className="font-semibold text-zinc-700 dark:text-zinc-300">Independent Service Disclaimer: </strong>
-            PlayStoreGuide is an independent developer advisory service and educational resource. PlayStoreGuide is not affiliated with, endorsed by, sponsored by, or associated with Google LLC, Alphabet Inc., or the Android Open Source Project. &ldquo;Google Play&rdquo;, &ldquo;Android&rdquo;, &ldquo;Google Play Console&rdquo;, and their respective logos are trademarks of Google LLC. We provide technical advisory and testing facilitation adhering strictly to official developer policies; we do not sell or guarantee Google Play approvals.
+        {/* Independent Trademark Disclaimer Notice */}
+        <div className="mt-12 rounded-xl border border-border bg-muted/40 p-4 sm:p-5">
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            <strong className="font-semibold text-foreground">Independent Service Disclaimer: </strong>
+            PlayStoreGuide is an independent developer advisory service and technical educational resource. PlayStoreGuide is not affiliated with, endorsed by, sponsored by, or associated with Google LLC, Alphabet Inc., or the Android Open Source Project. &ldquo;Google Play&rdquo;, &ldquo;Android&rdquo;, &ldquo;Google Play Console&rdquo;, and their respective logos are trademarks of Google LLC. We provide technical advisory and testing facilitation adhering strictly to official developer policies; we do not sell or guarantee Google Play approvals.
           </p>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-zinc-200 pt-8 sm:flex-row dark:border-zinc-800">
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row text-xs text-muted-foreground">
+          <p>
             &copy; {currentYear} PlayStoreGuide. All rights reserved. Built for Android developers worldwide.
           </p>
-          <div className="flex items-center gap-6 text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex items-center gap-6">
             <Link href="/disclaimer" className="hover:underline">
               Legal Disclaimer
             </Link>

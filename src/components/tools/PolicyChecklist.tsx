@@ -2,16 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  CheckCircle2,
-  AlertTriangle,
-  FileCheck,
-  ShieldAlert,
-  ArrowRight,
-  RefreshCw,
-  Printer,
-  Sparkles,
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ChecklistItem {

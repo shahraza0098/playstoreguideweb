@@ -1,13 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import {
-  FileCheck,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
-} from "lucide-react";
+import { FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { constructMetadata, generateBreadcrumbSchema } from "@/lib/seo";
@@ -56,7 +50,7 @@ export default function ToolsIndexPage() {
             Developer Readiness Tools
           </h1>
           <p className="mt-4 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Interactive, client-side diagnostics designed to evaluate your Android application against Google Play's latest technical and policy standards prior to release.
+            Interactive, client-side diagnostics designed to evaluate your Android application against Google Play&rsquo;s latest technical and policy standards prior to release.
           </p>
         </div>
 

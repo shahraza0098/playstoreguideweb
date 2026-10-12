@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { FileCheck, ShieldCheck, AlertTriangle } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { constructMetadata, generateBreadcrumbSchema } from "@/lib/seo";
 import { PolicyChecklist } from "@/components/tools/PolicyChecklist";
@@ -60,7 +59,7 @@ export default function PolicyChecklistPage() {
             Google Play Pre-Launch Policy Readiness Checklist
           </h1>
           <p className="mt-4 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-            Evaluate your app against Google Play's 2026 developer requirements. Check off verified items to calculate your readiness score and uncover potential rejection triggers before submitting your release.
+            Evaluate your app against Google Play&rsquo;s 2026 developer requirements. Check off verified items to calculate your readiness score and uncover potential rejection triggers before submitting your release.
           </p>
         </div>
 
