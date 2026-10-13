@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import {
@@ -11,12 +13,17 @@ import {
   ChevronDown,
   ArrowRight,
   BookOpen,
+  Info,
+  Sparkles,
+  CheckCircle2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import type { Article } from "@/data/articles";
 import { getAuthorBySlug } from "@/data/authors";
 import { blogCategories } from "@/data/categories";
+import { ReadingProgressBar } from "./ReadingProgressBar";
+import { TableOfContents, type TocItem } from "./TableOfContents";
+import { CodeBlock } from "./CodeBlock";
 
 interface ArticleContentProps {
   article: Article;
@@ -29,13 +36,16 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
   const categoryObj = blogCategories.find((c) => c.slug === article.category);
 
   // Generate Table of Contents items from sections
-  const tocItems = article.sections.map((section) => ({
+  const tocItems: TocItem[] = article.sections.map((section) => ({
     id: section.id,
     title: section.title,
   }));
 
   return (
-    <div className="py-10 sm:py-16">
+    <div className="py-8 sm:py-14 bg-surface-panel dark:bg-background">
+      {/* 1. Performant Reading Progress Indicator */}
+      <ReadingProgressBar />
+
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
@@ -55,7 +65,7 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
             <li>
               <Link
                 href={`/blog/category/${article.category}`}
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors font-medium"
               >
                 {categoryObj?.shortName || article.category}
               </Link>
@@ -67,38 +77,49 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
           </ol>
         </nav>
 
-        {/* Main Grid: Content Column & Sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          {/* Main Article Content */}
-          <article className="lg:col-span-8">
+        {/* Main Grid: Content Column & Sticky Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          {/* Main Article Reading Column */}
+          <article className="lg:col-span-8 min-w-0">
             {/* Header */}
-            <header className="space-y-4 border-b border-border pb-8">
+            <header className="space-y-5 border-b border-border/80 pb-8">
+              {/* Category & Tags Row */}
               <div className="flex flex-wrap items-center gap-2">
                 <Link href={`/blog/category/${article.category}`}>
-                  <Badge variant="default">{categoryObj?.name || article.category}</Badge>
+                  <Badge
+                    variant="outline"
+                    className="border-primary/30 bg-surface-cream text-foreground font-semibold px-2.5 py-0.5 text-xs rounded-full hover:border-primary transition-colors"
+                  >
+                    <Sparkles className="h-3 w-3 text-primary mr-1" />
+                    {categoryObj?.name || article.category}
+                  </Badge>
                 </Link>
                 {article.tags.map((tag) => (
                   <Link key={tag} href={`/blog/tag/${tag}`}>
-                    <Badge variant="outline" className="text-[10px] hover:border-primary">
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] font-mono hover:bg-muted text-muted-foreground px-2 py-0.5 rounded-md"
+                    >
                       #{tag}
                     </Badge>
                   </Link>
                 ))}
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
+              {/* H1 Article Title */}
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.65rem] font-extrabold tracking-tight text-foreground leading-[1.18]">
                 {article.title}
               </h1>
 
-              {/* Byline with Author & Reviewer */}
-              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-2">
+              {/* Byline with Genuine Author, Reviewer & Date Metadata */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground pt-1">
                 {author && (
                   <span className="flex items-center gap-1.5">
                     <User className="h-3.5 w-3.5 text-primary" />
                     <span>By </span>
                     <Link
                       href={`/authors/${author.slug}`}
-                      className="font-semibold text-foreground hover:text-primary underline-offset-2 hover:underline"
+                      className="font-bold text-foreground hover:text-primary underline-offset-2 hover:underline"
                     >
                       {author.name}
                     </Link>
@@ -111,44 +132,55 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
                     <span>Reviewed by </span>
                     <Link
                       href={`/authors/${reviewer.slug}`}
-                      className="font-semibold text-foreground hover:text-primary underline-offset-2 hover:underline"
+                      className="font-medium text-foreground hover:text-primary underline-offset-2 hover:underline"
                     >
                       {reviewer.name}
                     </Link>
                   </span>
                 )}
 
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
+                <span className="flex items-center gap-1 font-mono text-[11px]">
+                  <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                   <span>Updated {article.updatedAt}</span>
                 </span>
 
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" />
+                <span className="flex items-center gap-1 font-mono text-[11px]">
+                  <Clock className="h-3.5 w-3.5 text-muted-foreground" />
                   <span>{article.readTime}</span>
                 </span>
               </div>
 
               {/* Executive Summary Box */}
-              <div className="rounded-xl border border-border bg-card p-4 sm:p-5 text-sm text-foreground leading-relaxed shadow-xs">
-                <strong className="font-bold text-primary block mb-1">
-                  Executive Summary
-                </strong>
-                {article.excerpt}
+              <div className="rounded-2xl border border-primary/20 bg-surface-cream/80 dark:bg-card p-5 sm:p-6 text-sm text-foreground leading-relaxed shadow-subtle">
+                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary mb-1.5">
+                  <Info className="h-4 w-4" />
+                  <span>Executive Takeaway</span>
+                </div>
+                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                  {article.excerpt}
+                </p>
               </div>
             </header>
 
-            {/* Article Sections */}
-            <div className="mt-8 space-y-12">
-              {article.sections.map((section) => (
+            {/* Mobile Collapsible TOC */}
+            <TableOfContents items={tocItems} className="lg:hidden mt-6" />
+
+            {/* Article Sections (Comfortable reading column with generous spacing) */}
+            <div className="mt-10 space-y-14">
+              {article.sections.map((section, sIndex) => (
                 <section
                   key={section.id}
                   id={section.id}
-                  className="scroll-mt-24 space-y-4"
+                  className="scroll-mt-24 space-y-5"
                 >
-                  <h2 className="text-2xl font-bold tracking-tight text-foreground border-b border-border/40 pb-2">
-                    {section.title}
-                  </h2>
+                  <div className="flex items-center gap-3 border-b border-border/70 pb-2.5">
+                    <span className="font-mono text-sm font-bold text-primary/60">
+                      0{sIndex + 1}.
+                    </span>
+                    <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
+                      {section.title}
+                    </h2>
+                  </div>
 
                   <div className="text-sm sm:text-base leading-relaxed text-muted-foreground space-y-4 whitespace-pre-line">
                     {section.content}
@@ -156,73 +188,69 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
 
                   {/* Code Snippet if present */}
                   {section.codeSnippet && (
-                    <div className="rounded-xl border border-border bg-zinc-950 p-4 text-xs font-mono text-zinc-100 overflow-x-auto shadow-sm">
-                      {section.codeSnippet.caption && (
-                        <div className="text-[11px] font-sans text-zinc-400 mb-2 border-b border-zinc-800 pb-1">
-                          {section.codeSnippet.caption}
-                        </div>
-                      )}
-                      <pre>
-                        <code>{section.codeSnippet.code}</code>
-                      </pre>
-                    </div>
+                    <CodeBlock
+                      code={section.codeSnippet.code}
+                      language={section.codeSnippet.language}
+                      caption={section.codeSnippet.caption}
+                      className="my-5"
+                    />
                   )}
 
                   {/* Callout Box */}
                   {section.callout && (
                     <div
-                      className={`rounded-xl border p-4 text-xs sm:text-sm leading-relaxed ${
+                      className={`rounded-2xl border p-4 sm:p-5 text-xs sm:text-sm leading-relaxed shadow-2xs ${
                         section.callout.type === "warning"
-                          ? "border-rose-300 bg-rose-50/70 text-rose-950 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-200"
+                          ? "border-rose-400/40 bg-rose-500/10 text-rose-950 dark:text-rose-200"
                           : section.callout.type === "official"
-                          ? "border-teal-300 bg-teal-50/70 text-teal-950 dark:border-teal-900/60 dark:bg-teal-950/40 dark:text-teal-200"
+                          ? "border-teal-400/40 bg-teal-500/10 text-teal-950 dark:text-teal-200"
                           : section.callout.type === "tip"
-                          ? "border-emerald-300 bg-emerald-50/70 text-emerald-950 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
-                          : "border-blue-300 bg-blue-50/70 text-blue-950 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-200"
+                          ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-950 dark:text-emerald-200"
+                          : "border-primary/30 bg-primary/10 text-foreground"
                       }`}
                     >
-                      <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs mb-1">
+                      <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-xs mb-1.5">
                         {section.callout.type === "warning" ? (
-                          <AlertTriangle className="h-4 w-4 shrink-0 text-rose-600" />
+                          <AlertTriangle className="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
                         ) : section.callout.type === "official" ? (
-                          <ShieldCheck className="h-4 w-4 shrink-0 text-teal-600" />
+                          <ShieldCheck className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" />
+                        ) : section.callout.type === "tip" ? (
+                          <Lightbulb className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                         ) : (
-                          <Lightbulb className="h-4 w-4 shrink-0 text-emerald-600" />
+                          <Info className="h-4 w-4 shrink-0 text-primary" />
                         )}
                         <span>
                           {section.callout.type === "warning"
                             ? "Policy Alert"
                             : section.callout.type === "official"
-                            ? "Official Google Policy"
-                            : "Technical Tip"}
+                            ? "Official Google Play Rule"
+                            : section.callout.type === "tip"
+                            ? "Technical Tip"
+                            : "Advisory Note"}
                         </span>
                       </div>
-                      <p>{section.callout.text}</p>
+                      <p className="leading-relaxed">{section.callout.text}</p>
                     </div>
                   )}
 
-                  {/* Subsections if present */}
+                  {/* Subsections */}
                   {section.subsections && section.subsections.length > 0 && (
-                    <div className="space-y-6 pt-2 pl-2 sm:pl-4 border-l-2 border-border/60">
+                    <div className="space-y-6 pt-3 pl-3 sm:pl-5 border-l-2 border-border/80">
                       {section.subsections.map((sub, sIdx) => (
-                        <div key={sIdx} id={sub.id} className="space-y-2 scroll-mt-24">
-                          <h3 className="text-lg font-bold text-foreground">
+                        <div key={sIdx} id={sub.id} className="space-y-2.5 scroll-mt-24">
+                          <h3 className="text-base sm:text-lg font-bold text-foreground">
                             {sub.title}
                           </h3>
-                          <div className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
+                          <div className="text-xs sm:text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
                             {sub.content}
                           </div>
                           {sub.codeSnippet && (
-                            <div className="rounded-xl border border-border bg-zinc-950 p-4 text-xs font-mono text-zinc-100 overflow-x-auto shadow-sm">
-                              {sub.codeSnippet.caption && (
-                                <div className="text-[11px] font-sans text-zinc-400 mb-2 border-b border-zinc-800 pb-1">
-                                  {sub.codeSnippet.caption}
-                                </div>
-                              )}
-                              <pre>
-                                <code>{sub.codeSnippet.code}</code>
-                              </pre>
-                            </div>
+                            <CodeBlock
+                              code={sub.codeSnippet.code}
+                              language={sub.codeSnippet.language}
+                              caption={sub.codeSnippet.caption}
+                              className="my-3"
+                            />
                           )}
                         </div>
                       ))}
@@ -234,23 +262,23 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
 
             {/* In-Article Service Callout Box */}
             {article.serviceLink && (
-              <div className="mt-12 rounded-2xl border border-primary/30 bg-card p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <Badge variant="default" className="text-[10px]">
+              <div className="mt-14 rounded-3xl border border-primary/30 bg-surface-cream/80 dark:bg-card p-6 sm:p-7 shadow-floating flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                <div className="space-y-1.5">
+                  <Badge variant="default" className="text-[10px] font-bold uppercase tracking-wider">
                     {article.serviceLink.badge}
                   </Badge>
-                  <h3 className="text-base font-bold text-foreground">
+                  <h3 className="text-base sm:text-lg font-extrabold text-foreground">
                     {article.serviceLink.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground">
-                    Get legitimate technical advisory and testing facilitation from PlayStoreGuide.
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    Get legitimate technical advisory, cohort coordination, and policy compliance verification from PlayStoreGuide.
                   </p>
                 </div>
                 <Link
                   href={article.serviceLink.href}
-                  className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-primary text-primary-foreground px-4 py-2.5 text-xs font-semibold hover:bg-primary/90 transition-colors shadow-xs"
+                  className="shrink-0 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 text-xs font-bold hover:bg-primary/90 transition-all shadow-card"
                 >
-                  <span>Learn More</span>
+                  <span>Explore Service</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
@@ -258,18 +286,18 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
 
             {/* Frequently Asked Questions */}
             {article.faqs && article.faqs.length > 0 && (
-              <section className="mt-14 border-t border-border pt-10">
-                <h2 className="text-2xl font-bold tracking-tight text-foreground mb-6">
+              <section className="mt-16 border-t border-border/80 pt-10">
+                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground mb-6">
                   Frequently Asked Questions
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3.5">
                   {article.faqs.map((faq, idx) => (
                     <details
                       key={idx}
-                      className="group rounded-xl border border-border bg-card p-5 transition-all hover:border-border/80"
+                      className="group rounded-2xl border border-border/80 bg-surface-panel dark:bg-card p-5 sm:p-6 transition-all hover:border-primary/40 shadow-2xs"
                     >
-                      <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-md">
-                        <span className="text-sm sm:text-base pr-4">
+                      <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary rounded-md">
+                        <span className="text-sm sm:text-base pr-4 leading-snug">
                           {faq.question}
                         </span>
                         <ChevronDown className="h-5 w-5 text-muted-foreground transition-transform duration-200 group-open:rotate-180 shrink-0" />
@@ -283,29 +311,32 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
               </section>
             )}
 
-            {/* Sources & Official References */}
+            {/* Sources & Official Policy References */}
             {article.sources && article.sources.length > 0 && (
-              <section className="mt-14 border-t border-border pt-8">
+              <section className="mt-14 border-t border-border/80 pt-8">
                 <div className="flex items-center gap-2 mb-4">
                   <BookOpen className="h-4 w-4 text-primary" />
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-                    Sources &amp; Official References
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+                    Authoritative Sources &amp; Official References
                   </h3>
                 </div>
-                <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-2 text-xs">
+                <div className="rounded-2xl border border-border/80 bg-surface-cream/50 dark:bg-muted/20 p-5 space-y-3 text-xs">
                   {article.sources.map((source, idx) => (
-                    <div key={idx} className="flex items-start justify-between gap-2">
+                    <div
+                      key={idx}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 pb-2.5 border-b border-border/50 last:border-0 last:pb-0"
+                    >
                       <div>
-                        <span className="font-semibold text-foreground">{source.title}</span>
-                        <span className="text-muted-foreground"> ({source.publisher})</span>
+                        <span className="font-bold text-foreground">{source.title}</span>
+                        <span className="text-muted-foreground"> &bull; {source.publisher}</span>
                       </div>
                       <a
                         href={source.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:underline flex items-center gap-1 shrink-0 font-medium"
+                        className="text-primary hover:underline inline-flex items-center gap-1 font-semibold text-xs shrink-0"
                       >
-                        <span>View Source</span>
+                        <span>Official Google Document</span>
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     </div>
@@ -314,38 +345,52 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
               </section>
             )}
 
-            {/* Author Profile Bio Card */}
+            {/* Author Profile Bio Card (Genuine verifiable information) */}
             {author && (
-              <div className="mt-12 rounded-2xl border border-border bg-card p-6 shadow-sm flex flex-col sm:flex-row gap-5 items-start">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300 font-bold text-xl border border-border">
+              <div className="mt-14 rounded-3xl border border-border/90 bg-surface-panel dark:bg-card p-6 sm:p-8 shadow-card flex flex-col sm:flex-row gap-5 items-start">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary font-bold text-xl border border-primary/20 shadow-xs">
                   {author.name.charAt(0)}
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                        Written By
-                      </span>
-                      <h4 className="text-base font-bold text-foreground">
-                        <Link
-                          href={`/authors/${author.slug}`}
-                          className="hover:text-primary transition-colors"
-                        >
-                          {author.name}
-                        </Link>
-                      </h4>
-                      <p className="text-xs text-muted-foreground">{author.role}</p>
-                    </div>
+                <div className="space-y-2.5 flex-1">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Written By
+                    </span>
+                    <h4 className="text-base sm:text-lg font-bold text-foreground">
+                      <Link
+                        href={`/authors/${author.slug}`}
+                        className="hover:text-primary transition-colors"
+                      >
+                        {author.name}
+                      </Link>
+                    </h4>
+                    <p className="text-xs font-medium text-muted-foreground">{author.role}</p>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     {author.bio}
                   </p>
-                  <div className="pt-1">
+
+                  {/* Credentials highlights */}
+                  <div className="pt-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-foreground block mb-1.5">
+                      Verifiable Credentials:
+                    </span>
+                    <ul className="space-y-1 text-xs text-muted-foreground">
+                      {author.credentials.map((cred, cIdx) => (
+                        <li key={cIdx} className="flex items-center gap-1.5">
+                          <CheckCircle2 className="h-3 w-3 text-primary shrink-0" />
+                          <span>{cred}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pt-2">
                     <Link
                       href={`/authors/${author.slug}`}
-                      className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                      className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1"
                     >
-                      <span>View full author profile &amp; articles</span>
+                      <span>View full author profile &amp; published articles</span>
                       <ArrowRight className="h-3 w-3" />
                     </Link>
                   </div>
@@ -355,30 +400,44 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
 
             {/* Related Articles */}
             {relatedArticles.length > 0 && (
-              <div className="mt-14 border-t border-border pt-10">
-                <h3 className="text-xl font-bold text-foreground mb-6">
-                  Related Guides &amp; Playbooks
-                </h3>
+              <div className="mt-16 border-t border-border/80 pt-10">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground">
+                    Related Engineering Playbooks
+                  </h3>
+                  <Link
+                    href="/blog"
+                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
+                  >
+                    <span>View all guides</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {relatedArticles.map((rel) => (
                     <Link
                       key={rel.slug}
                       href={`/blog/${rel.slug}`}
-                      className="group rounded-xl border border-border bg-card p-5 hover:border-primary/50 transition-all shadow-xs block"
+                      className="group rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 hover:border-primary/50 hover:shadow-card-hover transition-all shadow-subtle flex flex-col justify-between"
                     >
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                        {blogCategories.find((c) => c.slug === rel.category)?.shortName || rel.category}
-                      </span>
-                      <h4 className="mt-1 text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                        {rel.title}
-                      </h4>
-                      <p className="mt-2 text-xs text-muted-foreground line-clamp-2">
-                        {rel.excerpt}
-                      </p>
-                      <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground pt-2 border-t border-border/50">
-                        <span>{rel.readTime}</span>
-                        <span className="text-primary font-semibold group-hover:underline">
-                          Read article &rarr;
+                      <div className="space-y-2.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                          {blogCategories.find((c) => c.slug === rel.category)?.shortName || rel.category}
+                        </span>
+                        <h4 className="text-sm sm:text-base font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                          {rel.title}
+                        </h4>
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                          {rel.excerpt}
+                        </p>
+                      </div>
+
+                      <div className="mt-5 pt-3 flex items-center justify-between text-[11px] text-muted-foreground border-t border-border/50">
+                        <span className="font-mono">{rel.readTime}</span>
+                        <span className="text-primary font-bold group-hover:underline inline-flex items-center gap-1">
+                          <span>Read</span>
+                          <ArrowRight className="h-3 w-3" />
                         </span>
                       </div>
                     </Link>
@@ -388,63 +447,47 @@ export function ArticleContent({ article, relatedArticles }: ArticleContentProps
             )}
           </article>
 
-          {/* Sticky Sidebar: Table of Contents & Quick Consultation */}
-          <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-            {/* Table of Contents */}
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                Table of Contents
-              </h3>
-              <nav aria-label="Table of Contents" className="mt-4">
-                <ul className="space-y-2.5 text-xs text-muted-foreground">
-                  {tocItems.map((item) => (
-                    <li key={item.id}>
-                      <a
-                        href={`#${item.id}`}
-                        className="hover:text-primary transition-colors line-clamp-1"
-                      >
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
+          {/* Sticky Desktop Sidebar */}
+          <aside className="hidden lg:block lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+            {/* Desktop Table of Contents */}
+            <TableOfContents items={tocItems} />
 
             {/* Service Consultation Card */}
-            <div className="rounded-2xl border border-teal-500/30 bg-muted/40 p-6 space-y-3">
+            <div className="rounded-3xl border border-border/90 bg-surface-panel dark:bg-card p-6 shadow-floating space-y-3.5">
               <span className="text-xs font-bold uppercase tracking-wider text-primary block">
                 Technical Advisory
               </span>
               <h3 className="text-sm font-bold text-foreground">
-                Need Help Applying This to Your App?
+                Need Support Navigating Console Policies?
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Our team audits closed testing tracks, reviews questionnaire answers, verifies D-U-N-S data, and helps resolve rejection strikes.
+                We coordinate compliant 20+ tester cohorts, review production questionnaires, and audit AAB builds before submission.
               </p>
-              <div className="pt-2">
-                <Link href="/contact" className="w-full block">
-                  <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-xs py-5">
-                    Request Consultation &rarr;
-                  </Button>
+              <div className="pt-1">
+                <Link
+                  href="/contact"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 text-xs font-bold transition-all shadow-card"
+                >
+                  <span>Request Advisory Consultation</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </div>
 
             {/* Categories Quick Links */}
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-3">
+            <div className="rounded-3xl border border-border/80 bg-surface-cream/50 dark:bg-card p-6 shadow-subtle space-y-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                Browse Categories
+                Browse Playbook Categories
               </h3>
-              <div className="space-y-2 pt-1 text-xs">
+              <div className="space-y-1.5 pt-1 text-xs">
                 {blogCategories.map((cat) => (
                   <Link
                     key={cat.slug}
                     href={`/blog/category/${cat.slug}`}
-                    className="flex items-center justify-between py-1 text-muted-foreground hover:text-primary transition-colors"
+                    className="flex items-center justify-between py-1.5 px-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-panel dark:hover:bg-muted/40 transition-colors"
                   >
                     <span>{cat.name}</span>
-                    <ArrowRight className="h-3 w-3" />
+                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
                   </Link>
                 ))}
               </div>

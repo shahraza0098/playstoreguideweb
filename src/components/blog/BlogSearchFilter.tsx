@@ -2,10 +2,15 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, Clock, ArrowRight, User, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  Search,
+  Clock,
+  ArrowRight,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Article } from "@/data/articles";
 import { blogCategories } from "@/data/categories";
@@ -21,6 +26,7 @@ export function BlogSearchFilter({ articles }: BlogSearchFilterProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const shouldReduceMotion = useReducedMotion();
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
@@ -62,51 +68,86 @@ export function BlogSearchFilter({ articles }: BlogSearchFilterProps) {
     return filteredArticles.slice(start, start + ARTICLES_PER_PAGE);
   }, [filteredArticles, currentPage]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.06,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.3,
+        ease: [0.16, 1, 0.3, 1] as const,
+      },
+    },
+  };
+
   return (
     <div className="space-y-8">
-      {/* Category Pills & Search Bar */}
-      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+      {/* Category Pills & Search Controls */}
+      <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
+        {/* Visually Distinct Category Filter Pills */}
+        <div
+          role="tablist"
+          aria-label="Filter articles by category"
+          className="flex items-center gap-1.5 overflow-x-auto pb-2 lg:pb-0 no-scrollbar p-1 rounded-2xl bg-surface-cream/80 dark:bg-muted/30 border border-border/70"
+        >
           <button
             type="button"
+            role="tab"
+            aria-selected={selectedCategory === "all"}
             onClick={() => handleCategoryChange("all")}
-            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+            className={`rounded-xl px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
               selectedCategory === "all"
-                ? "bg-primary text-primary-foreground shadow-xs"
-                : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                ? "bg-surface-panel dark:bg-card text-foreground shadow-2xs border border-border/80"
+                : "text-muted-foreground hover:text-foreground hover:bg-black/[0.03]"
             }`}
           >
-            All Articles ({articles.length})
+            All Guides ({articles.length})
           </button>
           {blogCategories.map((cat) => {
             const count = articles.filter((a) => a.category === cat.slug).length;
+            const isSelected = selectedCategory === cat.slug;
             return (
               <button
                 key={cat.slug}
                 type="button"
+                role="tab"
+                aria-selected={isSelected}
                 onClick={() => handleCategoryChange(cat.slug)}
-                className={`rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  selectedCategory === cat.slug
-                    ? "bg-primary text-primary-foreground shadow-xs"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                className={`rounded-xl px-3.5 py-2 text-xs font-bold whitespace-nowrap transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
+                  isSelected
+                    ? "bg-surface-panel dark:bg-card text-foreground shadow-2xs border border-border/80"
+                    : "text-muted-foreground hover:text-foreground hover:bg-black/[0.03]"
                 }`}
               >
-                {cat.shortName} ({count})
+                <span>{cat.shortName}</span>
+                <span className="ml-1.5 text-[10px] font-mono text-muted-foreground opacity-80">
+                  ({count})
+                </span>
               </button>
             );
           })}
         </div>
 
-        {/* Search Input */}
-        <div className="relative w-full md:w-72 shrink-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+        {/* Search Input Bar */}
+        <div className="relative w-full lg:w-80 shrink-0">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            placeholder="Search guides & policies..."
-            className="w-full rounded-lg border border-border bg-card pl-9 pr-8 py-2 text-xs text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-xs"
+            placeholder="Search guides, AAB, 20 testers..."
+            aria-label="Search articles by title or keyword"
+            className="w-full rounded-2xl border border-border/90 bg-surface-panel dark:bg-card pl-10 pr-9 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs transition-all"
           />
           {searchQuery && (
             <button
@@ -115,8 +156,8 @@ export function BlogSearchFilter({ articles }: BlogSearchFilterProps) {
                 setSearchQuery("");
                 setCurrentPage(1);
               }}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5"
-              aria-label="Clear search"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5 cursor-pointer"
+              aria-label="Clear search query"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -128,138 +169,134 @@ export function BlogSearchFilter({ articles }: BlogSearchFilterProps) {
       {(selectedCategory !== "all" || searchQuery !== "") && (
         <div className="flex items-center justify-between text-xs text-muted-foreground border-b border-border/60 pb-3">
           <span>
-            Showing <strong>{filteredArticles.length}</strong> of {articles.length} articles
-            {selectedCategory !== "all" && ` in ${blogCategories.find((c) => c.slug === selectedCategory)?.name}`}
-            {searchQuery && ` matching "${searchQuery}"`}
+            Showing <strong className="text-foreground">{filteredArticles.length}</strong> of {articles.length} articles
+            {selectedCategory !== "all" && (
+              <> in <strong className="text-foreground">{blogCategories.find((c) => c.slug === selectedCategory)?.name}</strong></>
+            )}
+            {searchQuery && (
+              <> matching &ldquo;{searchQuery}&rdquo;</>
+            )}
           </span>
           <button
             type="button"
             onClick={clearFilters}
-            className="text-primary hover:underline font-semibold"
+            className="text-primary hover:underline font-bold cursor-pointer"
           >
             Reset filters
           </button>
         </div>
       )}
 
-      {/* Articles Grid */}
+      {/* Articles Grid (Staggered card entrances with motion) */}
       {paginatedArticles.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          variants={shouldReduceMotion ? undefined : containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+        >
           {paginatedArticles.map((article) => {
             const author = getAuthorBySlug(article.authorId);
             const categoryObj = blogCategories.find((c) => c.slug === article.category);
 
             return (
-              <Card
+              <motion.article
                 key={article.slug}
-                className="flex flex-col justify-between hover:border-primary/50 hover:shadow-md transition-all group bg-card"
+                variants={shouldReduceMotion ? undefined : cardVariants}
+                className="group flex flex-col justify-between rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 sm:p-7 shadow-subtle hover:shadow-card-hover hover:border-primary/40 transition-all duration-300"
               >
-                <CardHeader className="space-y-3">
+                <div className="space-y-3.5">
+                  {/* Category & Read Time Row */}
                   <div className="flex items-center justify-between text-xs">
-                    <Link href={`/blog/category/${article.category}`}>
-                      <Badge variant="default" className="hover:opacity-90">
-                        {categoryObj?.shortName || article.category}
-                      </Badge>
-                    </Link>
-                    <span className="flex items-center gap-1 text-muted-foreground text-[11px]">
+                    <span className="font-bold text-primary text-[11px] uppercase tracking-wider">
+                      {categoryObj?.shortName || article.category}
+                    </span>
+                    <span className="flex items-center gap-1 text-muted-foreground text-[11px] font-mono">
                       <Clock className="h-3 w-3" /> {article.readTime}
                     </span>
                   </div>
 
-                  <CardTitle className="text-lg leading-snug">
-                    <Link
-                      href={`/blog/${article.slug}`}
-                      className="group-hover:text-primary transition-colors line-clamp-2"
-                    >
+                  {/* Title (Semantic H3 for Crawlers) */}
+                  <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                    <Link href={`/blog/${article.slug}`}>
                       {article.title}
                     </Link>
-                  </CardTitle>
+                  </h3>
 
-                  <CardDescription className="line-clamp-3 text-xs sm:text-sm">
+                  {/* Excerpt */}
+                  <p className="line-clamp-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {article.excerpt}
-                  </CardDescription>
-                </CardHeader>
+                  </p>
+                </div>
 
-                <CardFooter className="pt-0 flex flex-col gap-3 border-t border-border/50 mt-auto">
-                  <div className="flex items-center justify-between w-full text-[11px] text-muted-foreground pt-3">
-                    <span className="flex items-center gap-1.5">
-                      <User className="h-3 w-3" />
-                      <span>{author?.name || "PlayStoreGuide Team"}</span>
+                {/* Footer Byline & Action */}
+                <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px]">
+                      {author?.name.charAt(0) || "P"}
+                    </div>
+                    <span className="text-[11px] font-medium text-muted-foreground truncate max-w-[120px]">
+                      {author?.name || "PlayStoreGuide"}
                     </span>
-                    <span>Updated {article.updatedAt}</span>
                   </div>
 
-                  <div className="w-full flex justify-end">
-                    <Link
-                      href={`/blog/${article.slug}`}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-                    >
-                      <span>Read playbook</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
+                  <Link
+                    href={`/blog/${article.slug}`}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:translate-x-0.5 transition-transform"
+                  >
+                    <span>Read Guide</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </motion.article>
             );
           })}
-        </div>
+        </motion.div>
       ) : (
         <EmptyState
           title="No articles found"
-          description="We couldn't find any guides matching your search criteria. Try a different search term or reset filters."
+          description={`No articles match your search "${searchQuery}". Try searching for another topic or resetting your category filter.`}
           action={
-            <Button variant="outline" size="sm" onClick={clearFilters}>
-              Clear all filters
-            </Button>
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-4 py-2 text-xs font-bold hover:bg-primary/90 transition-colors shadow-xs cursor-pointer"
+            >
+              Clear All Filters
+            </button>
           }
         />
       )}
 
-      {/* Crawlable Pagination */}
+      {/* Accessible Pagination Controls */}
       {totalPages > 1 && (
         <nav
-          aria-label="Blog Pagination"
-          className="flex items-center justify-center gap-2 pt-8 border-t border-border/60"
+          aria-label="Articles Pagination"
+          className="mt-12 pt-6 border-t border-border/70 flex items-center justify-between"
         >
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          <button
+            type="button"
             disabled={currentPage === 1}
-            className="text-xs"
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-surface-panel dark:bg-card px-4 py-2 text-xs font-bold text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors cursor-pointer shadow-2xs"
           >
-            <ChevronLeft className="h-3.5 w-3.5 mr-1" />
+            <ChevronLeft className="h-4 w-4" />
             <span>Previous</span>
-          </Button>
+          </button>
 
-          <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                type="button"
-                onClick={() => setCurrentPage(page)}
-                className={`h-8 w-8 rounded-md text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  currentPage === page
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-                aria-current={currentPage === page ? "page" : undefined}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
+          <span className="text-xs font-mono font-medium text-muted-foreground">
+            Page {currentPage} of {totalPages}
+          </span>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          <button
+            type="button"
             disabled={currentPage === totalPages}
-            className="text-xs"
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-surface-panel dark:bg-card px-4 py-2 text-xs font-bold text-foreground disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors cursor-pointer shadow-2xs"
           >
             <span>Next</span>
-            <ChevronRight className="h-3.5 w-3.5 ml-1" />
-          </Button>
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </nav>
       )}
     </div>

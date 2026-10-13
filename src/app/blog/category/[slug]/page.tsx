@@ -2,9 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { Clock, ArrowRight, User, ArrowLeft } from "lucide-react";
+import { Clock, ArrowRight, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { constructMetadata, generateBreadcrumbSchema } from "@/lib/seo";
 import { getArticlesByCategory } from "@/data/articles";
@@ -104,58 +103,54 @@ export default async function CategoryArchivePage({ params }: CategoryPageProps)
         </div>
 
         {/* Articles Grid */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {articles.map((article) => {
             const author = getAuthorBySlug(article.authorId);
             return (
-              <Card
+              <article
                 key={article.slug}
-                className="flex flex-col justify-between hover:border-primary/50 hover:shadow-md transition-all group bg-card"
+                className="group flex flex-col justify-between rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 sm:p-7 shadow-subtle hover:shadow-card-hover hover:border-primary/40 transition-all duration-300"
               >
-                <CardHeader className="space-y-3">
+                <div className="space-y-3.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-primary text-[11px] uppercase tracking-wider">
+                    <span className="font-bold text-primary text-[11px] uppercase tracking-wider">
                       {category.shortName}
                     </span>
-                    <span className="flex items-center gap-1 text-muted-foreground text-[11px]">
+                    <span className="flex items-center gap-1 text-muted-foreground text-[11px] font-mono">
                       <Clock className="h-3 w-3" /> {article.readTime}
                     </span>
                   </div>
 
-                  <CardTitle className="text-lg leading-snug">
-                    <Link
-                      href={`/blog/${article.slug}`}
-                      className="group-hover:text-primary transition-colors line-clamp-2"
-                    >
+                  <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                    <Link href={`/blog/${article.slug}`}>
                       {article.title}
                     </Link>
-                  </CardTitle>
+                  </h3>
 
-                  <CardDescription className="line-clamp-3 text-xs sm:text-sm">
+                  <p className="line-clamp-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {article.excerpt}
-                  </CardDescription>
-                </CardHeader>
+                  </p>
+                </div>
 
-                <CardFooter className="pt-0 flex flex-col gap-3 border-t border-border/50 mt-auto">
-                  <div className="flex items-center justify-between w-full text-[11px] text-muted-foreground pt-3">
-                    <span className="flex items-center gap-1.5">
-                      <User className="h-3 w-3" />
-                      <span>{author?.name || "PlayStoreGuide Team"}</span>
+                <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-[10px]">
+                      {author?.name.charAt(0) || "P"}
+                    </div>
+                    <span className="text-[11px] font-medium text-muted-foreground truncate max-w-[120px]">
+                      {author?.name || "PlayStoreGuide"}
                     </span>
-                    <span>Updated {article.updatedAt}</span>
                   </div>
 
-                  <div className="w-full flex justify-end">
-                    <Link
-                      href={`/blog/${article.slug}`}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-                    >
-                      <span>Read guide</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
+                  <Link
+                    href={`/blog/${article.slug}`}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:translate-x-0.5 transition-transform"
+                  >
+                    <span>Read Guide</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </article>
             );
           })}
         </div>

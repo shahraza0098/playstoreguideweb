@@ -2,6 +2,9 @@ import React from "react";
 import type { Metadata } from "next";
 import { ServicePageTemplate, type ServicePageData } from "@/components/services/ServicePageTemplate";
 import { constructMetadata } from "@/lib/seo";
+import { ConsoleDashboardMock } from "@/components/testing/ConsoleDashboardMock";
+import { ClosedTestingTimeline } from "@/components/testing/ClosedTestingTimeline";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 export const metadata: Metadata = constructMetadata({
   title: "Google Play 20 Testers & 14-Day Closed Testing Coordination",
@@ -282,6 +285,48 @@ const pageData: ServicePageData = {
     "Contact our technical advisory team with your app details and target release timeline. We will review your track configuration and coordinate an active tester cohort.",
 };
 
+function ClosedTestingShowcase() {
+  return (
+    <div className="space-y-16 sm:space-y-20">
+      <div>
+        <SectionHeading
+          align="center"
+          eyebrow="Console Telemetry Simulation"
+          title="Developer Console Simulation & 14-Day Progress"
+          description="A demonstration of how a compliant 22–25 tester cohort maintains daily retention, tracks Android Vitals limits, and compiles physical hardware evidence."
+        />
+        <div className="mt-10 max-w-4xl mx-auto">
+          <ConsoleDashboardMock
+            appName="FocusRoutine Android"
+            packageName="com.focusroutine.app"
+            targetSdk="Target SDK 35 (Android 15)"
+            versionName="v1.4.2 (AAB)"
+            activeTesters={23}
+            requiredTesters={20}
+            currentDay={12}
+            totalDays={14}
+            showTabs={true}
+          />
+        </div>
+      </div>
+
+      <div>
+        <ClosedTestingTimeline
+          eyebrow="Step-by-Step Engagement Protocol"
+          title="The 14-Day Closed Testing Execution Roadmap"
+          description="From pre-flight AAB checks to production access questionnaire prep: each milestone is tracked with verifiable evidence."
+          showSelector={true}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function ClosedTestingPage() {
-  return <ServicePageTemplate data={pageData} />;
+  return (
+    <ServicePageTemplate
+      data={pageData}
+      interactiveShowcase={<ClosedTestingShowcase />}
+    />
+  );
 }

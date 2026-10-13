@@ -99,7 +99,12 @@ export interface ServicePageData {
   ctaDescription?: string;
 }
 
-export function ServicePageTemplate({ data }: { data: ServicePageData }) {
+export interface ServicePageTemplateProps {
+  data: ServicePageData;
+  interactiveShowcase?: React.ReactNode;
+}
+
+export function ServicePageTemplate({ data, interactiveShowcase }: ServicePageTemplateProps) {
   const serviceUrl = `/services/${data.slug}`;
 
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -375,42 +380,53 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
         </div>
       </section>
 
-      {/* 6. Step-by-Step Engagement Workflow */}
-      <section className="py-16 sm:py-24 bg-surface-cream/60 dark:bg-muted/15 border-b border-border/80">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="Step-by-Step Process"
-            title="How the Advisory Engagement Unfolds"
-            description="Our structured milestone-driven process ensures clear communication and measurable progress from day one."
-          />
-
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {data.workflow.map((wf) => (
-              <div
-                key={wf.step}
-                className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 shadow-subtle flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-extrabold text-primary/40 font-mono">
-                      {wf.step}
-                    </span>
-                    {wf.duration && (
-                      <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1 font-mono">
-                        <Clock className="h-3 w-3" /> {wf.duration}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-sm font-bold text-foreground">{wf.title}</h3>
-                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-                    {wf.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+      {/* Interactive Showcase Section (Dashboard Illustration & Closed Testing Timeline) */}
+      {interactiveShowcase && (
+        <section className="py-16 sm:py-24 bg-surface-pale-blue/40 dark:bg-muted/10 border-b border-border/80">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            {interactiveShowcase}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* 6. Step-by-Step Engagement Workflow (Rendered if interactiveShowcase is not provided) */}
+      {!interactiveShowcase && (
+        <section className="py-16 sm:py-24 bg-surface-cream/60 dark:bg-muted/15 border-b border-border/80">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+              eyebrow="Step-by-Step Process"
+              title="How the Advisory Engagement Unfolds"
+              description="Our structured milestone-driven process ensures clear communication and measurable progress from day one."
+            />
+
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {data.workflow.map((wf) => (
+                <div
+                  key={wf.step}
+                  className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 shadow-subtle flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-2xl font-extrabold text-primary/40 font-mono">
+                        {wf.step}
+                      </span>
+                      {wf.duration && (
+                        <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1 font-mono">
+                          <Clock className="h-3 w-3" /> {wf.duration}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-sm font-bold text-foreground">{wf.title}</h3>
+                    <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                      {wf.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 7. Prerequisites & Developer Responsibilities */}
       <section className="py-16 sm:py-20 bg-surface-panel dark:bg-background border-b border-border/80">
