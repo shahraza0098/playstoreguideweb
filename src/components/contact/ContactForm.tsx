@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Send, CheckCircle2, AlertCircle, ShieldCheck, Mail, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,13 +12,18 @@ interface ContactFormProps {
   sourceContext?: string;
 }
 
-export function ContactForm({ initialService = "closed-testing", sourceContext }: ContactFormProps) {
+function ContactFormContent({ initialService = "closed-testing", sourceContext }: ContactFormProps) {
+  const searchParams = useSearchParams();
+  const queryService = searchParams.get("service");
+
+  const [customService, setCustomService] = useState<string | null>(null);
+  const activeService = customService ?? (queryService || initialService);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     packageName: "",
     stage: "closed-testing",
-    service: initialService,
     message: sourceContext ? `Inquiry regarding ${sourceContext}: ` : "",
     website: "", // Honeypot field
   });
@@ -45,6 +51,7 @@ export function ContactForm({ initialService = "closed-testing", sourceContext }
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          service: activeService,
           renderedAt: renderedAtRef.current,
         }),
       });
@@ -76,9 +83,9 @@ export function ContactForm({ initialService = "closed-testing", sourceContext }
   };
 
   // Pre-filled mailto fallback URL
-  const mailtoSubject = encodeURIComponent(`Consultation Inquiry: [${formData.service}] from ${formData.name || "Developer"}`);
+  const mailtoSubject = encodeURIComponent(`Consultation Inquiry: [${activeService}] from ${formData.name || "Developer"}`);
   const mailtoBody = encodeURIComponent(
-    `Hello PlayStoreGuide Team,\n\nName: ${formData.name}\nEmail: ${formData.email}\nApp Stage: ${formData.stage}\nPackage ID: ${formData.packageName || "N/A"}\n\nProject Details:\n${formData.message}\n`
+    `Hello PlayStoreGuide Team,\n\nName: ${formData.name}\nEmail: ${formData.email}\nApp Stage: ${formData.stage}\nPackage ID: ${formData.packageName || "N/A"}\nService: ${activeService}\n\nProject Details:\n${formData.message}\n`
   );
   const mailtoUrl = `mailto:support@playstoreguide.com?subject=${mailtoSubject}&body=${mailtoBody}`;
 
@@ -100,12 +107,12 @@ export function ContactForm({ initialService = "closed-testing", sourceContext }
             size="sm"
             onClick={() => {
               setSubmissionState({ status: "idle" });
+              setCustomService(null);
               setFormData({
                 name: "",
                 email: "",
                 packageName: "",
                 stage: "closed-testing",
-                service: initialService,
                 message: "",
                 website: "",
               });
@@ -244,8 +251,8 @@ export function ContactForm({ initialService = "closed-testing", sourceContext }
         <select
           id="service"
           required
-          value={formData.service}
-          onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+          value={activeService}
+          onChange={(e) => setCustomService(e.target.value)}
           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <option value="closed-testing">Closed Testing Coordination (20 Testers / 14 Days)</option>
@@ -297,3 +304,18 @@ export function ContactForm({ initialService = "closed-testing", sourceContext }
     </form>
   );
 }
+
+export function ContactForm(props: ContactFormProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-xs text-muted-foreground animate-pulse">
+          Loading publishing project intake form...
+        </div>
+      }
+    >
+      <ContactFormContent {...props} />
+    </Suspense>
+  );
+}
+

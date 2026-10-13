@@ -46,10 +46,10 @@ export default function RootLayout({
         <JsonLd data={orgSchema} />
         <JsonLd data={websiteSchema} />
       </head>
-      <body className="min-h-full flex flex-col bg-white text-zinc-900 selection:bg-emerald-500 selection:text-white dark:bg-zinc-950 dark:text-zinc-50">
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/15 selection:text-foreground antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-emerald-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
         >
           Skip to main content
         </a>

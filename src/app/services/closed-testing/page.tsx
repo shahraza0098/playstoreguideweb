@@ -25,20 +25,20 @@ const pageData: ServicePageData = {
   subtitle:
     "Coordinate real, active Android testers on physical hardware to fulfill Google's mandatory 14-day closed testing requirement. Transparent tracking, active telemetry, qualitative feedback, and zero bot emulators.",
   snapshot: {
-    targetAudience: "Personal Developer Accounts",
+    targetAudience: "Personal Developer Accounts (Post-Nov 13, 2023)",
     engagementModel: "14-Day Cohort Coordination",
     primaryFocus: "20+ Opt-In Testers & Feedback Logs",
-    googlePolicyRule: "Mandatory for accounts created after Nov 13, 2023",
+    googlePolicyRule: "Mandatory for personal accounts post-Nov 13, 2023 (Org accounts exempt)",
   },
   problem: {
     title: "Why Satisfying Google's 20-Tester Rule Is Difficult for Solo Developers",
     description:
-      "Since November 2023, Google has mandated that personal developer accounts must recruit at least 20 testers opted in for 14 continuous days before applying for production access. Satisfying this quota without an active developer network presents serious compliance hazards.",
+      "Under Google Play Console policy enacted on November 13, 2023, developers with personal accounts created on or after that date must maintain at least 20 testers opted into closed testing for 14 continuous days before becoming eligible to request production access. Organization accounts verified with a D-U-N-S number are exempt from this rule. For indie and solo developers, satisfying this mandatory quota safely without an established tester network presents serious operational hazards.",
     cards: [
       {
         title: "The 14-Day Counter Reset Risk",
         description:
-          "If even one tester uninstalls or opts out and your active count drops below 20 for even a few hours, Google's automated counter resets to Day 1. We recruit 22 to 25 testers to maintain an active safety buffer.",
+          "If even one tester uninstalls or opts out and your active count dips below Google's 20-tester minimum, the Play Console timer resets to Day 1. Google requires a minimum of 20 testers; we facilitate 22 to 25 testers to maintain an active safety buffer.",
       },
       {
         title: "The Inactive Tester / Bot Detection Trap",
@@ -48,7 +48,7 @@ const pageData: ServicePageData = {
       {
         title: "Missing Qualitative Feedback Logs",
         description:
-          "Meeting the 14-day threshold is not an automatic pass. Google requires substantive answers regarding user feedback, bug resolutions, and iteration history in the production access review questionnaire.",
+          "Meeting the 14-day threshold is an eligibility prerequisite, not an automatic guarantee of approval. Google requires substantive answers regarding user feedback, bug resolutions, and iteration history in the production access review questionnaire.",
       },
     ],
   },
@@ -56,12 +56,12 @@ const pageData: ServicePageData = {
     {
       persona: "Solo Android Developers",
       description:
-        "Developers with personal Play Console accounts created after November 13, 2023 who need to fulfill the mandatory 20-tester requirement.",
+        "Developers with personal Play Console accounts created on or after November 13, 2023 who are subject to the mandatory 20-tester closed track requirement.",
     },
     {
       persona: "Indie Studios & Bootstrappers",
       description:
-        "Teams without a large internal QA team or personal tester network seeking genuine device variety across Android versions.",
+        "Teams without a large internal QA team or private tester network seeking genuine device variety across Android 11 to Android 15.",
     },
     {
       persona: "Developers Needing Real User Feedback",
@@ -76,9 +76,9 @@ const pageData: ServicePageData = {
   ],
   deliverables: [
     {
-      title: "20+ Verified Real Android Testers (22-25 Buffer)",
+      title: "20+ Verified Real Android Testers (22–25 Safety Buffer)",
       description:
-        "Recruitment of real individuals with physical Android devices running Android 11 through Android 15. Zero automated bot farms or virtualized emulators.",
+        "Recruitment of real individuals with physical Android devices running Android 11 through Android 15. Google mandates 20 testers minimum; we provide 22 to 25 to protect against drop-offs. Zero automated bot farms or virtual emulators.",
     },
     {
       title: "14 Continuous Days of Opt-In Retention Monitoring",

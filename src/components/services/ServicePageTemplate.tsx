@@ -9,10 +9,11 @@ import {
   ChevronDown,
   ShieldCheck,
   CheckCircle2,
+  Sparkles,
+  Info,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -121,9 +122,17 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
       <JsonLd data={serviceSchema} />
       <JsonLd data={faqSchema} />
 
-      {/* 1. Breadcrumbs & 2. Hero with Unique H1 */}
-      <section className="border-b border-border bg-card/50 py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* 1. Breadcrumbs & 2. Hero Section */}
+      <section className="relative overflow-hidden bg-surface-cream/80 dark:bg-card/40 border-b border-border/80 pt-8 pb-16 sm:pt-12 sm:pb-20">
+        <div
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`,
+            backgroundSize: "24px 24px",
+          }}
+        />
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           {/* Breadcrumb Navigation */}
           <nav aria-label="Breadcrumb" className="mb-6 text-xs text-muted-foreground">
             <ol className="flex items-center gap-1.5 flex-wrap">
@@ -145,9 +154,13 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             </ol>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-8 space-y-4">
-              <Badge variant="default" className="py-1 px-3 text-xs font-semibold">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <div className="lg:col-span-8 space-y-5">
+              <Badge
+                variant="outline"
+                className="py-1 px-3 text-xs font-semibold rounded-full border-primary/30 bg-surface-panel/80 dark:bg-card/80 text-foreground"
+              >
+                <Sparkles className="h-3 w-3 text-primary mr-1" />
                 {data.eyebrow}
               </Badge>
 
@@ -159,18 +172,18 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                 {data.subtitle}
               </p>
 
-              <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                 <Link
                   href="/contact"
                   className={buttonVariants({
                     variant: "default",
                     size: "lg",
                     className:
-                      "bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-base font-semibold shadow-sm w-full sm:w-auto",
+                      "rounded-full bg-primary px-8 py-6 text-sm font-semibold text-primary-foreground shadow-card hover:bg-primary/90 flex items-center justify-center gap-2",
                   })}
                 >
                   <span>Request Service Consultation</span>
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
 
                 <Link
@@ -178,21 +191,29 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   className={buttonVariants({
                     variant: "outline",
                     size: "lg",
-                    className: "border-border px-6 py-6 text-base font-medium w-full sm:w-auto",
+                    className:
+                      "rounded-full border-border bg-surface-panel dark:bg-card px-6 py-6 text-sm font-medium text-foreground hover:bg-muted flex items-center justify-center gap-2",
                   })}
                 >
-                  <span>View Engagement Model</span>
+                  <span>View Engagement Scope</span>
                 </Link>
               </div>
             </div>
 
             {/* Quick Service Snapshot Box */}
-            <div className="lg:col-span-4 rounded-xl border border-border bg-card p-6 shadow-sm space-y-3.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-primary block">
-                Service Overview
-              </span>
+            <div className="lg:col-span-4 rounded-3xl border border-border/90 bg-surface-panel dark:bg-card p-6 sm:p-7 shadow-floating space-y-4">
+              <div className="flex items-center justify-between border-b border-border/70 pb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  Service Snapshot
+                </span>
+                <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  Active Track
+                </span>
+              </div>
+
               <div className="space-y-3 text-xs divide-y divide-border/60">
-                <div className="pt-1.5 flex justify-between gap-2">
+                <div className="pt-1 flex justify-between gap-2">
                   <span className="font-medium text-muted-foreground">Target Audience:</span>
                   <span className="font-semibold text-foreground text-right">
                     {data.snapshot.targetAudience}
@@ -217,13 +238,18 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   </span>
                 </div>
               </div>
+
+              <div className="pt-3 border-t border-border/60 text-[11px] text-muted-foreground flex items-center gap-1.5">
+                <Info className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span>Zero account credential sharing required.</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. Concise Explanation of the Problem Solved */}
-      <section className="py-14 sm:py-18 bg-muted/30 border-b border-border">
+      {/* 3. The Technical Problem Solved */}
+      <section className="py-16 sm:py-24 bg-surface-panel dark:bg-background border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="The Technical Bottleneck"
@@ -231,11 +257,14 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             description={data.problem.description}
           />
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {data.problem.cards.map((card, idx) => (
-              <Card key={idx} className="p-6 bg-card border-border flex flex-col justify-between">
+              <div
+                key={idx}
+                className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-cream/50 dark:bg-card p-6 sm:p-7 shadow-subtle hover:shadow-card hover:border-primary/40 transition-all flex flex-col justify-between"
+              >
                 <div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-800 dark:bg-teal-950 dark:text-teal-300 font-mono text-xs font-bold mb-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20 font-mono text-xs font-bold mb-4">
                     0{idx + 1}
                   </div>
                   <h3 className="text-base font-bold text-foreground">{card.title}</h3>
@@ -243,14 +272,14 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                     {card.description}
                   </p>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. Who the Service Is For */}
-      <section className="py-14 sm:py-18 bg-card border-b border-border">
+      {/* 4. Target Audience Personas */}
+      <section className="py-16 sm:py-20 bg-surface-pale-blue/50 dark:bg-muted/15 border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Target Audience"
@@ -258,40 +287,45 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             description="Our structured advisory is targeted at developers facing specific technical criteria, account hurdles, or policy deadlines."
           />
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {data.whoIsItFor.map((item, idx) => (
-              <Card key={idx} className="p-5 border-border bg-card hover:border-primary/40 transition-colors">
-                <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+              <div
+                key={idx}
+                className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 shadow-subtle hover:shadow-card hover:border-primary/40 transition-all"
+              >
+                <div className="flex items-center gap-2 mb-2.5">
+                  <CheckCircle2 className="h-4.5 w-4.5 text-primary shrink-0" />
                   <h3 className="text-sm font-bold text-foreground">{item.persona}</h3>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">{item.description}</p>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 5. Detailed List of Deliverables and Exclusions */}
-      <section className="py-14 sm:py-20 bg-muted/30 border-b border-border">
+      {/* 5. Detailed Scope: Deliverables & Transparent Exclusions */}
+      <section className="py-16 sm:py-24 bg-surface-panel dark:bg-background border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Scope of Work"
-            title="Deliverables &amp; Transparent Exclusions"
-            description="We outline exact inclusions and transparent boundaries so developers understand exactly what to expect from our engagement."
+            title="Included Deliverables &amp; Transparent Exclusions"
+            description="We establish exact deliverables and clear boundaries so developers know precisely what to expect from our advisory engagement."
           />
 
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            {/* Deliverables */}
-            <div className="rounded-xl border border-emerald-500/30 bg-card p-6 shadow-sm space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                    <Check className="h-3.5 w-3.5" />
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Deliverables Panel */}
+            <div className="rounded-3xl border border-emerald-500/30 bg-surface-panel dark:bg-card p-6 sm:p-8 shadow-card space-y-5">
+              <div className="flex items-center justify-between border-b border-border/70 pb-3.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+                    <Check className="h-4 w-4" />
                   </div>
                   <h3 className="text-base font-bold text-foreground">Included Deliverables</h3>
                 </div>
-                <Badge variant="success">Included</Badge>
+                <Badge variant="success" className="rounded-full px-2.5 py-0.5 text-[10px] font-bold">
+                  INCLUDED
+                </Badge>
               </div>
 
               <div className="space-y-4">
@@ -299,7 +333,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   <div key={idx} className="flex items-start gap-3">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs font-bold text-foreground">{del.title}</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-foreground">{del.title}</h4>
                       <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                         {del.description}
                       </p>
@@ -309,16 +343,18 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
               </div>
             </div>
 
-            {/* Exclusions */}
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-card p-6 shadow-sm space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                    <X className="h-3.5 w-3.5" />
+            {/* Exclusions Panel */}
+            <div className="rounded-3xl border border-border/80 bg-surface-cream/50 dark:bg-card p-6 sm:p-8 shadow-subtle space-y-5">
+              <div className="flex items-center justify-between border-b border-border/70 pb-3.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                    <X className="h-4 w-4" />
                   </div>
                   <h3 className="text-base font-bold text-foreground">Explicit Exclusions</h3>
                 </div>
-                <Badge variant="outline">Not Included</Badge>
+                <Badge variant="outline" className="rounded-full px-2.5 py-0.5 text-[10px] font-bold">
+                  NOT INCLUDED
+                </Badge>
               </div>
 
               <div className="space-y-4">
@@ -326,7 +362,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   <div key={idx} className="flex items-start gap-3">
                     <X className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs font-bold text-foreground">{exc.title}</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-foreground">{exc.title}</h4>
                       <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
                         {exc.description}
                       </p>
@@ -339,25 +375,28 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
         </div>
       </section>
 
-      {/* 6. Step-by-Step Workflow */}
-      <section className="py-14 sm:py-20 bg-card border-b border-border">
+      {/* 6. Step-by-Step Engagement Workflow */}
+      <section className="py-16 sm:py-24 bg-surface-cream/60 dark:bg-muted/15 border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Step-by-Step Process"
-            title="How the Engagement Unfolds"
+            title="How the Advisory Engagement Unfolds"
             description="Our structured milestone-driven process ensures clear communication and measurable progress from day one."
           />
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {data.workflow.map((wf) => (
-              <Card key={wf.step} className="p-6 bg-card border-border flex flex-col justify-between">
+              <div
+                key={wf.step}
+                className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 shadow-subtle flex flex-col justify-between"
+              >
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-2xl font-extrabold text-primary/40 font-mono">
                       {wf.step}
                     </span>
                     {wf.duration && (
-                      <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1">
+                      <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1 font-mono">
                         <Clock className="h-3 w-3" /> {wf.duration}
                       </span>
                     )}
@@ -367,30 +406,30 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                     {wf.description}
                   </p>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 7. Customer Responsibilities and Prerequisites */}
-      <section className="py-14 sm:py-18 bg-muted/30 border-b border-border">
+      {/* 7. Prerequisites & Developer Responsibilities */}
+      <section className="py-16 sm:py-20 bg-surface-panel dark:bg-background border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="Client Responsibilities"
-            title="Prerequisites &amp; What You Need to Provide"
-            description="To maintain complete security and ownership of your developer account, you will provide specific inputs while retaining administrative control."
+            eyebrow="Prerequisites"
+            title="What You Need to Provide"
+            description="To maintain complete security and ownership of your developer account, you provide specific inputs while retaining administrative control."
           />
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.prerequisites.map((prereq, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-border bg-card p-5 space-y-2 shadow-xs"
+                className="rounded-2xl border border-border/80 bg-surface-cream/40 dark:bg-card p-5 space-y-2 shadow-2xs"
               >
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
-                  <h3 className="text-xs font-bold text-foreground">{prereq.title}</h3>
+                  <h3 className="text-xs sm:text-sm font-bold text-foreground">{prereq.title}</h3>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">{prereq.description}</p>
               </div>
@@ -400,7 +439,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
       </section>
 
       {/* 8. Estimated Timeline & Milestones */}
-      <section className="py-14 sm:py-18 bg-card border-b border-border">
+      <section className="py-16 sm:py-20 bg-surface-pale-blue/40 dark:bg-muted/15 border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Timeline Estimates"
@@ -408,34 +447,37 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             description={data.timeline.description}
           />
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
             {data.timeline.milestones.map((m, idx) => (
-              <Card key={idx} className="p-6 border-border bg-card">
-                <span className="text-xs font-bold uppercase tracking-wider text-primary block">
+              <div
+                key={idx}
+                className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 shadow-subtle"
+              >
+                <span className="text-xs font-bold uppercase tracking-wider text-primary font-mono block">
                   {m.estimate}
                 </span>
                 <h3 className="mt-2 text-base font-bold text-foreground">{m.name}</h3>
                 <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{m.detail}</p>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 9. Transparent Pricing or Enquiry-Based Pricing Explanation */}
-      <section id="pricing" className="py-14 sm:py-20 bg-muted/40 border-b border-border">
+      {/* 9. Pricing & Scope Engagement Card */}
+      <section id="pricing" className="py-16 sm:py-24 bg-surface-pale-lavender/40 dark:bg-card/40 border-b border-border/80">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <Card className="p-8 sm:p-12 border-border bg-card shadow-sm text-center sm:text-left">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border pb-6">
+          <div className="rounded-3xl border border-border/90 bg-surface-panel dark:bg-card p-8 sm:p-12 shadow-floating text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border/70 pb-6">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                  Pricing &amp; Engagement
+                  Pricing &amp; Scope
                 </span>
                 <h2 className="mt-1 text-2xl sm:text-3xl font-extrabold text-foreground">
                   {data.pricing.headline}
                 </h2>
               </div>
-              <Badge variant="secondary" className="text-xs py-1 px-3 shrink-0">
+              <Badge variant="secondary" className="text-xs py-1 px-3.5 rounded-full shrink-0">
                 {data.pricing.model}
               </Badge>
             </div>
@@ -444,17 +486,17 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
               {data.pricing.description}
             </p>
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-left">
               {data.pricing.highlights.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2.5 text-xs text-foreground">
+                <div key={idx} className="flex items-start gap-2.5 text-xs text-foreground font-medium">
                   <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                   <span>{item}</span>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 p-4 rounded-lg bg-muted/60 border border-border/60 text-xs text-muted-foreground text-left">
-              <span className="font-semibold text-foreground">Policy Note: </span>
+            <div className="mt-6 p-4 rounded-2xl bg-surface-cream/80 dark:bg-muted/40 border border-border/60 text-xs text-muted-foreground text-left">
+              <span className="font-semibold text-foreground">Policy Standard: </span>
               {data.pricing.note}
             </div>
 
@@ -465,21 +507,21 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   variant: "default",
                   size: "lg",
                   className:
-                    "bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-sm font-semibold shadow-sm w-full sm:w-auto",
+                    "rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-sm font-semibold shadow-card w-full sm:w-auto",
                 })}
               >
                 Inquire About Availability &amp; Scope
               </Link>
               <span className="text-xs text-muted-foreground">
-                Typically quoted within 24 hours of app bundle review.
+                Typically quoted within 12–24 business hours.
               </span>
             </div>
-          </Card>
+          </div>
         </div>
       </section>
 
       {/* 10. Relevant Service FAQs */}
-      <section className="py-14 sm:py-20 bg-card border-b border-border">
+      <section className="py-16 sm:py-24 bg-surface-panel dark:bg-background border-b border-border/80">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             align="center"
@@ -488,14 +530,14 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             description="Transparent, direct answers regarding deliverables, limitations, and Google review evaluation."
           />
 
-          <div className="mt-10 space-y-4">
+          <div className="mt-12 space-y-4">
             {data.faqs.map((faq, idx) => (
               <details
                 key={idx}
-                className="group rounded-xl border border-border bg-card p-5 sm:p-6 transition-all hover:border-border/80"
+                className="group rounded-2xl border border-border/80 bg-surface-panel dark:bg-card p-5 sm:p-6 transition-all hover:border-primary/40 shadow-2xs"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-md">
-                  <span className="text-sm sm:text-base pr-4">
+                <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring rounded-md">
+                  <span className="text-sm sm:text-base pr-4 leading-snug">
                     {idx + 1}. {faq.question}
                   </span>
                   <ChevronDown className="h-5 w-5 text-muted-foreground transition-transform duration-200 group-open:rotate-180 shrink-0" />
@@ -509,8 +551,8 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
         </div>
       </section>
 
-      {/* 11. Links to Official Google Documentation */}
-      <section className="py-14 sm:py-18 bg-muted/30 border-b border-border">
+      {/* 11. Official Google Documentation References */}
+      <section className="py-16 sm:py-20 bg-surface-cream/50 dark:bg-card/40 border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Official Documentation"
@@ -518,12 +560,15 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             description="We encourage all developers to review official Google Play policies and developer distribution rules directly."
           />
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.officialDocs.map((doc, idx) => (
-              <Card key={idx} className="p-5 border-border bg-card flex flex-col justify-between">
+              <div
+                key={idx}
+                className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 shadow-subtle flex flex-col justify-between"
+              >
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-bold text-primary uppercase tracking-wider">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
                       Official Reference
                     </span>
                     <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
@@ -533,7 +578,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                     {doc.description}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-border/50">
+                <div className="mt-5 pt-3 border-t border-border/50">
                   <a
                     href={doc.url}
                     target="_blank"
@@ -544,14 +589,14 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 12. Related Guides and Contextual Internal Links */}
-      <section className="py-14 sm:py-20 bg-card border-b border-border">
+      {/* 12. Related Guides */}
+      <section className="py-16 sm:py-24 bg-surface-panel dark:bg-background border-b border-border/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
             <SectionHeading
@@ -567,13 +612,18 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {data.relatedGuides.map((guide) => (
-              <Card key={guide.slug} className="p-6 border-border bg-card flex flex-col justify-between hover:border-primary/40 transition-colors">
+              <div
+                key={guide.slug}
+                className="rounded-2xl sm:rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 shadow-subtle flex flex-col justify-between hover:shadow-card hover:border-primary/40 transition-all"
+              >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs">
-                    <Badge variant="default">{guide.category}</Badge>
-                    <span className="flex items-center gap-1 text-muted-foreground text-[11px]">
+                    <Badge variant="secondary" className="text-[10px] uppercase font-semibold">
+                      {guide.category}
+                    </Badge>
+                    <span className="flex items-center gap-1 text-muted-foreground text-[11px] font-mono">
                       <Clock className="h-3 w-3" /> {guide.readTime}
                     </span>
                   </div>
@@ -587,7 +637,7 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-border/50">
+                <div className="mt-5 pt-3 border-t border-border/50">
                   <Link
                     href={`/blog/${guide.slug}`}
                     className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
@@ -596,31 +646,31 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                     <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 13. Clear Enquiry CTA */}
-      <section className="py-14 sm:py-20 bg-muted/40 text-center">
+      {/* 13. Final Service Enquiry CTA */}
+      <section className="py-16 sm:py-24 bg-surface-pale-blue/70 dark:bg-card/40 text-center">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-border bg-card p-8 sm:p-12 shadow-sm space-y-4">
+          <div className="rounded-3xl border border-border/90 bg-surface-panel dark:bg-card p-8 sm:p-14 shadow-floating space-y-4">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">
-              {data.ctaHeadline || "Ready to Get Started?"}
+              {data.ctaHeadline || "Ready to Prepare for Submission?"}
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
               {data.ctaDescription ||
-                "Contact our technical advisory team to discuss your app's timeline and verify readiness before your next submission."}
+                "Contact our technical advisory team to verify readiness before your next submission to Google Play Console."}
             </p>
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3.5">
               <Link
                 href="/contact"
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
                   className:
-                    "bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-base font-semibold shadow-sm w-full sm:w-auto",
+                    "rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-sm font-semibold shadow-card w-full sm:w-auto",
                 })}
               >
                 Inquire About This Service
@@ -630,7 +680,8 @@ export function ServicePageTemplate({ data }: { data: ServicePageData }) {
                 className={buttonVariants({
                   variant: "outline",
                   size: "lg",
-                  className: "border-border px-6 py-6 text-base font-medium w-full sm:w-auto",
+                  className:
+                    "rounded-full border-border bg-surface-panel dark:bg-card px-7 py-6 text-sm font-medium w-full sm:w-auto hover:bg-muted",
                 })}
               >
                 Explore Other Services

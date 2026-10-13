@@ -14,62 +14,82 @@ import {
   Sparkles,
   Layers,
   ArrowRight,
+  BadgeDollarSign,
+  Compass,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "motion/react";
 
 const services = [
   {
     title: "Closed Testing (20 Testers / 14 Days)",
     href: "/services/closed-testing",
-    desc: "Coordinated opt-in cohort & qualitative feedback logs.",
+    desc: "Verified human Android testers with continuous 14-day cohort tracking.",
     icon: Users,
+    badge: "Mandatory",
   },
   {
     title: "Account Setup & D-U-N-S",
     href: "/services/play-console-account-setup",
-    desc: "Personal & organization Console identity verification.",
+    desc: "Organization & personal Play Console developer identity verification.",
     icon: ShieldCheck,
+    badge: "Identity",
   },
   {
     title: "Production Access Advisory",
     href: "/services/production-access-guidance",
-    desc: "Questionnaire response review & reviewer readiness prep.",
+    desc: "Review questionnaire strategy, testing telemetry synthesis & Vitals check.",
     icon: CheckCircle2,
+    badge: "Crucial Step",
   },
   {
     title: "App Publishing & Compliance",
     href: "/services/app-publishing-assistance",
-    desc: "Target SDK 34/35, Data Safety form & credentials audit.",
+    desc: "Target SDK 34/35, Data Safety declaration & reviewer credential audit.",
     icon: Layers,
+    badge: "Pre-Launch",
   },
   {
     title: "Rejection Troubleshooting",
     href: "/services/app-rejection-help",
-    desc: "Root-cause diagnostics, policy remediation & appeals.",
+    desc: "Root-cause diagnostics, policy violation remediation & appeal letters.",
     icon: AlertTriangle,
+    badge: "Recovery",
   },
   {
     title: "Store Listing Optimization (ASO)",
     href: "/services/play-store-aso",
-    desc: "Policy-safe metadata structuring & conversion assets.",
+    desc: "Policy-safe metadata structuring, keyword targeting & conversion assets.",
     icon: Sparkles,
+    badge: "Growth",
   },
 ];
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const [prevPathname, setPrevPathname] = useState(pathname);
 
+  const [prevPathname, setPrevPathname] = useState(pathname);
   if (prevPathname !== pathname) {
     setPrevPathname(pathname);
     setMobileMenuOpen(false);
     setServicesDropdownOpen(false);
   }
 
-  // Close dropdown on Escape key or outside click
+  // Track scroll state for subtle elevation change
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Keyboard and outside-click handling
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -95,7 +115,7 @@ export function Navbar() {
     };
   }, []);
 
-  // Prevent body scrolling when mobile drawer is open
+  // Body scroll locking when mobile drawer is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -107,29 +127,47 @@ export function Navbar() {
     };
   }, [mobileMenuOpen]);
 
+  const isServicesActive = pathname.startsWith("/services");
+  const isPricingActive = pathname === "/pricing";
+  const isToolsActive = pathname.startsWith("/tools");
+  const isBlogActive = pathname.startsWith("/blog") || pathname.startsWith("/guides");
+  const isAboutActive = pathname === "/about";
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/95 backdrop-blur-md transition-colors">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand Logo */}
+    <header className="sticky top-3 sm:top-4 z-50 w-full px-3.5 sm:px-6 lg:px-8 max-w-7xl mx-auto pointer-events-none transition-all duration-300">
+      {/* Floating Pill Bar */}
+      <div
+        className={`pointer-events-auto mx-auto flex items-center justify-between h-14 sm:h-15 px-3 sm:px-4 rounded-full border transition-all duration-300 ${
+          isScrolled
+            ? "bg-surface-panel/92 dark:bg-card/92 backdrop-blur-md border-border shadow-floating"
+            : "bg-surface-panel/80 dark:bg-card/80 backdrop-blur-md border-border/80 shadow-card hover:border-border"
+        }`}
+      >
+        {/* Brand Logo & Pill Indicator */}
         <Link
           href="/"
-          className="group flex items-center gap-2.5 transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-1 -ml-1"
+          className="group flex items-center gap-2.5 rounded-full p-1 -ml-1 pr-3 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="PlayStoreGuide Homepage"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm ring-1 ring-border">
-            <ShieldCheck className="h-5 w-5" />
+          <div className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm transition-transform group-hover:scale-105">
+            <ShieldCheck className="h-4.5 w-4.5" />
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-extrabold tracking-tight text-foreground leading-none">
-              PlayStore<span className="text-primary">Guide</span>
-            </span>
-            <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase mt-0.5">
-              Developer Resource
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm sm:text-base font-extrabold tracking-tight text-foreground leading-none">
+                PlayStore<span className="text-primary">Guide</span>
+              </span>
+              <span className="hidden xl:inline-flex items-center rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+                Verified
+              </span>
+            </div>
+            <span className="text-[10px] font-medium tracking-wider text-muted-foreground uppercase mt-0.5 hidden xs:block">
+              Android Publishing
             </span>
           </div>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation Links */}
         <nav
           className="hidden md:flex items-center gap-1 text-sm font-medium"
           aria-label="Main Navigation"
@@ -144,211 +182,264 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                pathname.startsWith("/services")
-                  ? "text-primary font-semibold"
-                  : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
+              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                isServicesActive
+                  ? "text-primary font-semibold bg-primary/10 dark:bg-primary/20"
+                  : "text-foreground/80 hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
               }`}
               aria-expanded={servicesDropdownOpen}
               aria-haspopup="true"
-              aria-controls="services-menu"
+              aria-controls="desktop-services-flyout"
             >
               <span>Services</span>
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
+                className={`h-3.5 w-3.5 transition-transform duration-200 opacity-70 ${
                   servicesDropdownOpen ? "rotate-180" : ""
                 }`}
                 aria-hidden="true"
               />
             </button>
 
-            {/* Dropdown Panel */}
-            {servicesDropdownOpen && (
-              <div
-                id="services-menu"
-                className="absolute left-0 top-full pt-1.5 w-[380px] origin-top-left transition-all z-50"
-              >
-                <div className="rounded-xl border border-border bg-card p-2 shadow-xl ring-1 ring-black/5 dark:ring-white/10">
-                  <div className="flex items-center justify-between px-3 py-2 border-b border-border/60">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Publishing Advisory
-                    </span>
-                    <Link
-                      href="/services"
-                      className="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1"
-                    >
-                      All Services <ArrowRight className="h-3 w-3" />
-                    </Link>
-                  </div>
+            {/* Services Dropdown Flyout Panel */}
+            <AnimatePresence>
+              {servicesDropdownOpen && (
+                <motion.div
+                  id="desktop-services-flyout"
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[440px] z-50 pointer-events-auto"
+                >
+                  <div className="rounded-2xl border border-border bg-surface-panel dark:bg-card p-3 shadow-floating ring-1 ring-black/5 dark:ring-white/10">
+                    <div className="flex items-center justify-between px-3 py-2 border-b border-border/60">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                        <Compass className="h-3.5 w-3.5 text-primary" />
+                        Publishing Advisory Tracks
+                      </span>
+                      <Link
+                        href="/services"
+                        className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1"
+                      >
+                        All Services <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
 
-                  <div className="grid gap-1 pt-1.5">
-                    {services.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className="flex items-start gap-3 rounded-lg p-2.5 transition-colors hover:bg-muted/70 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        >
-                          <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                            <Icon className="h-4 w-4" />
-                          </div>
-                          <div>
-                            <div className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
-                              {item.title}
+                    <div className="grid gap-1 pt-2">
+                      {services.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className="flex items-start gap-3 rounded-xl p-2.5 transition-all hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <div className="mt-0.5 flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-surface-cream text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors border border-border/60">
+                              <Icon className="h-4 w-4" />
                             </div>
-                            <div className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
-                              {item.desc}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
+                                  {item.title}
+                                </span>
+                                <span className="text-[9px] font-semibold text-muted-foreground uppercase bg-muted/60 px-1.5 py-0.5 rounded">
+                                  {item.badge}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
+                                {item.desc}
+                              </p>
                             </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                          </Link>
+                        );
+                      })}
+                    </div>
+
+                    <div className="mt-2 pt-2 border-t border-border/60 flex items-center justify-between px-3 text-[11px] text-muted-foreground">
+                      <span>Have custom launch requirements?</span>
+                      <Link
+                        href="/pricing"
+                        className="font-semibold text-foreground hover:text-primary flex items-center gap-1"
+                      >
+                        <BadgeDollarSign className="h-3.5 w-3.5 text-primary" />
+                        View Pricing
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <Link
-            href="/blog"
-            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-              pathname.startsWith("/blog") || pathname.startsWith("/guides")
-                ? "text-primary font-semibold"
-                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
+            href="/pricing"
+            className={`px-3 py-1.5 rounded-full text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              isPricingActive
+                ? "text-primary font-semibold bg-primary/10 dark:bg-primary/20"
+                : "text-foreground/80 hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
             }`}
           >
-            Blog
+            Pricing
           </Link>
 
           <Link
             href="/tools"
-            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-              pathname.startsWith("/tools")
-                ? "text-primary font-semibold"
-                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
+            className={`px-3 py-1.5 rounded-full text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              isToolsActive
+                ? "text-primary font-semibold bg-primary/10 dark:bg-primary/20"
+                : "text-foreground/80 hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
             }`}
           >
             Tools
           </Link>
 
           <Link
-            href="/resources"
-            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-              pathname === "/resources"
-                ? "text-primary font-semibold"
-                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
+            href="/blog"
+            className={`px-3 py-1.5 rounded-full text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              isBlogActive
+                ? "text-primary font-semibold bg-primary/10 dark:bg-primary/20"
+                : "text-foreground/80 hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
             }`}
           >
-            Resources
+            Blog
           </Link>
 
           <Link
             href="/about"
-            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-              pathname === "/about"
-                ? "text-primary font-semibold"
-                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
+            className={`px-3 py-1.5 rounded-full text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              isAboutActive
+                ? "text-primary font-semibold bg-primary/10 dark:bg-primary/20"
+                : "text-foreground/80 hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
             }`}
           >
             About
           </Link>
         </nav>
 
-        {/* Primary Contact CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link href="/contact">
-            <Button
-              size="sm"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-4 shadow-sm"
-            >
-              Enquire Now
-            </Button>
+        {/* Action Controls & Primary CTA */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/contact"
+            className="hidden sm:inline-flex items-center justify-center rounded-full bg-primary px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-all hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-95"
+          >
+            <span>Get Started</span>
+            <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
           </Link>
-        </div>
 
-        {/* Mobile menu button */}
-        <div className="flex md:hidden">
+          {/* Mobile menu trigger */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="rounded-lg p-2 text-foreground/80 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex md:hidden h-9 w-9 items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-black/[0.05] dark:hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation"
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open navigation menu"}
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </button>
         </div>
       </div>
 
-      {/* Accessible Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div
-          id="mobile-navigation"
-          className="md:hidden border-b border-border bg-background px-4 pt-3 pb-6 animate-in fade-in-20 duration-150"
-        >
-          <div className="flex flex-col space-y-4">
-            <div>
-              <div className="px-2 py-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Services
-              </div>
-              <div className="grid grid-cols-1 gap-1.5 pl-2 pt-1">
-                {services.map((item) => (
+      {/* Mobile Drawer Navigation */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            id="mobile-navigation"
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="pointer-events-auto md:hidden mt-2 rounded-3xl border border-border bg-surface-panel/95 dark:bg-card/95 backdrop-blur-xl p-5 shadow-floating"
+          >
+            <div className="flex flex-col space-y-4">
+              {/* Services section */}
+              <div>
+                <div className="flex items-center justify-between px-2 py-1 border-b border-border/50 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  <span>Advisory Services</span>
                   <Link
-                    key={item.href}
-                    href={item.href}
-                    className="text-sm font-medium text-foreground hover:text-primary py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1"
+                    href="/services"
+                    className="text-xs font-semibold text-primary hover:underline"
                   >
-                    {item.title}
+                    View All &rarr;
                   </Link>
-                ))}
+                </div>
+                <div className="grid grid-cols-1 gap-1 pt-2">
+                  {services.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-medium text-foreground hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] transition-colors"
+                      >
+                        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-muted text-muted-foreground">
+                          <Icon className="h-3.5 w-3.5" />
+                        </div>
+                        <span className="truncate">{item.title}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Direct Links */}
+              <div className="border-t border-border/60 pt-3 grid grid-cols-2 gap-2 text-xs font-semibold">
+                <Link
+                  href="/pricing"
+                  className="rounded-xl px-3 py-2 text-foreground hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="/tools"
+                  className="rounded-xl px-3 py-2 text-foreground hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  Tools &amp; Checklists
+                </Link>
+                <Link
+                  href="/blog"
+                  className="rounded-xl px-3 py-2 text-foreground hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  Developer Blog
+                </Link>
+                <Link
+                  href="/about"
+                  className="rounded-xl px-3 py-2 text-foreground hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  About Us
+                </Link>
+                <Link
+                  href="/resources"
+                  className="rounded-xl px-3 py-2 text-foreground hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  Resources
+                </Link>
+                <Link
+                  href="/faq"
+                  className="rounded-xl px-3 py-2 text-foreground hover:bg-surface-cream/80 dark:hover:bg-white/[0.06] transition-colors"
+                >
+                  FAQ
+                </Link>
+              </div>
+
+              {/* Mobile CTA */}
+              <div className="pt-2">
+                <Link
+                  href="/contact"
+                  className="flex items-center justify-center w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-all text-center"
+                >
+                  <span>Schedule Consultation</span>
+                  <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Link>
               </div>
             </div>
-
-            <div className="border-t border-border/60 pt-3 flex flex-col space-y-1.5">
-              <Link
-                href="/blog"
-                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                Blog
-              </Link>
-              <Link
-                href="/tools"
-                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                Tools &amp; Checklists
-              </Link>
-              <Link
-                href="/resources"
-                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                Resources
-              </Link>
-              <Link
-                href="/about"
-                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                About Us
-              </Link>
-              <Link
-                href="/faq"
-                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                FAQ
-              </Link>
-            </div>
-
-            <div className="pt-2">
-              <Link href="/contact" className="w-full block">
-                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-5">
-                  Enquire Now &rarr;
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
