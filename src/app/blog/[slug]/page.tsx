@@ -39,7 +39,13 @@ export async function generateMetadata({
   const article = getArticleBySlug(slug);
 
   if (!article || article.status !== "published") {
-    notFound();
+    return {
+      title: "Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
 
   return constructMetadata({

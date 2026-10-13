@@ -254,15 +254,15 @@ const pageData: ServicePageData = {
   relatedGuides: [
     {
       title: "Google Play App Rejection: Step-by-Step Recovery & Appeal Guide",
-      slug: "google-play-app-rejection-recovery-guide",
+      slug: "common-google-play-app-rejection-reasons",
       category: "App Rejections",
       readTime: "9 min read",
       summary:
         "How to deconstruct Google Play rejection notices, identify root causes in your code or metadata, and draft successful appeals without risking account strikes.",
     },
     {
-      title: "Google Play Data Safety Form: A Developer's Practical Walkthrough",
-      slug: "google-play-data-safety-form-guide",
+      title: "Android App Publishing Checklist: 2026 Policy Edition",
+      slug: "android-app-publishing-checklist-2026",
       category: "Data Safety & Policy",
       readTime: "8 min read",
       summary:
@@ -270,7 +270,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "Google Play Developer Account Verification: D-U-N-S, Identity & Common Pitfalls",
-      slug: "google-play-account-verification-guide",
+      slug: "google-play-developer-account-verification-guide",
       category: "Account Verification",
       readTime: "8 min read",
       summary:

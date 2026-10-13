@@ -33,16 +33,21 @@ export function constructMetadata({
   publishedTime,
   modifiedTime,
 }: MetadataProps): Metadata {
-  const canonicalUrl = `${SITE_URL}${path ? (path.startsWith("/") ? path : `/${path}`) : ""}`;
+  const isRoot = path === "" || path === "/";
+  const normalizedPath = isRoot ? "/" : (path.startsWith("/") ? path : `/${path}`).replace(/\/+$/, "");
+  const canonicalUrl = isRoot ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}`;
+
+  // Strip redundant brand suffix if already included in title to prevent double template suffixes
+  const cleanTitle = title.replace(/\s*(\||\-)\s*PlayStoreGuide$/i, "").trim();
+  const fullTitle = cleanTitle.includes(SITE_NAME) ? cleanTitle : `${cleanTitle} | ${SITE_NAME}`;
 
   return {
-    title:
-      path === "" || path === "/"
-        ? {
-            default: title,
-            template: `%s | ${SITE_NAME}`,
-          }
-        : title,
+    title: isRoot
+      ? {
+          default: title,
+          template: `%s | ${SITE_NAME}`,
+        }
+      : cleanTitle,
     description,
     keywords,
     authors: [{ name: "PlayStoreGuide Editorial & Advisory Team" }],
@@ -53,7 +58,7 @@ export function constructMetadata({
       canonical: canonicalUrl,
     },
     openGraph: {
-      title,
+      title: fullTitle,
       description,
       url: canonicalUrl,
       siteName: SITE_NAME,
@@ -66,13 +71,13 @@ export function constructMetadata({
           url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: `${title} - PlayStoreGuide`,
+          alt: `${cleanTitle} - PlayStoreGuide`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: fullTitle,
       description,
       creator: "@PlayStoreGuide",
       images: [DEFAULT_OG_IMAGE],

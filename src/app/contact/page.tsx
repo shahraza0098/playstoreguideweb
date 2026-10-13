@@ -7,7 +7,7 @@ import { constructMetadata, generateBreadcrumbSchema } from "@/lib/seo";
 import { ContactForm } from "@/components/contact/ContactForm";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Contact PlayStoreGuide | Publishing Advisory Consultation",
+  title: "Contact Our Publishing Advisory Team",
   description:
     "Schedule a consultation with our Android developer publishing team. Inquire about closed testing coordination, Play Console verification, and app rejection diagnosis.",
   path: "/contact",

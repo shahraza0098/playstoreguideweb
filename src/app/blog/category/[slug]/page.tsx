@@ -32,7 +32,13 @@ export async function generateMetadata({
   const category = getCategoryBySlug(slug);
 
   if (!category) {
-    notFound();
+    return {
+      title: "Category Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
 
   return constructMetadata({

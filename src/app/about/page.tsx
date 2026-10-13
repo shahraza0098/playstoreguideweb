@@ -12,7 +12,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { constructMetadata, generateBreadcrumbSchema } from "@/lib/seo";
 
 export const metadata: Metadata = constructMetadata({
-  title: "About PlayStoreGuide | Legitimate Android Developer Publishing Advisory",
+  title: "About Us - Ethical Android Developer Publishing Advisory",
   description:
     "Learn about PlayStoreGuide's mission: helping Android developers publish successfully through policy compliance, genuine tester cohorts, and technical audits without shortcuts or false claims.",
   path: "/about",

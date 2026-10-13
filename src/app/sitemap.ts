@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Core static routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: SITE_URL,
+      url: `${SITE_URL}/`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 1.0,
@@ -73,8 +73,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${SITE_URL}/tools`,
       lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/tools/closed-testing-planner`,
+      lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/tools/play-store-publishing-checklist`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/tools/app-privacy-policy-checklist`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.85,
     },
     {
       url: `${SITE_URL}/tools/policy-readiness-checklist`,

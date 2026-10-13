@@ -50,6 +50,21 @@ export const blogTags: BlogTag[] = [
     name: "Store Listing",
     description: "Optimizing app titles, short descriptions, screenshots, and metadata without policy penalties.",
   },
+  {
+    slug: "14-day-rule",
+    name: "14-Day Rule",
+    description: "Understanding and maintaining the mandatory 14 consecutive calendar day testing requirement.",
+  },
+  {
+    slug: "account-setup",
+    name: "Account Setup",
+    description: "Play Console identity verification, payment profiles, and developer registration best practices.",
+  },
+  {
+    slug: "aso",
+    name: "App Store Optimization",
+    description: "Policy-compliant keyword strategy, conversion rate optimization, and store asset preparation.",
+  },
 ];
 
 export function getTagBySlug(slug: string): BlogTag | undefined {

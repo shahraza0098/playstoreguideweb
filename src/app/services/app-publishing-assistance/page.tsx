@@ -258,8 +258,8 @@ const pageData: ServicePageData = {
   ],
   relatedGuides: [
     {
-      title: "Google Play Data Safety Form: A Developer's Practical Walkthrough",
-      slug: "google-play-data-safety-form-guide",
+      title: "Android App Publishing Checklist: 2026 Policy Edition",
+      slug: "android-app-publishing-checklist-2026",
       category: "Data Safety & Policy",
       readTime: "8 min read",
       summary:
@@ -267,7 +267,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "Google Play App Rejection: Step-by-Step Recovery & Appeal Guide",
-      slug: "google-play-app-rejection-recovery-guide",
+      slug: "common-google-play-app-rejection-reasons",
       category: "App Rejections",
       readTime: "9 min read",
       summary:
@@ -275,7 +275,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "How to Pass Google Play Production Access Review: Questions & Best Practices",
-      slug: "how-to-pass-production-access-review",
+      slug: "how-to-prepare-for-google-play-production-access",
       category: "Production Access",
       readTime: "11 min read",
       summary:

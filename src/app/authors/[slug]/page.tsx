@@ -41,11 +41,22 @@ export async function generateMetadata({
   const author = getAuthorBySlug(slug);
 
   if (!author) {
-    notFound();
+    return {
+      title: "Author Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
 
+  const cleanAuthorName = author.name.replace(/^PlayStoreGuide\s*/i, "").trim();
+  const cleanAuthorTitle = author.slug === "technical-review-board"
+    ? "Technical Review Board - Editorial Verification & Review History"
+    : `${cleanAuthorName} - Author Profile & Articles`;
+
   return constructMetadata({
-    title: `${author.name} - Author Profile & Articles | PlayStoreGuide`,
+    title: cleanAuthorTitle,
     description: author.bio.slice(0, 155),
     path: `/authors/${author.slug}`,
   });

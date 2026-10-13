@@ -5,10 +5,13 @@ interface JsonLdProps {
 }
 
 export function JsonLd({ data }: JsonLdProps) {
+  // Safely serialize JSON-LD to prevent premature script tag closure or XSS
+  const serialized = JSON.stringify(data).replace(/</g, "\\u003c");
+
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: serialized }}
     />
   );
 }

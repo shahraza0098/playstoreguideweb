@@ -258,16 +258,16 @@ const pageData: ServicePageData = {
   ],
   relatedGuides: [
     {
-      title: "Google Play 20 Testers Requirement: The Complete 14-Day Closed Testing Playbook",
-      slug: "google-play-20-testers-requirement-playbook",
-      category: "Closed Testing",
+      title: "Play Store Listing Optimization Fundamentals",
+      slug: "play-store-listing-optimization-fundamentals",
+      category: "Store Listing & ASO",
       readTime: "9 min read",
       summary:
-        "A step-by-step technical guide to structuring your closed testing track, recruiting compliant testers, tracking engagement, and compiling required feedback.",
+        "A step-by-step technical guide to structuring your store listing, choosing keywords, and designing compliant graphic assets.",
     },
     {
-      title: "Google Play Data Safety Form: A Developer's Practical Walkthrough",
-      slug: "google-play-data-safety-form-guide",
+      title: "Android App Publishing Checklist: 2026 Policy Edition",
+      slug: "android-app-publishing-checklist-2026",
       category: "Data Safety & Policy",
       readTime: "8 min read",
       summary:
@@ -275,7 +275,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "Google Play App Rejection: Step-by-Step Recovery & Appeal Guide",
-      slug: "google-play-app-rejection-recovery-guide",
+      slug: "common-google-play-app-rejection-reasons",
       category: "App Rejections",
       readTime: "9 min read",
       summary:

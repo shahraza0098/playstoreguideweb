@@ -222,9 +222,20 @@ export function Navbar() {
           </Link>
 
           <Link
+            href="/tools"
+            className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              pathname.startsWith("/tools")
+                ? "text-primary font-semibold"
+                : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
+            }`}
+          >
+            Tools
+          </Link>
+
+          <Link
             href="/resources"
             className={`px-3 py-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-              pathname.startsWith("/resources") || pathname.startsWith("/tools")
+              pathname === "/resources"
                 ? "text-primary font-semibold"
                 : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
             }`}
@@ -303,10 +314,16 @@ export function Navbar() {
                 Blog
               </Link>
               <Link
+                href="/tools"
+                className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Tools &amp; Checklists
+              </Link>
+              <Link
                 href="/resources"
                 className="text-sm font-medium text-foreground hover:text-primary py-1.5 px-2 rounded hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                Resources &amp; Tools
+                Resources
               </Link>
               <Link
                 href="/about"

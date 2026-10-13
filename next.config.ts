@@ -18,6 +18,28 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/",
+        has: [
+          {
+            type: "host",
+            value: "www.playstoreguide.com",
+          },
+        ],
+        destination: "https://playstoreguide.com/",
+        permanent: true,
+      },
+      {
+        source: "/:path+",
+        has: [
+          {
+            type: "host",
+            value: "www.playstoreguide.com",
+          },
+        ],
+        destination: "https://playstoreguide.com/:path+",
+        permanent: true,
+      },
+      {
         source: "/services/account-setup",
         destination: "/services/play-console-account-setup",
         permanent: true,
@@ -70,6 +92,11 @@ const nextConfig: NextConfig = {
       {
         source: "/guides/:slug",
         destination: "/blog/:slug",
+        permanent: true,
+      },
+      {
+        source: "/blog/android-app-publishing-checklist",
+        destination: "/blog/android-app-publishing-checklist-2026",
         permanent: true,
       },
     ];

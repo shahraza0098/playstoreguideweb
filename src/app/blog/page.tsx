@@ -59,6 +59,7 @@ export default function BlogIndexPage() {
 
         {/* Section Heading */}
         <SectionHeading
+          as="h1"
           eyebrow="Editorial Knowledge Base"
           title="Google Play Developer Blog &amp; Guides"
           description="In-depth technical articles, policy compliance breakdowns, and release frameworks written to help Android developers navigate the Google Play ecosystem safely."

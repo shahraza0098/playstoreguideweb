@@ -33,11 +33,17 @@ export async function generateMetadata({
   const tag = getTagBySlug(slug);
 
   if (!tag) {
-    notFound();
+    return {
+      title: "Tag Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
 
   return constructMetadata({
-    title: `${tag.name} Articles & Guides | PlayStoreGuide`,
+    title: `${tag.name} Articles & Guides`,
     description: `Browse all articles, tutorials, and developer playbooks related to ${tag.name} on PlayStoreGuide.`,
     path: `/blog/tag/${tag.slug}`,
   });

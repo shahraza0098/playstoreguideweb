@@ -6,6 +6,7 @@ export interface SectionHeadingProps extends React.HTMLAttributes<HTMLDivElement
   title: string;
   description?: string;
   align?: "left" | "center";
+  as?: "h1" | "h2" | "h3";
 }
 
 export function SectionHeading({
@@ -13,6 +14,7 @@ export function SectionHeading({
   title,
   description,
   align = "left",
+  as: HeadingTag = "h2",
   className,
   children,
   ...props
@@ -31,9 +33,9 @@ export function SectionHeading({
           {eyebrow}
         </span>
       )}
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
+      <HeadingTag className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
         {title}
-      </h2>
+      </HeadingTag>
       {description && (
         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
           {description}

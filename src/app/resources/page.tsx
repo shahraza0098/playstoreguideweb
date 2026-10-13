@@ -74,6 +74,7 @@ export default function ResourcesPage() {
         <Breadcrumbs items={[{ label: "Resources", href: "/resources" }]} className="mb-6" />
 
         <SectionHeading
+          as="h1"
           eyebrow="Developer Toolkit"
           title="Google Play Publishing Resources"
           description="Free utilities, comprehensive documentation, and self-assessment tools built specifically for Android developers preparing for Google Play release."

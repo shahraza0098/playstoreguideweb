@@ -254,7 +254,7 @@ const pageData: ServicePageData = {
   relatedGuides: [
     {
       title: "How to Pass Google Play Production Access Review: Questions & Best Practices",
-      slug: "how-to-pass-production-access-review",
+      slug: "how-to-prepare-for-google-play-production-access",
       category: "Production Access",
       readTime: "11 min read",
       summary:
@@ -262,7 +262,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "Google Play 20 Testers Requirement: The Complete 14-Day Closed Testing Playbook",
-      slug: "google-play-20-testers-requirement-playbook",
+      slug: "google-play-closed-testing-requirements-guide",
       category: "Closed Testing",
       readTime: "9 min read",
       summary:
@@ -270,7 +270,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "Google Play App Rejection: Step-by-Step Recovery & Appeal Guide",
-      slug: "google-play-app-rejection-recovery-guide",
+      slug: "common-google-play-app-rejection-reasons",
       category: "App Rejections",
       readTime: "9 min read",
       summary:

@@ -254,7 +254,7 @@ const pageData: ServicePageData = {
   relatedGuides: [
     {
       title: "Google Play 20 Testers Requirement: The Complete 14-Day Closed Testing Playbook",
-      slug: "google-play-20-testers-requirement-playbook",
+      slug: "google-play-closed-testing-requirements-guide",
       category: "Closed Testing",
       readTime: "9 min read",
       summary:
@@ -262,7 +262,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "How to Pass Google Play Production Access Review: Questions & Best Practices",
-      slug: "how-to-pass-production-access-review",
+      slug: "how-to-prepare-for-google-play-production-access",
       category: "Production Access",
       readTime: "11 min read",
       summary:
@@ -270,7 +270,7 @@ const pageData: ServicePageData = {
     },
     {
       title: "Google Play Developer Account Verification: D-U-N-S, Identity & Common Pitfalls",
-      slug: "google-play-account-verification-guide",
+      slug: "google-play-developer-account-verification-guide",
       category: "Account Verification",
       readTime: "8 min read",
       summary:
