@@ -86,7 +86,7 @@ const pageData: ServicePageData = {
     {
       title: "14 Continuous Days of Opt-In Retention Monitoring",
       description:
-        "Daily tracking of active tester opt-in status in Play Console to guarantee your counter never dips below Google's 20-tester minimum threshold.",
+        "Daily tracking of active tester opt-in status in Play Console to ensure your counter never dips below Google's 20-tester minimum threshold.",
     },
     {
       title: "Periodic App Launches & Interaction Telemetry",

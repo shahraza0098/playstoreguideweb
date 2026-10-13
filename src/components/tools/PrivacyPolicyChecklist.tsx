@@ -8,7 +8,10 @@ import {
   Copy,
   Check,
   AlertTriangle,
+  Printer,
+  Filter,
 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -257,18 +260,50 @@ export function PrivacyPolicyChecklist() {
   const completedCount = completedIds.length;
   const progressPercent = Math.round((completedCount / totalTasks) * 100);
 
+  const [statusFilter, setStatusFilter] = useState<"all" | "incomplete" | "completed">("all");
+  const shouldReduceMotion = useReducedMotion();
+
   const filteredTasks = useMemo(() => {
-    if (activeCategory === "all") return PRIVACY_TASKS;
-    return PRIVACY_TASKS.filter((task) => task.category === activeCategory);
-  }, [activeCategory]);
+    return PRIVACY_TASKS.filter((task) => {
+      if (activeCategory !== "all" && task.category !== activeCategory) {
+        return false;
+      }
+      const isDone = completedIds.includes(task.id);
+      if (statusFilter === "incomplete" && isDone) return false;
+      if (statusFilter === "completed" && !isDone) return false;
+      return true;
+    });
+  }, [activeCategory, statusFilter, completedIds]);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleToggleCurrentCategory = (markComplete: boolean) => {
+    const targetTaskIds = filteredTasks.map((t) => t.id);
+    setCompletedIds((prev) => {
+      let updated: string[];
+      if (markComplete) {
+        const set = new Set([...prev, ...targetTaskIds]);
+        updated = Array.from(set);
+      } else {
+        updated = prev.filter((id) => !targetTaskIds.includes(id));
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
 
   const handleCopySpec = () => {
     const report = `
 Privacy Policy & Data Safety Audit Specification
 Completed: ${completedCount} / ${totalTasks} items reviewed (${progressPercent}%)
+Audit Date: ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
 --------------------------------------------------
 LEGAL DISCLAIMER:
-This self-audit summary is an educational reference for drafting Google Play Data Safety
+This self-audit summary is an educational reference for organizing Google Play Data Safety
 declarations and privacy policies. It is NOT legal advice.
 --------------------------------------------------
 ${PRIVACY_CATEGORIES.map((cat) => {
@@ -288,25 +323,30 @@ Generated via PlayStoreGuide.com Privacy Policy Preparation Checklist.
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const currentCategoryObj = PRIVACY_CATEGORIES.find((c) => c.id === activeCategory);
+  const currentCategoryTasks = activeCategory === "all" ? PRIVACY_TASKS : PRIVACY_TASKS.filter((t) => t.category === activeCategory);
+  const currentCategoryCompleted = currentCategoryTasks.filter((t) => completedIds.includes(t.id)).length;
+  const isCurrentCategoryAllDone = currentCategoryTasks.length > 0 && currentCategoryCompleted === currentCategoryTasks.length;
+
   return (
     <div className="space-y-8">
       {/* Prominent Legal Disclaimer Banner */}
-      <div className="rounded-2xl border border-amber-300 bg-amber-50/70 dark:border-amber-900/60 dark:bg-amber-950/20 p-5 sm:p-6 text-xs sm:text-sm">
+      <div className="rounded-3xl border border-amber-300/80 bg-amber-50/70 dark:border-amber-900/60 dark:bg-amber-950/20 p-5 sm:p-6 text-xs sm:text-sm print:border print:border-gray-300">
         <div className="flex items-start gap-3.5">
-          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5 print:hidden" />
           <div className="space-y-1">
-            <h3 className="font-bold text-amber-900 dark:text-amber-200">
+            <h3 className="font-extrabold text-amber-900 dark:text-amber-200">
               Important Legal &amp; Policy Notice
             </h3>
             <p className="text-amber-800 dark:text-amber-300 leading-relaxed text-xs">
-              This checklist is an educational self-audit tool designed to help developers identify data practices before filling out Google Play&rsquo;s Data Safety form. <strong>This checklist does not constitute legal advice</strong> and cannot independently establish compliance with data privacy regulations (such as GDPR, CCPA/CPRA, or COPPA). Always consult qualified legal counsel for binding compliance.
+              This checklist is an educational self-audit tool designed to help developers identify technical data practices before completing Google Play&rsquo;s Data Safety section. <strong>This checklist does not constitute formal legal counsel</strong> and cannot independently establish compliance with global data privacy statutes (e.g. GDPR, CCPA/CPRA, or COPPA). Always consult a qualified privacy attorney for binding legal counsel.
             </p>
           </div>
         </div>
       </div>
 
       {/* Progress & Overview Card */}
-      <div className="rounded-2xl border border-primary/20 bg-card p-6 shadow-sm space-y-6">
+      <div className="rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 sm:p-8 shadow-floating space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-primary">
@@ -322,55 +362,74 @@ Generated via PlayStoreGuide.com Privacy Policy Preparation Checklist.
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2.5 print:hidden">
             <Button
+              type="button"
+              onClick={handlePrint}
+              variant="outline"
+              size="sm"
+              className="text-xs font-semibold border-border/80 hover:bg-muted/30"
+            >
+              <Printer className="h-3.5 w-3.5 mr-1.5 text-primary" />
+              <span>Print / PDF Spec</span>
+            </Button>
+
+            <Button
+              type="button"
               onClick={handleCopySpec}
               variant="outline"
               size="sm"
-              className="text-xs font-medium border-border"
+              className="text-xs font-medium border-border/80 hover:bg-muted/30"
             >
               {copied ? (
                 <>
-                  <Check className="h-3.5 w-3.5 mr-1.5 text-emerald-600" /> Copied Privacy Spec
+                  <Check className="h-3.5 w-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>Copied Spec Sheet</span>
                 </>
               ) : (
                 <>
-                  <Copy className="h-3.5 w-3.5 mr-1.5" /> Copy Privacy Spec Sheet
+                  <Copy className="h-3.5 w-3.5 mr-1.5 text-primary" />
+                  <span>Copy Privacy Spec</span>
                 </>
               )}
             </Button>
 
             <Button
+              type="button"
               onClick={handleReset}
               variant="ghost"
               size="sm"
               disabled={completedCount === 0}
               className="text-xs text-muted-foreground hover:text-foreground"
             >
-              <RotateCcw className="h-3.5 w-3.5 mr-1" /> Reset Progress
+              <RotateCcw className="h-3.5 w-3.5 mr-1" />
+              <span>Reset</span>
             </Button>
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-          <div
-            className="bg-primary h-3 rounded-full transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
+        {/* Animated Progress Bar */}
+        <div className="w-full bg-muted/60 rounded-full h-3.5 overflow-hidden p-0.5 border border-border/40">
+          <motion.div
+            className="bg-primary h-full rounded-full"
+            initial={shouldReduceMotion ? false : { width: 0 }}
+            animate={{ width: `${progressPercent}%` }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.35, ease: "easeOut" }}
           />
         </div>
 
         {/* Category Pill Navigation */}
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="flex flex-wrap gap-2 pt-1 print:hidden">
           <button
+            type="button"
             onClick={() => setActiveCategory("all")}
-            className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
+            className={`text-xs px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-medium ${
               activeCategory === "all"
-                ? "bg-primary text-primary-foreground border-primary font-semibold"
-                : "bg-background text-muted-foreground border-border hover:border-foreground/30"
+                ? "bg-primary text-primary-foreground border-primary font-bold shadow-2xs"
+                : "bg-surface-panel dark:bg-card text-muted-foreground border-border/70 hover:border-border hover:text-foreground"
             }`}
           >
-            All Categories ({totalTasks})
+            All Categories ({completedCount}/{totalTasks})
           </button>
           {PRIVACY_CATEGORIES.map((cat) => {
             const catTasks = PRIVACY_TASKS.filter((t) => t.category === cat.id);
@@ -380,17 +439,18 @@ Generated via PlayStoreGuide.com Privacy Policy Preparation Checklist.
             return (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => setActiveCategory(cat.id)}
-                className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                className={`text-xs px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer font-medium ${
                   activeCategory === cat.id
-                    ? "bg-primary text-primary-foreground border-primary font-semibold"
+                    ? "bg-primary text-primary-foreground border-primary font-bold shadow-2xs"
                     : isCatComplete
                     ? "bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-                    : "bg-background text-muted-foreground border-border hover:border-foreground/30"
+                    : "bg-surface-panel dark:bg-card text-muted-foreground border-border/70 hover:border-border hover:text-foreground"
                 }`}
               >
                 <span>{cat.shortName}</span>
-                <span className="text-[11px] opacity-80">
+                <span className="text-[11px] opacity-80 font-mono">
                   ({catCompleted}/{catTasks.length})
                 </span>
               </button>
@@ -399,77 +459,154 @@ Generated via PlayStoreGuide.com Privacy Policy Preparation Checklist.
         </div>
       </div>
 
-      {/* Checklist Tasks List */}
-      <div className="space-y-3">
-        {filteredTasks.map((task) => {
-          const isDone = completedIds.includes(task.id);
-          const categoryObj = PRIVACY_CATEGORIES.find((c) => c.id === task.category);
-
-          return (
-            <div
-              key={task.id}
-              onClick={() => toggleItem(task.id)}
-              className={`group p-4 sm:p-5 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${
-                isDone
-                  ? "border-emerald-200/80 bg-emerald-50/20 dark:border-emerald-950/40 dark:bg-emerald-950/10 opacity-80"
-                  : "border-border bg-card hover:border-primary/50 shadow-sm"
+      {/* Filter Tabs & Quick Actions Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-border/70 print:hidden">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+          <span className="text-xs font-bold text-muted-foreground flex items-center gap-1 shrink-0">
+            <Filter className="h-3.5 w-3.5" /> View:
+          </span>
+          <div className="inline-flex rounded-xl border border-border/70 bg-surface-cream/50 dark:bg-muted/20 p-0.5 text-xs">
+            <button
+              type="button"
+              onClick={() => setStatusFilter("all")}
+              className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                statusFilter === "all"
+                  ? "bg-surface-panel dark:bg-card text-foreground font-bold shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <button
-                type="button"
-                aria-label={isDone ? "Mark as unverified" : "Mark as verified"}
-                className="mt-0.5 shrink-0 transition-transform group-hover:scale-110"
-              >
-                {isDone ? (
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                ) : (
-                  <Circle className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
-                )}
-              </button>
+              All Items ({totalTasks})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("incomplete")}
+              className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                statusFilter === "incomplete"
+                  ? "bg-surface-panel dark:bg-card text-foreground font-bold shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Pending ({totalTasks - completedCount})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("completed")}
+              className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                statusFilter === "completed"
+                  ? "bg-surface-panel dark:bg-card text-foreground font-bold shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Verified ({completedCount})
+            </button>
+          </div>
+        </div>
 
-              <div className="space-y-1.5 flex-1 text-xs sm:text-sm">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h4
-                    className={`font-bold transition-colors ${
-                      isDone ? "line-through text-muted-foreground" : "text-foreground"
+        {/* Category Quick Actions */}
+        <div className="flex items-center gap-2 shrink-0 text-xs">
+          {activeCategory !== "all" && (
+            <span className="text-xs text-muted-foreground mr-1">
+              {currentCategoryObj?.name}:
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => handleToggleCurrentCategory(!isCurrentCategoryAllDone)}
+            className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+          >
+            {isCurrentCategoryAllDone
+              ? "Clear Category"
+              : `Mark ${activeCategory === "all" ? "Filtered" : "Category"} Verified`}
+          </button>
+        </div>
+      </div>
+
+      {/* Checklist Tasks List */}
+      <div className="space-y-3.5">
+        {filteredTasks.length === 0 ? (
+          <div className="p-10 text-center rounded-3xl border border-dashed border-border bg-surface-panel dark:bg-card text-muted-foreground text-sm">
+            No privacy checklist requirements match your current filter selection.
+          </div>
+        ) : (
+          filteredTasks.map((task) => {
+            const isDone = completedIds.includes(task.id);
+            const categoryObj = PRIVACY_CATEGORIES.find((c) => c.id === task.category);
+
+            return (
+              <motion.div
+                key={task.id}
+                layout={!shouldReduceMotion}
+                onClick={() => toggleItem(task.id)}
+                className={`group p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 select-none ${
+                  isDone
+                    ? "border-emerald-300/70 bg-emerald-50/30 dark:border-emerald-950/40 dark:bg-emerald-950/10 opacity-85"
+                    : "border-border/80 bg-surface-panel dark:bg-card hover:border-primary/50 shadow-2xs"
+                }`}
+              >
+                <button
+                  type="button"
+                  aria-label={isDone ? `Mark "${task.title}" as unverified` : `Mark "${task.title}" as verified`}
+                  aria-checked={isDone}
+                  role="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleItem(task.id);
+                  }}
+                  className="mt-0.5 shrink-0 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg hover:bg-muted/40 transition-transform cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40"
+                >
+                  {isDone ? (
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  ) : (
+                    <Circle className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  )}
+                </button>
+
+                <div className="space-y-1.5 flex-1 text-xs sm:text-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h4
+                      className={`font-bold transition-colors ${
+                        isDone ? "line-through text-muted-foreground" : "text-foreground"
+                      }`}
+                    >
+                      {task.title}
+                    </h4>
+
+                    <div className="flex items-center gap-1.5">
+                      {task.critical && (
+                        <Badge variant="destructive" className="text-[10px] py-0 px-1.5 font-bold">
+                          Strict Google Check
+                        </Badge>
+                      )}
+                      <Badge variant="outline" className="text-[10px] py-0 px-1.5 font-medium">
+                        {categoryObj?.shortName || task.category}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <p
+                    className={`text-xs leading-relaxed ${
+                      isDone ? "text-muted-foreground/80 line-through" : "text-muted-foreground"
                     }`}
                   >
-                    {task.title}
-                  </h4>
+                    {task.description}
+                  </p>
 
-                  <div className="flex items-center gap-1.5">
-                    {task.critical && (
-                      <Badge variant="destructive" className="text-[10px] py-0 px-1.5 font-semibold">
-                        Strict Google Check
-                      </Badge>
-                    )}
-                    <Badge variant="outline" className="text-[10px] py-0 px-1.5">
-                      {categoryObj?.shortName || task.category}
-                    </Badge>
+                  <div className="pt-1 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                    <span className="font-bold text-primary">Play Console Mapping:</span>
+                    <span className="font-mono text-[10.5px] bg-muted/70 px-2 py-0.5 rounded-md border border-border/40 text-foreground">
+                      {task.dataSafetyMapping}
+                    </span>
                   </div>
                 </div>
-
-                <p
-                  className={`text-xs leading-relaxed ${
-                    isDone ? "text-muted-foreground/80 line-through" : "text-muted-foreground"
-                  }`}
-                >
-                  {task.description}
-                </p>
-
-                <div className="pt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
-                  <span className="font-semibold text-primary">Play Console Mapping:</span>
-                  <span className="font-mono text-[10.5px] bg-muted px-1.5 py-0.5 rounded">{task.dataSafetyMapping}</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+              </motion.div>
+            );
+          })
+        )}
       </div>
 
       {isMounted && (
-        <p className="text-[11px] text-muted-foreground text-center">
-          Audit selections are securely saved in your browser local storage.
+        <p className="text-[11px] text-muted-foreground text-center print:hidden">
+          Audit selections are securely saved in your browser local storage. You can refresh or print this audit anytime.
         </p>
       )}
     </div>

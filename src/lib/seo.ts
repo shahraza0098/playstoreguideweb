@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://playstoreguide.com";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.playstoreguide.com";
 export const SITE_NAME = "PlayStoreGuide";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 

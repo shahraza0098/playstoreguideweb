@@ -42,12 +42,12 @@ export function HeroDashboardIllustration() {
   return (
     <motion.div
       variants={shouldReduceMotion ? undefined : containerVariants}
-      initial="hidden"
-      animate="visible"
+      initial={shouldReduceMotion ? false : "hidden"}
+      animate={shouldReduceMotion ? false : "visible"}
       className="relative w-full max-w-xl mx-auto lg:max-w-none"
     >
-      {/* Decorative ambient background glow */}
-      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-primary/15 via-teal-500/10 to-indigo-500/15 blur-2xl opacity-60 dark:opacity-40 pointer-events-none" />
+      {/* Decorative ambient background glow (optimized blur for mobile GPUs) */}
+      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-primary/15 via-teal-500/10 to-indigo-500/15 sm:blur-2xl blur-lg opacity-50 dark:opacity-30 pointer-events-none" />
 
       {/* Main Developer Dashboard Shell */}
       <div className="relative rounded-2xl sm:rounded-3xl border border-border/90 bg-surface-panel dark:bg-card p-4 sm:p-6 shadow-floating">
@@ -246,9 +246,9 @@ export function HeroDashboardIllustration() {
 
       {/* Floating Status Badges */}
       <motion.div
-        initial={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.9, x: -10 }}
-        animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1, x: 0 }}
-        transition={{ delay: 0.4, duration: 0.3 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9, x: -10 }}
+        animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, x: 0 }}
+        transition={{ delay: shouldReduceMotion ? 0 : 0.35, duration: 0.28 }}
         className="hidden sm:flex absolute -bottom-3 -left-3 items-center gap-2 rounded-full border border-border bg-surface-panel/95 dark:bg-card/95 px-3.5 py-1.5 shadow-card text-xs font-semibold text-foreground"
       >
         <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -256,9 +256,9 @@ export function HeroDashboardIllustration() {
       </motion.div>
 
       <motion.div
-        initial={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.9, x: 10 }}
-        animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1, x: 0 }}
-        transition={{ delay: 0.5, duration: 0.3 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9, x: 10 }}
+        animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, x: 0 }}
+        transition={{ delay: shouldReduceMotion ? 0 : 0.45, duration: 0.28 }}
         className="hidden sm:flex absolute -top-3 -right-3 items-center gap-2 rounded-full border border-border bg-surface-panel/95 dark:bg-card/95 px-3.5 py-1.5 shadow-card text-xs font-semibold text-foreground"
       >
         <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { fadeRiseVariants } from "@/lib/motion";
+import { fadeRiseVariants, defaultViewport } from "@/lib/motion";
 
 interface StaggerGroupProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ interface StaggerGroupProps {
 export function StaggerGroup({
   children,
   className = "",
-  staggerDelay = 0.08,
+  staggerDelay = 0.06,
   triggerOnce = true,
 }: StaggerGroupProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -37,7 +37,7 @@ export function StaggerGroup({
       }}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: triggerOnce, margin: "-40px" }}
+      viewport={{ ...defaultViewport, once: triggerOnce }}
       className={className}
     >
       {children}

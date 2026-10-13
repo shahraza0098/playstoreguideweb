@@ -319,7 +319,7 @@ export default function ClosedTestingPlannerPage() {
                 Hands-On Assistance
               </span>
               <h3 className="font-bold text-base text-foreground leading-snug">
-                Need Guaranteed Active Testers for Your Cohort?
+                Need Verified Active Testers for Your Cohort?
               </h3>
               <p className="text-muted-foreground leading-relaxed">
                 Don’t risk your 14-day clock resetting due to tester dropout. Our closed testing coordination service connects you with 20+ verified real Android testers who maintain continuous opt-in and provide genuine feedback.

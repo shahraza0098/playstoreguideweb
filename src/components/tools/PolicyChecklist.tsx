@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ChecklistItem {
@@ -160,15 +160,27 @@ export function PolicyChecklist() {
               </span>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={resetAll}
-              className="text-xs border-zinc-300 bg-white dark:bg-zinc-900"
-              title="Reset checklist"
-            >
-              <RefreshCw className="h-3.5 w-3.5 mr-1" /> Reset
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center gap-2 print:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.print()}
+                className="text-xs border-zinc-300 bg-white dark:bg-zinc-900"
+                title="Print checklist"
+              >
+                <Printer className="h-3.5 w-3.5 mr-1 text-primary" /> Print / PDF
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={resetAll}
+                className="text-xs border-zinc-300 bg-white dark:bg-zinc-900"
+                title="Reset checklist"
+              >
+                <RefreshCw className="h-3.5 w-3.5 mr-1" /> Reset
+              </Button>
+            </div>
           </div>
         </div>
 

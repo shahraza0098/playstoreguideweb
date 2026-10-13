@@ -389,10 +389,13 @@ export function ClosedTestingTimeline({
                 {/* Timeline Card Container */}
                 <div className="w-full md:w-[46%] pl-14 md:pl-0">
                   <motion.div
-                    initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
-                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.35, delay: index * 0.08 }}
+                    initial={shouldReduceMotion ? false : { opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.08, margin: "0px 0px -20px 0px" }}
+                    transition={{
+                      duration: shouldReduceMotion ? 0 : 0.32,
+                      delay: shouldReduceMotion ? 0 : Math.min(index * 0.06, 0.2),
+                    }}
                     className={`rounded-2xl sm:rounded-3xl border transition-all duration-300 p-6 sm:p-7 shadow-card hover:shadow-card-hover ${
                       isSelected
                         ? "border-primary bg-surface-cream/80 dark:bg-card ring-2 ring-primary/20 shadow-floating"

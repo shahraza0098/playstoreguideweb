@@ -308,7 +308,7 @@ export default function ServicesPage() {
                 </ul>
 
                 <div className="pt-3 border-t border-border/60 text-[11px] text-muted-foreground">
-                  <span className="font-semibold text-foreground">Compliance Guarantee: </span>
+                  <span className="font-semibold text-foreground">Compliance Standard: </span>
                   100% physical devices. Zero bot emulators, automated farms, or fake public reviews.
                 </div>
               </div>

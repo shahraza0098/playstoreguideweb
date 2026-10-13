@@ -8,7 +8,10 @@ import {
   Copy,
   Check,
   Filter,
+  Printer,
+  Info,
 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -314,11 +317,37 @@ export function PublishingChecklist() {
     });
   }, [activeCategory, statusFilter, completedIds]);
 
+  const shouldReduceMotion = useReducedMotion();
+
+  // Print checklist
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // Toggle all items in current filtered view or category
+  const handleToggleCurrentCategory = (markComplete: boolean) => {
+    const targetTaskIds = filteredTasks.map((t) => t.id);
+    setCompletedIds((prev) => {
+      let updated: string[];
+      if (markComplete) {
+        const set = new Set([...prev, ...targetTaskIds]);
+        updated = Array.from(set);
+      } else {
+        updated = prev.filter((id) => !targetTaskIds.includes(id));
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
   // Copy checklist summary
   const handleCopySummary = () => {
     const summary = `
 Google Play Publishing Readiness Checklist Audit
 Completed: ${completedCount} / ${totalTasks} (${progressPercent}%)
+Audit Date: ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
 --------------------------------------------------
 ${CHECKLIST_CATEGORIES.map((cat) => {
   const catTasks = PUBLISHING_TASKS.filter((t) => t.category === cat.id);
@@ -329,7 +358,7 @@ ${CHECKLIST_CATEGORIES.map((cat) => {
       .join("\n");
 }).join("\n")}
 --------------------------------------------------
-Generated via PlayStoreGuide.com Publishing Checklist Tool.
+Notice: Educational self-audit checklist via PlayStoreGuide.com. Not an official Google approval guarantee.
 `.trim();
 
     navigator.clipboard.writeText(summary);
@@ -337,10 +366,30 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const currentCategoryObj = CHECKLIST_CATEGORIES.find((c) => c.id === activeCategory);
+  const currentCategoryTasks = activeCategory === "all" ? PUBLISHING_TASKS : PUBLISHING_TASKS.filter((t) => t.category === activeCategory);
+  const currentCategoryCompleted = currentCategoryTasks.filter((t) => completedIds.includes(t.id)).length;
+  const isCurrentCategoryAllDone = currentCategoryTasks.length > 0 && currentCategoryCompleted === currentCategoryTasks.length;
+
   return (
     <div className="space-y-8">
-      {/* Progress & Overview Bar */}
-      <div className="rounded-2xl border border-primary/20 bg-card p-6 shadow-sm space-y-6">
+      {/* Tool Limitations & Policy Notice */}
+      <div className="rounded-3xl border border-primary/20 bg-surface-cream/80 dark:bg-card p-6 sm:p-7 shadow-subtle print:border print:border-gray-300">
+        <div className="flex items-start gap-3.5">
+          <Info className="h-5 w-5 text-primary shrink-0 mt-0.5 print:hidden" />
+          <div className="space-y-1.5">
+            <h2 className="text-sm font-extrabold text-foreground">
+              Tool Limitations &bull; Pre-Submission Self-Audit Only
+            </h2>
+            <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+              This interactive readiness checklist evaluates your store listing assets, App Bundle technical configurations, Target SDK requirements, and Data Safety disclosures against published Google Play Developer Program policies. <strong>Completing all items here does not guarantee automated approval.</strong> Google evaluates app submissions using proprietary static scanners and human reviewers who review app runtime behavior, in-app purchases, and account credentials.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Progress & Overview Card */}
+      <div className="rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-6 sm:p-8 shadow-floating space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-primary">
@@ -356,46 +405,75 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2.5 print:hidden">
             <Button
+              type="button"
+              onClick={handlePrint}
+              variant="outline"
+              size="sm"
+              className="text-xs font-semibold border-border/80 hover:bg-muted/30"
+            >
+              <Printer className="h-3.5 w-3.5 mr-1.5 text-primary" />
+              <span>Print / PDF Audit</span>
+            </Button>
+
+            <Button
+              type="button"
               onClick={handleCopySummary}
               variant="outline"
               size="sm"
-              className="text-xs font-medium border-border"
+              className="text-xs font-medium border-border/80 hover:bg-muted/30"
             >
               {copied ? (
                 <>
-                  <Check className="h-3.5 w-3.5 mr-1.5 text-emerald-600" /> Copied Summary
+                  <Check className="h-3.5 w-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>Copied Report</span>
                 </>
               ) : (
                 <>
-                  <Copy className="h-3.5 w-3.5 mr-1.5" /> Copy Audit Report
+                  <Copy className="h-3.5 w-3.5 mr-1.5 text-primary" />
+                  <span>Copy Report</span>
                 </>
               )}
             </Button>
 
             <Button
+              type="button"
               onClick={handleReset}
               variant="ghost"
               size="sm"
               disabled={completedCount === 0}
               className="text-xs text-muted-foreground hover:text-foreground"
             >
-              <RotateCcw className="h-3.5 w-3.5 mr-1" /> Reset Progress
+              <RotateCcw className="h-3.5 w-3.5 mr-1" />
+              <span>Reset</span>
             </Button>
           </div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-          <div
-            className="bg-primary h-3 rounded-full transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
+        {/* Animated Progress Bar */}
+        <div className="w-full bg-muted/60 rounded-full h-3.5 overflow-hidden p-0.5 border border-border/40">
+          <motion.div
+            className="bg-primary h-full rounded-full"
+            initial={shouldReduceMotion ? false : { width: 0 }}
+            animate={{ width: `${progressPercent}%` }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.35, ease: "easeOut" }}
           />
         </div>
 
         {/* Category Completion Badges */}
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="flex flex-wrap gap-2 pt-1 print:hidden">
+          <button
+            type="button"
+            onClick={() => setActiveCategory("all")}
+            className={`text-xs px-3 py-1.5 rounded-xl border transition-all cursor-pointer font-medium ${
+              activeCategory === "all"
+                ? "bg-primary text-primary-foreground border-primary font-bold shadow-2xs"
+                : "bg-surface-panel dark:bg-card text-muted-foreground border-border/70 hover:border-border hover:text-foreground"
+            }`}
+          >
+            All Categories ({completedCount}/{totalTasks})
+          </button>
           {CHECKLIST_CATEGORIES.map((cat) => {
             const catTasks = PUBLISHING_TASKS.filter((t) => t.category === cat.id);
             const catCompleted = catTasks.filter((t) => completedIds.includes(t.id)).length;
@@ -404,17 +482,18 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
             return (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(activeCategory === cat.id ? "all" : cat.id)}
-                className={`text-xs px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1.5 ${
+                type="button"
+                onClick={() => setActiveCategory(cat.id)}
+                className={`text-xs px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer font-medium ${
                   activeCategory === cat.id
-                    ? "bg-primary text-primary-foreground border-primary font-semibold"
+                    ? "bg-primary text-primary-foreground border-primary font-bold shadow-2xs"
                     : isCatComplete
                     ? "bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-                    : "bg-background text-muted-foreground border-border hover:border-foreground/30"
+                    : "bg-surface-panel dark:bg-card text-muted-foreground border-border/70 hover:border-border hover:text-foreground"
                 }`}
               >
                 <span>{cat.shortName}</span>
-                <span className="text-[11px] opacity-80">
+                <span className="text-[11px] opacity-80 font-mono">
                   ({catCompleted}/{catTasks.length})
                 </span>
               </button>
@@ -423,70 +502,73 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
         </div>
       </div>
 
-      {/* Filter Tabs & Status Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border">
+      {/* Filter Tabs & Quick Actions Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-border/70 print:hidden">
         <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-          <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
-            <Filter className="h-3.5 w-3.5" /> Filter:
+          <span className="text-xs font-bold text-muted-foreground flex items-center gap-1 shrink-0">
+            <Filter className="h-3.5 w-3.5" /> View:
           </span>
-          <button
-            onClick={() => setActiveCategory("all")}
-            className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all ${
-              activeCategory === "all"
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            All Categories ({totalTasks})
-          </button>
-          {CHECKLIST_CATEGORIES.map((cat) => (
+          <div className="inline-flex rounded-xl border border-border/70 bg-surface-cream/50 dark:bg-muted/20 p-0.5 text-xs">
             <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all whitespace-nowrap ${
-                activeCategory === cat.id
-                  ? "bg-foreground text-background"
+              type="button"
+              onClick={() => setStatusFilter("all")}
+              className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                statusFilter === "all"
+                  ? "bg-surface-panel dark:bg-card text-foreground font-bold shadow-2xs"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {cat.shortName}
+              All Items ({totalTasks})
             </button>
-          ))}
+            <button
+              type="button"
+              onClick={() => setStatusFilter("incomplete")}
+              className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                statusFilter === "incomplete"
+                  ? "bg-surface-panel dark:bg-card text-foreground font-bold shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Incomplete ({totalTasks - completedCount})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter("completed")}
+              className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                statusFilter === "completed"
+                  ? "bg-surface-panel dark:bg-card text-foreground font-bold shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Completed ({completedCount})
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1 shrink-0 text-xs">
+        {/* Category Quick Actions */}
+        <div className="flex items-center gap-2 shrink-0 text-xs">
+          {activeCategory !== "all" && (
+            <span className="text-xs text-muted-foreground mr-1">
+              {currentCategoryObj?.name}:
+            </span>
+          )}
           <button
-            onClick={() => setStatusFilter("all")}
-            className={`px-2.5 py-1 rounded-md ${
-              statusFilter === "all" ? "font-bold text-foreground bg-muted" : "text-muted-foreground"
-            }`}
+            type="button"
+            onClick={() => handleToggleCurrentCategory(!isCurrentCategoryAllDone)}
+            className="text-xs font-semibold text-primary hover:underline cursor-pointer"
           >
-            All
-          </button>
-          <button
-            onClick={() => setStatusFilter("incomplete")}
-            className={`px-2.5 py-1 rounded-md ${
-              statusFilter === "incomplete" ? "font-bold text-foreground bg-muted" : "text-muted-foreground"
-            }`}
-          >
-            Incomplete
-          </button>
-          <button
-            onClick={() => setStatusFilter("completed")}
-            className={`px-2.5 py-1 rounded-md ${
-              statusFilter === "completed" ? "font-bold text-foreground bg-muted" : "text-muted-foreground"
-            }`}
-          >
-            Completed
+            {isCurrentCategoryAllDone
+              ? "Clear Category"
+              : `Mark ${activeCategory === "all" ? "Filtered" : "Category"} Done`}
           </button>
         </div>
       </div>
 
       {/* Checklist Items List */}
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         {filteredTasks.length === 0 ? (
-          <div className="p-8 text-center rounded-2xl border border-dashed border-border text-muted-foreground text-sm">
-            No checklist requirements match your current filter.
+          <div className="p-10 text-center rounded-3xl border border-dashed border-border bg-surface-panel dark:bg-card text-muted-foreground text-sm">
+            No checklist requirements match your current filter selection.
           </div>
         ) : (
           filteredTasks.map((task) => {
@@ -494,24 +576,31 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
             const categoryObj = CHECKLIST_CATEGORIES.find((c) => c.id === task.category);
 
             return (
-              <div
+              <motion.div
                 key={task.id}
+                layout={!shouldReduceMotion}
                 onClick={() => toggleItem(task.id)}
-                className={`group p-4 sm:p-5 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${
+                className={`group p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 select-none ${
                   isDone
-                    ? "border-emerald-200/80 bg-emerald-50/20 dark:border-emerald-950/40 dark:bg-emerald-950/10 opacity-80"
-                    : "border-border bg-card hover:border-primary/50 shadow-sm"
+                    ? "border-emerald-300/70 bg-emerald-50/30 dark:border-emerald-950/40 dark:bg-emerald-950/10 opacity-85"
+                    : "border-border/80 bg-surface-panel dark:bg-card hover:border-primary/50 shadow-2xs"
                 }`}
               >
                 <button
                   type="button"
-                  aria-label={isDone ? "Mark as incomplete" : "Mark as complete"}
-                  className="mt-0.5 shrink-0 transition-transform group-hover:scale-110"
+                  aria-label={isDone ? `Mark "${task.title}" as incomplete` : `Mark "${task.title}" as complete`}
+                  aria-checked={isDone}
+                  role="checkbox"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleItem(task.id);
+                  }}
+                  className="mt-0.5 shrink-0 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-lg hover:bg-muted/40 transition-transform cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40"
                 >
                   {isDone ? (
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   ) : (
-                    <Circle className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+                    <Circle className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                   )}
                 </button>
 
@@ -527,11 +616,11 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
 
                     <div className="flex items-center gap-1.5">
                       {task.critical && (
-                        <Badge variant="destructive" className="text-[10px] py-0 px-1.5 font-semibold">
+                        <Badge variant="destructive" className="text-[10px] py-0 px-1.5 font-bold">
                           Critical
                         </Badge>
                       )}
-                      <Badge variant="outline" className="text-[10px] py-0 px-1.5">
+                      <Badge variant="outline" className="text-[10px] py-0 px-1.5 font-medium">
                         {categoryObj?.shortName || task.category}
                       </Badge>
                     </div>
@@ -545,12 +634,12 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
                     {task.description}
                   </p>
 
-                  <div className="pt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
-                    <span className="font-semibold text-primary">Rule Reference:</span>
+                  <div className="pt-1 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                    <span className="font-bold text-primary">Rule Reference:</span>
                     <span>{task.officialRule}</span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })
         )}
@@ -558,8 +647,8 @@ Generated via PlayStoreGuide.com Publishing Checklist Tool.
 
       {/* LocalStorage Note */}
       {isMounted && (
-        <p className="text-[11px] text-muted-foreground text-center">
-          Progress is automatically saved to your browser&rsquo;s local storage. You can safely refresh or return to this page later.
+        <p className="text-[11px] text-muted-foreground text-center print:hidden">
+          Progress is automatically saved to your browser&rsquo;s local storage. You can safely refresh, return later, or print this page as a PDF audit sheet.
         </p>
       )}
     </div>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { defaultTransition } from "@/lib/motion";
+import { defaultTransition, defaultViewport } from "@/lib/motion";
 
 interface FadeRiseProps {
   children: React.ReactNode;
@@ -11,7 +11,6 @@ interface FadeRiseProps {
   duration?: number;
   yOffset?: number;
   triggerOnce?: boolean;
-  as?: React.ElementType;
 }
 
 export function FadeRise({
@@ -19,7 +18,7 @@ export function FadeRise({
   className = "",
   delay = 0,
   duration,
-  yOffset = 16,
+  yOffset = 14,
   triggerOnce = true,
 }: FadeRiseProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -40,7 +39,7 @@ export function FadeRise({
           delay,
         },
       }}
-      viewport={{ once: triggerOnce, margin: "-40px" }}
+      viewport={{ ...defaultViewport, once: triggerOnce }}
       className={className}
     >
       {children}

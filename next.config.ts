@@ -38,6 +38,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/services/app-rejections",
+        destination: "/services/app-rejection-help",
+        permanent: true,
+      },
+      {
         source: "/services/listing-optimization",
         destination: "/services/play-store-aso",
         permanent: true,

@@ -1,10 +1,15 @@
 import { AlertTriangle, FileText } from "lucide-react";
+import { LEGAL_CONFIG } from "@/data/legal-config";
 
 interface LegalReviewNoticeProps {
   documentType: "Privacy Policy" | "Terms and Conditions" | "Refund Policy";
 }
 
 export function LegalReviewNotice({ documentType }: LegalReviewNoticeProps) {
+  if (!LEGAL_CONFIG.isDraftForLegalReview) {
+    return null;
+  }
+
   return (
     <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 sm:p-5 text-amber-900 dark:text-amber-200">
       <div className="flex items-start gap-3">

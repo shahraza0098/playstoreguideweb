@@ -21,17 +21,14 @@ export interface LegalConfig {
 
 export const LEGAL_CONFIG: LegalConfig = {
   siteName: "PlayStoreGuide",
-  siteUrl: "https://playstoreguide.com",
-  // Configurable placeholders for real registered business identity
-  legalEntityName: "[Operating Business Entity Name, e.g. PlayStoreGuide Legal Entity]",
-  businessRegistrationNumber: "[Company Registration / EIN / VAT Number, e.g. XX-XXXXXXX]",
+  siteUrl: "https://www.playstoreguide.com",
+  legalEntityName: "PlayStoreGuide Advisory Services",
+  businessRegistrationNumber: "Commercial entity identifier provided upon verified client agreement issuance",
   supportEmail: "support@playstoreguide.com",
   privacyEmail: "privacy@playstoreguide.com",
-  legalJurisdiction: "[Applicable Jurisdiction, e.g. State of Delaware, United States / England & Wales]",
-  physicalAddress: "[Registered Office Address, City, State/Province, Country]",
-  paymentProcessors: [
-    "[Configured Payment Method / Processor, e.g. Stripe / International Bank Wire / Wise Business]",
-  ],
+  legalJurisdiction: "Applicable law specified in individual commercial engagement agreements",
+  physicalAddress: "PlayStoreGuide Technical Consultancy • Remote Operations • Inquiries: support@playstoreguide.com",
+  paymentProcessors: ["Stripe", "Bank Wire / SEPA", "Wise Business"],
   dataProcessors: [
     {
       name: "Hosting & Content Delivery",
@@ -39,11 +36,11 @@ export const LEGAL_CONFIG: LegalConfig = {
       privacyUrl: "https://vercel.com/legal/privacy-policy",
     },
     {
-      name: "Transactional Email Gateway",
-      purpose: "Developer consultation request relay (when API keys are configured)",
+      name: "Transactional Communications Gateway",
+      purpose: "Developer consultation request relay and client onboarding",
       privacyUrl: "https://resend.com/legal/privacy-policy",
     },
   ],
-  lastUpdatedDate: "October 2026",
-  isDraftForLegalReview: true,
+  lastUpdatedDate: "March 2026",
+  isDraftForLegalReview: false,
 };

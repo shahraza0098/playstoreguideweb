@@ -2,19 +2,34 @@ import type { Variants, Transition } from "motion/react";
 
 export const MOTION_DURATIONS = {
   fast: 0.18,
-  normal: 0.32,
-  slow: 0.5,
+  normal: 0.3,
+  slow: 0.45,
 } as const;
 
 export const MOTION_EASINGS = {
   default: [0.16, 1, 0.3, 1] as const,
   gentle: [0.25, 0.1, 0.25, 1] as const,
-  bounce: [0.34, 1.56, 0.64, 1] as const,
+  easeOut: [0, 0, 0.2, 1] as const,
+  easeInOut: [0.4, 0, 0.2, 1] as const,
 };
 
 export const defaultTransition: Transition = {
   duration: MOTION_DURATIONS.normal,
   ease: MOTION_EASINGS.default,
+};
+
+export const defaultViewport = {
+  once: true,
+  amount: 0.08,
+  margin: "0px 0px -20px 0px",
+};
+
+/**
+ * Fallback static variants when prefers-reduced-motion is active
+ */
+export const reducedMotionVariants: Variants = {
+  hidden: { opacity: 1, y: 0, scale: 1 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0 } },
 };
 
 /**
@@ -23,7 +38,7 @@ export const defaultTransition: Transition = {
 export const fadeRiseVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 16,
+    y: 14,
   },
   visible: {
     opacity: 1,
@@ -56,8 +71,8 @@ export const staggerContainerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.04,
+      staggerChildren: 0.06,
+      delayChildren: 0.02,
     },
   },
 };
@@ -68,7 +83,7 @@ export const staggerContainerVariants: Variants = {
 export const scaleSubtleVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: 0.96,
+    scale: 0.97,
   },
   visible: {
     opacity: 1,
@@ -83,14 +98,31 @@ export const scaleSubtleVariants: Variants = {
 export const mobileDrawerVariants: Variants = {
   closed: {
     opacity: 0,
-    y: -8,
+    y: -6,
     scale: 0.98,
-    transition: { duration: 0.18, ease: "easeInOut" as const },
+    transition: { duration: 0.15, ease: "easeInOut" as const },
   },
   open: {
     opacity: 1,
     y: 0,
     scale: 1,
+    transition: { duration: 0.22, ease: MOTION_EASINGS.default },
+  },
+};
+
+/**
+ * Disclosure and accordion smooth expansion
+ */
+export const disclosureVariants: Variants = {
+  closed: {
+    opacity: 0,
+    height: 0,
+    overflow: "hidden",
+    transition: { duration: 0.18, ease: "easeInOut" as const },
+  },
+  open: {
+    opacity: 1,
+    height: "auto",
     transition: { duration: 0.24, ease: MOTION_EASINGS.default },
   },
 };
@@ -114,11 +146,10 @@ export const cardHoverProps = {
  */
 export const buttonTapProps = {
   whileHover: {
-    scale: 1.02,
+    scale: 1.015,
     transition: { duration: 0.15 },
   },
   whileTap: {
-    scale: 0.98,
+    scale: 0.985,
   },
 };
-

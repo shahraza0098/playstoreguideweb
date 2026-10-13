@@ -17,7 +17,7 @@ import {
   BadgeDollarSign,
   Compass,
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
 const services = [
   {
@@ -65,6 +65,7 @@ const services = [
 ];
 
 export function Navbar() {
+  const shouldReduceMotion = useReducedMotion();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -205,10 +206,10 @@ export function Navbar() {
               {servicesDropdownOpen && (
                 <motion.div
                   id="desktop-services-flyout"
-                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 6, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 4, scale: 0.98 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 4, scale: 0.98 }}
+                  transition={{ duration: shouldReduceMotion ? 0 : 0.18, ease: "easeOut" }}
                   className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[440px] z-50 pointer-events-auto"
                 >
                   <div className="rounded-2xl border border-border bg-surface-panel dark:bg-card p-3 shadow-floating ring-1 ring-black/5 dark:ring-white/10">
@@ -349,10 +350,10 @@ export function Navbar() {
         {mobileMenuOpen && (
           <motion.div
             id="mobile-navigation"
-            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: -6, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.2, ease: "easeOut" }}
             className="pointer-events-auto md:hidden mt-2 rounded-3xl border border-border bg-surface-panel/95 dark:bg-card/95 backdrop-blur-xl p-5 shadow-floating"
           >
             <div className="flex flex-col space-y-4">

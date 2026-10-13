@@ -45,7 +45,7 @@ export default function RefundPolicyPage() {
           Refund Policy
         </h1>
         <p className="mt-2 text-xs text-muted-foreground">
-          Last Substantively Updated: {LEGAL_CONFIG.lastUpdatedDate} • Version 1.0 (Draft)
+          Last Substantively Updated: {LEGAL_CONFIG.lastUpdatedDate} • Version 1.0
         </p>
 
         {/* Legal Review Callout */}

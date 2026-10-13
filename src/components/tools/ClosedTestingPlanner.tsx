@@ -7,9 +7,9 @@ import {
   RotateCcw,
   Info,
   Sparkles,
+  Printer,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { motion, useReducedMotion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 
 interface PolicyPreset {
@@ -66,16 +66,16 @@ function toInputDateString(date: Date): string {
 const DEFAULT_INITIAL_DATE = "2026-10-15";
 
 export function ClosedTestingPlanner() {
-  // Input states (initialized statically for SSR, hydrated on client)
+  const shouldReduceMotion = useReducedMotion();
   const [startDateStr, setStartDateStr] = useState<string>(DEFAULT_INITIAL_DATE);
 
   useEffect(() => {
-    // Sync to user's local date on mount
     const today = toInputDateString(new Date());
     queueMicrotask(() => {
       setStartDateStr(today);
     });
   }, []);
+
   const [presetId, setPresetId] = useState<string>("personal-nov2023");
   const [testingDays, setTestingDays] = useState<number>(14);
   const [targetTesters, setTargetTesters] = useState<number>(25);
@@ -85,7 +85,6 @@ export function ClosedTestingPlanner() {
   const [productionReviewDays, setProductionReviewDays] = useState<number>(7);
   const [copied, setCopied] = useState(false);
 
-  // Handle Preset Changes
   const handlePresetChange = (newPresetId: string) => {
     setPresetId(newPresetId);
     const selected = POLICY_PRESETS.find((p) => p.id === newPresetId);
@@ -101,7 +100,6 @@ export function ClosedTestingPlanner() {
     }
   };
 
-  // Reset to default
   const handleReset = () => {
     setStartDateStr(toInputDateString(new Date()));
     setPresetId("personal-nov2023");
@@ -113,7 +111,6 @@ export function ClosedTestingPlanner() {
     setProductionReviewDays(7);
   };
 
-  // Calculations
   const timeline = useMemo(() => {
     const start = new Date(startDateStr);
     const validStart = isNaN(start.getTime()) ? new Date() : start;
@@ -146,7 +143,6 @@ export function ClosedTestingPlanner() {
     productionReviewDays,
   ]);
 
-  // Copy timeline text
   const handleCopyTimeline = () => {
     const text = `
 Google Play Closed Testing Timeline Plan
@@ -165,7 +161,7 @@ KEY MILESTONE SCHEDULE:
 6. Tentative Production Access Decision Date: ${formatDate(timeline.estimatedDecisionDate)}
 
 Estimated Total Duration: ~${timeline.totalCalendarDays} calendar days.
-Notice: This schedule is an independent developer planning estimate, not an official Google approval guarantee.
+Notice: This schedule is an independent developer planning estimate, not an official Google approval date.
 --------------------------------------------------
 `.trim();
 
@@ -175,69 +171,71 @@ Notice: This schedule is an independent developer planning estimate, not an offi
   };
 
   return (
-    <div className="space-y-12">
-      {/* Policy Transparency Banner */}
-      <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:p-6 text-sm">
+    <div className="space-y-10">
+      {/* Policy Transparency & Limitation Banner */}
+      <div className="rounded-3xl border border-primary/20 bg-surface-cream/80 dark:bg-card p-6 sm:p-7 shadow-subtle">
         <div className="flex items-start gap-3.5">
           <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <h3 className="font-bold text-foreground">
-              Official Requirement vs. Planning Estimates
-            </h3>
+          <div className="space-y-1.5">
+            <h2 className="text-sm font-extrabold text-foreground">
+              Planning Estimate Only &bull; Not an Approval Guarantee
+            </h2>
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-              Google Play requires personal accounts registered after Nov 13, 2023 to maintain at least <strong>20 active opted-in testers for 14 continuous days</strong>. This tool calculates a realistic calendar schedule incorporating track review buffers, opt-in ramp-up, and safety padding. It is an independent planning aid and does <em>not</em> guarantee Google approval.
+              Google Play requires personal developer accounts created on or after November 13, 2023 to maintain at least <strong>20 active opted-in testers continuously for 14 full days</strong>. Organization accounts with D-U-N-S verification are exempt. This calculator projects realistic milestone dates including review buffers, recruitment, and safety padding. <strong>A calculated target date is a planning milestone, not an approval date.</strong> Google review operations retains independent approval authority.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         {/* Left Column: Interactive Configuration Form */}
         <div className="lg:col-span-5 space-y-6">
-          <Card className="border-border shadow-sm">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Planner Parameters</CardTitle>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleReset}
-                  className="text-xs text-muted-foreground hover:text-foreground h-8 px-2"
-                >
-                  <RotateCcw className="h-3.5 w-3.5 mr-1" /> Reset Defaults
-                </Button>
-              </div>
-              <CardDescription className="text-xs">
-                Configure your release track timelines and account policy type.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-5 text-sm">
-              {/* Account Policy Presets */}
+          <div className="rounded-3xl border border-border/90 bg-surface-panel dark:bg-card p-6 sm:p-7 shadow-floating space-y-6">
+            <div className="flex items-center justify-between border-b border-border/70 pb-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-2">
-                  Account Rule Preset
-                </label>
-                <div className="space-y-2">
-                  {POLICY_PRESETS.map((preset) => (
+                <h3 className="text-base font-extrabold text-foreground">
+                  Planner Parameters
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Configure your testing parameters and buffers.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground py-1 px-2.5 rounded-lg border border-border/60 hover:bg-muted/40 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="h-3 w-3" />
+                <span>Reset</span>
+              </button>
+            </div>
+
+            <fieldset className="space-y-4">
+              <legend className="text-xs font-bold uppercase tracking-wider text-foreground mb-2">
+                Account Policy Rule
+              </legend>
+              <div className="space-y-2">
+                {POLICY_PRESETS.map((preset) => {
+                  const isChecked = presetId === preset.id;
+                  return (
                     <label
                       key={preset.id}
-                      className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
-                        presetId === preset.id
-                          ? "border-primary bg-primary/5 ring-1 ring-primary/30"
-                          : "border-border hover:border-border/80 bg-background"
+                      className={`flex items-start gap-3 p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                        isChecked
+                          ? "border-primary bg-surface-cream/80 dark:bg-muted/30 ring-2 ring-primary/20 shadow-xs"
+                          : "border-border/70 hover:border-border hover:bg-muted/20 bg-surface-panel dark:bg-card"
                       }`}
                     >
                       <input
                         type="radio"
                         name="policyPreset"
                         value={preset.id}
-                        checked={presetId === preset.id}
+                        checked={isChecked}
                         onChange={() => handlePresetChange(preset.id)}
-                        className="mt-1 text-primary focus:ring-primary"
+                        className="mt-0.5 text-primary focus:ring-primary h-4 w-4"
                       />
                       <div className="text-xs">
-                        <span className="font-semibold text-foreground block">
+                        <span className="font-bold text-foreground block">
                           {preset.name}
                         </span>
                         <span className="text-muted-foreground text-[11px] leading-tight block mt-0.5">
@@ -245,340 +243,378 @@ Notice: This schedule is an independent developer planning estimate, not an offi
                         </span>
                       </div>
                     </label>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
+            </fieldset>
 
-              {/* Start Date */}
+            {/* Start Date */}
+            <div>
+              <label
+                htmlFor="startDate"
+                className="block text-xs font-bold uppercase tracking-wider text-foreground mb-2"
+              >
+                Closed Track Start Date
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                value={startDateStr}
+                onChange={(e) => setStartDateStr(e.target.value)}
+                className="flex h-11 w-full rounded-2xl border border-border/90 bg-surface-cream/40 dark:bg-muted/30 px-3.5 py-2 text-xs font-medium text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
+              />
+              <span className="text-[11px] text-muted-foreground mt-1.5 block">
+                The date you submit your closed track release build in Play Console.
+              </span>
+            </div>
+
+            {/* Duration and Cohort Size */}
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="startDate" className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                  Closed Track Start Date
+                <label
+                  htmlFor="testingDays"
+                  className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5"
+                >
+                  Testing Days
                 </label>
                 <input
-                  type="date"
-                  id="startDate"
-                  value={startDateStr}
-                  onChange={(e) => setStartDateStr(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  type="number"
+                  id="testingDays"
+                  min={7}
+                  max={60}
+                  value={testingDays}
+                  onChange={(e) => setTestingDays(Math.max(1, parseInt(e.target.value) || 14))}
+                  className="flex h-11 w-full rounded-2xl border border-border/90 bg-surface-cream/40 dark:bg-muted/30 px-3.5 py-2 text-xs font-mono font-bold text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
                 />
-                <span className="text-[11px] text-muted-foreground mt-1 block">
-                  The date you intend to create the closed track release in Play Console.
+                <span className="text-[10px] text-muted-foreground mt-1 block">
+                  Google min: 14 days
                 </span>
               </div>
 
-              {/* Mandatory Testing Duration */}
+              <div>
+                <label
+                  htmlFor="targetTesters"
+                  className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5"
+                >
+                  Target Testers
+                </label>
+                <input
+                  type="number"
+                  id="targetTesters"
+                  min={20}
+                  max={100}
+                  value={targetTesters}
+                  onChange={(e) => setTargetTesters(Math.max(20, parseInt(e.target.value) || 20))}
+                  className="flex h-11 w-full rounded-2xl border border-border/90 bg-surface-cream/40 dark:bg-muted/30 px-3.5 py-2 text-xs font-mono font-bold text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
+                />
+                <span className="text-[10px] text-muted-foreground mt-1 block">
+                  Target 22–25 safe buffer
+                </span>
+              </div>
+            </div>
+
+            {/* Operational Buffers */}
+            <div className="pt-3 border-t border-border/70 space-y-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-foreground block">
+                Operational Review &amp; Safety Buffers
+              </span>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="testingDays" className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                    Testing Duration (Days)
+                  <label htmlFor="trackReview" className="block text-xs text-muted-foreground mb-1">
+                    Track Review Buffer
                   </label>
-                  <input
-                    type="number"
-                    id="testingDays"
-                    min={7}
-                    max={60}
-                    value={testingDays}
-                    onChange={(e) => setTestingDays(Math.max(1, parseInt(e.target.value) || 14))}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  />
-                  <span className="text-[11px] text-muted-foreground mt-1 block">
-                    Google minimum: 14 days
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="number"
+                      id="trackReview"
+                      min={0}
+                      max={10}
+                      value={trackReviewDays}
+                      onChange={(e) => setTrackReviewDays(Math.max(0, parseInt(e.target.value) || 0))}
+                      className="flex h-10 w-full rounded-xl border border-border/90 bg-surface-cream/40 dark:bg-muted/30 px-3 py-1 text-xs font-mono text-foreground"
+                    />
+                    <span className="text-xs text-muted-foreground">days</span>
+                  </div>
                 </div>
 
                 <div>
-                  <label htmlFor="targetTesters" className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                    Target Cohort Size
+                  <label htmlFor="recruitment" className="block text-xs text-muted-foreground mb-1">
+                    Opt-In Onboarding
                   </label>
-                  <input
-                    type="number"
-                    id="targetTesters"
-                    min={20}
-                    max={100}
-                    value={targetTesters}
-                    onChange={(e) => setTargetTesters(Math.max(20, parseInt(e.target.value) || 20))}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  />
-                  <span className="text-[11px] text-muted-foreground mt-1 block">
-                    Min 20. Target 25+ for safety.
-                  </span>
-                </div>
-              </div>
-
-              {/* Advanced Buffers (Collapsible or visible) */}
-              <div className="pt-2 border-t border-border space-y-4">
-                <span className="text-xs font-bold text-foreground block">
-                  Operational Safety Buffers
-                </span>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="trackReview" className="block text-xs text-muted-foreground mb-1">
-                      Track Review Buffer
-                    </label>
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        type="number"
-                        id="trackReview"
-                        min={0}
-                        max={10}
-                        value={trackReviewDays}
-                        onChange={(e) => setTrackReviewDays(Math.max(0, parseInt(e.target.value) || 0))}
-                        className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm text-foreground"
-                      />
-                      <span className="text-xs text-muted-foreground">days</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="recruitment" className="block text-xs text-muted-foreground mb-1">
-                      Opt-In Recruitment
-                    </label>
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        type="number"
-                        id="recruitment"
-                        min={1}
-                        max={14}
-                        value={recruitmentDays}
-                        onChange={(e) => setRecruitmentDays(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm text-foreground"
-                      />
-                      <span className="text-xs text-muted-foreground">days</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="safetyBuffer" className="block text-xs text-muted-foreground mb-1">
-                      Dropout Safety Buffer
-                    </label>
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        type="number"
-                        id="safetyBuffer"
-                        min={0}
-                        max={14}
-                        value={safetyBufferDays}
-                        onChange={(e) => setSafetyBufferDays(Math.max(0, parseInt(e.target.value) || 0))}
-                        className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm text-foreground"
-                      />
-                      <span className="text-xs text-muted-foreground">days</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="prodReview" className="block text-xs text-muted-foreground mb-1">
-                      Google Review SLA
-                    </label>
-                    <div className="flex items-center gap-1.5">
-                      <input
-                        type="number"
-                        id="prodReview"
-                        min={1}
-                        max={21}
-                        value={productionReviewDays}
-                        onChange={(e) => setProductionReviewDays(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm text-foreground"
-                      />
-                      <span className="text-xs text-muted-foreground">days</span>
-                    </div>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="number"
+                      id="recruitment"
+                      min={1}
+                      max={14}
+                      value={recruitmentDays}
+                      onChange={(e) => setRecruitmentDays(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="flex h-10 w-full rounded-xl border border-border/90 bg-surface-cream/40 dark:bg-muted/30 px-3 py-1 text-xs font-mono text-foreground"
+                    />
+                    <span className="text-xs text-muted-foreground">days</span>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* Quick Insights Box */}
-          <div className="rounded-xl border border-border bg-card p-4 space-y-2 text-xs">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="safetyBuffer" className="block text-xs text-muted-foreground mb-1">
+                    Dropout Buffer
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="number"
+                      id="safetyBuffer"
+                      min={0}
+                      max={14}
+                      value={safetyBufferDays}
+                      onChange={(e) => setSafetyBufferDays(Math.max(0, parseInt(e.target.value) || 0))}
+                      className="flex h-10 w-full rounded-xl border border-border/90 bg-surface-cream/40 dark:bg-muted/30 px-3 py-1 text-xs font-mono text-foreground"
+                    />
+                    <span className="text-xs text-muted-foreground">days</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="prodReview" className="block text-xs text-muted-foreground mb-1">
+                    Google Review SLA
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="number"
+                      id="prodReview"
+                      min={1}
+                      max={21}
+                      value={productionReviewDays}
+                      onChange={(e) => setProductionReviewDays(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="flex h-10 w-full rounded-xl border border-border/90 bg-surface-cream/40 dark:bg-muted/30 px-3 py-1 text-xs font-mono text-foreground"
+                    />
+                    <span className="text-xs text-muted-foreground">days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Key Insight Box */}
+          <div className="rounded-3xl border border-border/80 bg-surface-panel dark:bg-card p-5 space-y-2 text-xs shadow-subtle">
             <span className="font-bold text-foreground flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-primary" /> Key Timeline Metric:
+              <Sparkles className="h-4 w-4 text-primary" /> Key Safety Insight
             </span>
             <p className="text-muted-foreground leading-relaxed">
-              If any tester opts out and your active count drops to <strong>19</strong> on Day 13, Google’s automated tracker will reset your 14-day continuous clock. Maintaining a {targetTesters}-tester pool (+{safetyBufferDays} buffer days) prevents costly restart cycles.
+              If an opted-in tester drops out on Day 12 and your active count slips to <strong>19</strong>, Google resets the 14-day counter to Day 1. Planning a cohort of {targetTesters} testers with +{safetyBufferDays} buffer days provides essential insurance against reset loops.
             </p>
           </div>
         </div>
 
         {/* Right Column: Calculated Results & Milestones Timeline */}
         <div className="lg:col-span-7 space-y-6">
-          {/* Executive Summary Card */}
-          <div className="rounded-2xl border border-primary/30 bg-card p-6 sm:p-7 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
+          {/* Executive Target Card */}
+          <motion.div
+            key={timeline.recommendedApplyDate.toISOString()}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.28, ease: "easeOut" }}
+            className="rounded-3xl border border-primary/30 bg-surface-panel dark:bg-card p-6 sm:p-8 shadow-floating"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/70">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                  Tentative Target Date
+                  Earliest Recommended Application Date
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground mt-1">
                   {formatDate(timeline.recommendedApplyDate)}
                 </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Earliest recommended date to apply for Production Access
+                <p className="text-xs text-muted-foreground mt-1">
+                  Includes mandatory {testingDays}-day opt-in retention + {safetyBufferDays}-day drop-off safety buffer
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Button
+              <div className="flex flex-wrap items-center gap-2 print:hidden shrink-0">
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border/90 bg-surface-cream dark:bg-muted/40 hover:bg-muted px-3.5 py-2 text-xs font-bold text-foreground transition-all shadow-2xs cursor-pointer"
+                >
+                  <Printer className="h-3.5 w-3.5 text-primary" />
+                  <span>Print / PDF</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={handleCopyTimeline}
-                  variant="outline"
-                  size="sm"
-                  className="font-medium text-xs border-border"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border/90 bg-surface-cream dark:bg-muted/40 hover:bg-muted px-4 py-2 text-xs font-bold text-foreground transition-all shadow-2xs cursor-pointer"
                 >
                   {copied ? (
                     <>
-                      <Check className="h-3.5 w-3.5 mr-1.5 text-emerald-600" /> Copied Plan
+                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span>Copied Plan</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="h-3.5 w-3.5 mr-1.5" /> Copy Schedule
+                      <Copy className="h-3.5 w-3.5 text-primary" />
+                      <span>Copy Schedule</span>
                     </>
                   )}
-                </Button>
+                </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-6 text-center sm:text-left">
-              <div>
-                <span className="text-[11px] text-muted-foreground uppercase font-semibold">Total Duration</span>
-                <p className="text-lg font-bold text-foreground mt-0.5">~{timeline.totalCalendarDays} Days</p>
+            {/* 3 Metric Summary Counters */}
+            <div className="grid grid-cols-3 gap-3 pt-6 text-center sm:text-left">
+              <div className="p-3 rounded-2xl bg-surface-cream/50 dark:bg-muted/20 border border-border/60">
+                <span className="text-[10px] sm:text-[11px] text-muted-foreground uppercase font-semibold">Total Days</span>
+                <p className="text-base sm:text-xl font-extrabold text-foreground font-mono mt-0.5">
+                  ~{timeline.totalCalendarDays}d
+                </p>
               </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground uppercase font-semibold">Target Cohort</span>
-                <p className="text-lg font-bold text-foreground mt-0.5">{targetTesters} Testers</p>
+              <div className="p-3 rounded-2xl bg-surface-cream/50 dark:bg-muted/20 border border-border/60">
+                <span className="text-[10px] sm:text-[11px] text-muted-foreground uppercase font-semibold">Target Cohort</span>
+                <p className="text-base sm:text-xl font-extrabold text-foreground font-mono mt-0.5">
+                  {targetTesters} Testers
+                </p>
               </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground uppercase font-semibold">Safety Buffer</span>
-                <p className="text-lg font-bold text-primary mt-0.5">+{safetyBufferDays} Safe Days</p>
+              <div className="p-3 rounded-2xl bg-surface-cream/50 dark:bg-muted/20 border border-border/60">
+                <span className="text-[10px] sm:text-[11px] text-muted-foreground uppercase font-semibold">Safety Buffer</span>
+                <p className="text-base sm:text-xl font-extrabold text-primary font-mono mt-0.5">
+                  +{safetyBufferDays} Days
+                </p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Chronological Milestone Cards */}
+          {/* Phased Milestones Timeline */}
           <div className="space-y-4">
             <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground px-1">
-              Phased Execution Milestones
+              Phased Calendar Milestones
             </h4>
 
             {/* Milestone 1 */}
-            <div className="rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-sm">
-                1
+            <div className="rounded-2xl border border-border/80 bg-surface-panel dark:bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4 shadow-2xs">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary font-mono font-bold text-xs">
+                01
               </div>
               <div className="space-y-1.5 flex-1 text-xs">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="font-bold text-sm text-foreground">
                     Closed Track Setup &amp; AAB Submission
                   </span>
-                  <Badge variant="outline" className="text-[10px]">
+                  <Badge variant="outline" className="text-[10px] font-mono shrink-0">
                     {formatDate(timeline.startDate)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  Create closed testing track in Google Play Console. Target Android 14 (API 34+), attach feedback email or Google Group, and submit initial App Bundle release for Google review.
+                  Create closed testing track in Google Play Console. Target API 34/35, attach feedback Google Group or email list, and submit initial AAB for automated pre-launch checks.
                 </p>
               </div>
             </div>
 
             {/* Milestone 2 */}
-            <div className="rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-sm">
-                2
+            <div className="rounded-2xl border border-border/80 bg-surface-panel dark:bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4 shadow-2xs">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary font-mono font-bold text-xs">
+                02
               </div>
               <div className="space-y-1.5 flex-1 text-xs">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="font-bold text-sm text-foreground">
-                    Initial Track Review Completed
+                    Track Approval &amp; Opt-In Links Active
                   </span>
-                  <Badge variant="outline" className="text-[10px]">
+                  <Badge variant="outline" className="text-[10px] font-mono shrink-0">
                     {formatDate(timeline.trackApproved)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  Track is approved by Google Play reviewers. Testers can now access the opt-in link on the web and download the build directly from the Play Store.
+                  Release status changes to &lsquo;Completed&rsquo; in Play Console. Web and Android opt-in URLs become active for tester onboarding.
                 </p>
               </div>
             </div>
 
             {/* Milestone 3 */}
-            <div className="rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-sm">
-                3
+            <div className="rounded-2xl border border-border/80 bg-surface-panel dark:bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4 shadow-2xs">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary font-mono font-bold text-xs">
+                03
               </div>
               <div className="space-y-1.5 flex-1 text-xs">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="font-bold text-sm text-foreground">
-                    20+ Testers Opt-In Verified (Clock Starts)
+                    20+ Testers Opted In &bull; 14-Day Timer Starts
                   </span>
-                  <Badge variant="default" className="text-[10px]">
+                  <Badge variant="success" className="text-[10px] font-mono shrink-0">
                     {formatDate(timeline.optInsConfirmed)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  All 20+ testers accept the invitation and download the app. The Google Play Dashboard &ldquo;Test with 20 testers for 14 days&rdquo; task counter begins tracking consecutive active days.
+                  All {targetTesters} testers accept opt-in invitation and install build. Play Console dashboard counter actively registers consecutive days.
                 </p>
               </div>
             </div>
 
             {/* Milestone 4 */}
-            <div className="rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-sm">
-                4
+            <div className="rounded-2xl border border-border/80 bg-surface-panel dark:bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4 shadow-2xs">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary font-mono font-bold text-xs">
+                04
               </div>
               <div className="space-y-1.5 flex-1 text-xs">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="font-bold text-sm text-foreground">
-                    Official 14-Day Minimum Reached
+                    Official 14-Day Testing Threshold Reached
                   </span>
-                  <Badge variant="outline" className="text-[10px]">
+                  <Badge variant="outline" className="text-[10px] font-mono shrink-0">
                     {formatDate(timeline.officialTestingEnd)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  The minimum 14-day duration requirement is satisfied. Continue engaging testers for feedback, bug logging, and crash monitoring.
+                  Mandatory consecutive opt-in period completed. Production access application unlocks in Console dashboard.
                 </p>
               </div>
             </div>
 
             {/* Milestone 5 */}
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-50/20 dark:bg-emerald-950/20 p-5 hover:border-emerald-500/50 transition-all flex items-start gap-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white font-bold text-sm">
-                5
+            <div className="rounded-2xl border border-primary/40 bg-surface-cream/80 dark:bg-muted/30 p-5 hover:border-primary/60 transition-all flex items-start gap-4 shadow-subtle ring-1 ring-primary/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground font-mono font-bold text-xs">
+                05
               </div>
               <div className="space-y-1.5 flex-1 text-xs">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="font-bold text-sm text-foreground">
-                    Apply for Production Access (Recommended Date)
+                    Recommended Production Submission (+{safetyBufferDays}d Buffer)
                   </span>
-                  <Badge variant="default" className="bg-emerald-600 text-white text-[10px]">
+                  <Badge variant="default" className="text-[10px] font-mono shrink-0">
                     {formatDate(timeline.recommendedApplyDate)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  Submit the 3-part production access questionnaire in Play Console. Provide concrete answers about tester recruitment, qualitative feedback, and app iteration.
+                  Safety buffer elapsed. Review questionnaire submitted with qualitative feedback logs and Android Vitals telemetry evidence.
                 </p>
               </div>
             </div>
 
             {/* Milestone 6 */}
-            <div className="rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold text-sm">
-                6
+            <div className="rounded-2xl border border-border/80 bg-surface-panel dark:bg-card p-5 hover:border-primary/40 transition-all flex items-start gap-4 shadow-2xs">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground font-mono font-bold text-xs">
+                06
               </div>
               <div className="space-y-1.5 flex-1 text-xs">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                   <span className="font-bold text-sm text-foreground">
-                    Estimated Production Review Decision
+                    Tentative Production Access Decision Window
                   </span>
-                  <Badge variant="outline" className="text-[10px]">
-                    {formatDate(timeline.estimatedDecisionDate)}
+                  <Badge variant="outline" className="text-[10px] font-mono shrink-0">
+                    ~{formatDate(timeline.estimatedDecisionDate)}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  Google Play team evaluates your questionnaire and testing engagement telemetry. Upon approval, the Production track unlocks for public rollout.
+                  Estimated window for Google human reviewer evaluation of your production questionnaire and crash telemetry.
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Bottom Limitation Callout */}
+          <div className="p-4 rounded-2xl bg-surface-cream/50 dark:bg-muted/20 border border-border/70 text-xs text-muted-foreground">
+            <span className="font-bold text-foreground">Policy Disclaimer: </span>
+            This tool is an independent scheduling utility. Actual Google Play review turnaround times vary based on regional holidays, application complexity, and automated scanning flags.
           </div>
         </div>
       </div>
