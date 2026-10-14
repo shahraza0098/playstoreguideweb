@@ -77,9 +77,12 @@ export function Footer() {
               <li>
                 <Link
                   href="/services/closed-testing"
-                  className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                  className="font-bold text-primary hover:underline inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
                 >
-                  20 Testers / 14 Days Track
+                  <span>14-Day Closed Testing</span>
+                  <span className="text-[9px] font-semibold bg-primary/10 text-primary px-1.5 py-0.2 rounded-full border border-primary/20">
+                    Primary
+                  </span>
                 </Link>
               </li>
               <li>

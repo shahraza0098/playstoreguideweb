@@ -22,11 +22,11 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
 const services = [
   {
-    title: "Closed Testing (20 Testers / 14 Days)",
+    title: "14-Day Closed Testing Assistance",
     href: "/services/closed-testing",
-    desc: "Verified human Android testers with continuous 14-day cohort tracking.",
+    desc: "20+ real Android testers with continuous 14-day cohort tracking & feedback logs.",
     icon: Users,
-    badge: "Mandatory",
+    badge: "Primary Service",
   },
   {
     title: "Account Setup & D-U-N-S",
@@ -129,7 +129,8 @@ export function Navbar() {
     };
   }, [mobileMenuOpen]);
 
-  const isServicesActive = pathname.startsWith("/services");
+  const isClosedTestingActive = pathname === "/services/closed-testing";
+  const isServicesActive = pathname.startsWith("/services") && !isClosedTestingActive;
   const isPricingActive = pathname === "/pricing";
   const isToolsActive = pathname.startsWith("/tools");
   const isBlogActive = pathname.startsWith("/blog") || pathname.startsWith("/guides");
@@ -181,6 +182,26 @@ export function Navbar() {
           className="hidden md:flex items-center gap-1 text-sm font-medium"
           aria-label="Main Navigation"
         >
+          {/* Direct Primary Service Navigation Link */}
+          <Link
+            href="/services/closed-testing"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              isClosedTestingActive
+                ? "bg-primary text-primary-foreground shadow-xs"
+                : "text-foreground hover:text-foreground bg-primary/10 hover:bg-primary/20 dark:bg-primary/20 dark:hover:bg-primary/30"
+            }`}
+          >
+            <Users className={`h-3.5 w-3.5 ${isClosedTestingActive ? "text-primary-foreground" : "text-primary"} shrink-0`} />
+            <span>14-Day Testing</span>
+            <span className={`hidden xl:inline-flex items-center rounded-full px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${
+              isClosedTestingActive
+                ? "bg-white/20 text-primary-foreground"
+                : "bg-primary/20 dark:bg-white/20 text-primary dark:text-white"
+            }`}>
+              Primary
+            </span>
+          </Link>
+
           {/* Services Dropdown */}
           <div
             ref={dropdownRef}
@@ -385,6 +406,30 @@ export function Navbar() {
                   </div>
                 </div>
               </div>
+
+              {/* Primary Service Spotlight Card */}
+              <Link
+                href="/services/closed-testing"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-start gap-3 rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/10 via-surface-cream to-surface-panel dark:from-primary/20 dark:to-card p-3.5 transition-all shadow-xs"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-xs">
+                  <Users className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-foreground">
+                      14-Day Closed Testing
+                    </span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                      Primary Service
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
+                    Fulfill Google Play&rsquo;s 14-day requirement with 20+ real opt-in Android testers on physical hardware.
+                  </p>
+                </div>
+              </Link>
 
               {/* Services section */}
               <div>

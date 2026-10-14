@@ -277,6 +277,20 @@ const pageData: ServicePageData = {
         "How to deconstruct Google Play rejection notices, identify root causes in your code or metadata, and draft successful appeals without risking account strikes.",
     },
   ],
+  closedTestingCallout: {
+    eyebrow: "Testing Prerequisite",
+    headline: "Need to Complete Your 14-Day Closed Testing Track First?",
+    description:
+      "Before you can submit the 5-prompt production questionnaire, eligible personal developer accounts must first complete at least 14 continuous days of closed testing with at least 20 opted-in testers. If your testing track is not yet complete or suffered a counter reset, our coordination service can help.",
+    points: [
+      "Coordinate 20+ verified real testers on physical Android hardware (with 22–25 buffer).",
+      "Maintain continuous 14-day opt-in retention in Google Play Console without drops.",
+      "Generate authentic session telemetry and qualitative feedback logs to cite in your answers.",
+      "Surveil Android Vitals crash (<1.09%) and ANR (<0.47%) rates to protect review credibility.",
+    ],
+    ctaLabel: "Explore 14-Day Closed Testing Assistance",
+    ctaHref: "/services/closed-testing",
+  },
   ctaHeadline: "Preparing to Apply for Google Play Production Access?",
   ctaDescription:
     "Contact our technical advisory team to review your test feedback and ensure your questionnaire responses present your iteration history compellingly.",

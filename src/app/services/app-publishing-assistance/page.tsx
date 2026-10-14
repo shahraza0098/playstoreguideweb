@@ -282,6 +282,20 @@ const pageData: ServicePageData = {
         "An in-depth breakdown of Google's production access questionnaire. Learn what human reviewers look for in your testing feedback and iteration history.",
     },
   ],
+  closedTestingCallout: {
+    eyebrow: "Publishing Workflow Prerequisite",
+    headline: "Deploying Your Bundle to Closed Testing First?",
+    description:
+      "Before a personal developer account can push an AAB bundle to production, Google Play requires at least 14 days of closed testing with 20+ testers. Our publishing audit ensures your Target SDK, permissions, and Data Safety disclosures pass automated scanners so your 14-day test proceeds without release halts.",
+    points: [
+      "Ensure Target SDK 34/35 compliance to prevent release rejection upon bundle upload.",
+      "Synchronize Data Safety declarations with embedded analytics and crash SDKs.",
+      "Configure unrestricted demo account credentials in App Access for testing cohorts.",
+      "Transition your validated release bundle directly into a 14-day closed testing track.",
+    ],
+    ctaLabel: "Coordinate 14-Day Closed Testing",
+    ctaHref: "/services/closed-testing",
+  },
   ctaHeadline: "Preparing Your Android App for Store Submission?",
   ctaDescription:
     "Contact our advisory team to schedule a pre-launch compliance audit and ensure your build satisfies every technical and policy requirement.",

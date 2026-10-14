@@ -282,6 +282,20 @@ const pageData: ServicePageData = {
         "How to deconstruct Google Play rejection notices, identify root causes in your code or metadata, and draft successful appeals without risking account strikes.",
     },
   ],
+  closedTestingCallout: {
+    eyebrow: "Publishing Journey Context",
+    headline: "Still Working on Google Play Production Access?",
+    description:
+      "Store Listing Optimization (ASO) becomes active once your app is publicly discoverable on the Play Store. If you have a personal developer account created on or after November 13, 2023, you must first complete the mandatory 14-day closed testing track and pass Google's production review before your public listing goes live.",
+    points: [
+      "Understand the roadmap: 14-day closed testing &rarr; production review &rarr; public ASO growth.",
+      "Use closed testing to refine your short description and core feature messaging with real users.",
+      "Ensure graphic assets and screenshots follow Google metadata spam rules during test releases.",
+      "Transition from successful production access directly into organic store discoverability.",
+    ],
+    ctaLabel: "View 14-Day Closed Testing Assistance",
+    ctaHref: "/services/closed-testing",
+  },
   ctaHeadline: "Ready to Optimize Your Google Play Store Listing?",
   ctaDescription:
     "Contact our advisory team to discuss a policy-compliant ASO strategy that boosts organic impressions and maximizes store conversion rates.",

@@ -216,10 +216,10 @@ export default function ServicesPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <span className="text-xs font-bold uppercase tracking-wider text-primary block">
-              Flagship Advisory Track
+              Primary Service Focus
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mt-1">
-              Google Play Closed Testing Coordination
+              Google Play 14-Day Closed Testing Assistance
             </h2>
           </div>
 
@@ -232,10 +232,10 @@ export default function ServicesPage() {
                   </div>
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Personal Accounts (Post-Nov 13, 2023)
+                      Eligible Personal Accounts (Post-Nov 13, 2023)
                     </span>
                     <h3 className="text-xl sm:text-2xl font-extrabold text-foreground">
-                      14-Day Closed Testing Coordination (20 Testers)
+                      Guided 14-Day Closed Testing (20 Testers)
                     </h3>
                   </div>
                 </div>

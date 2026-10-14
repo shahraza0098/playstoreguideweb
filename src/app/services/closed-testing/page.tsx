@@ -3,19 +3,20 @@ import type { Metadata } from "next";
 import { ServicePageTemplate, type ServicePageData } from "@/components/services/ServicePageTemplate";
 import { constructMetadata } from "@/lib/seo";
 import { ConsoleDashboardMock } from "@/components/testing/ConsoleDashboardMock";
-import { ClosedTestingTimeline } from "@/components/testing/ClosedTestingTimeline";
+import { FourteenDayProcessTimeline } from "@/components/testing/FourteenDayProcessTimeline";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Google Play 20 Testers & 14-Day Closed Testing Coordination",
+  title: "Google Play 14-Day Closed Testing Assistance (20 Testers)",
   description:
-    "Fulfill Google's mandatory 14-day closed testing requirement with 20+ verified human testers on real Android devices. Complete opt-in tracking, authentic engagement telemetry, and feedback documentation.",
+    "Prepare for Google Play Production Access with guided 14-day closed testing assistance. 20+ verified real human testers on physical Android devices, continuous opt-in tracking, authentic telemetry, and reviewer-ready questionnaire guidance.",
   path: "/services/closed-testing",
   keywords: [
+    "Google Play 14-day closed testing",
     "Google Play 20 testers",
     "14 days closed testing Google Play",
     "personal developer account closed test",
-    "Google Play closed testing service",
+    "Google Play closed testing assistance",
     "Android closed testing testers",
     "closed testing recruitment",
   ],
@@ -23,15 +24,15 @@ export const metadata: Metadata = constructMetadata({
 
 const pageData: ServicePageData = {
   slug: "closed-testing",
-  eyebrow: "Personal Account Compliance",
-  h1: "Google Play 20 Testers & 14-Day Closed Testing Coordination",
+  eyebrow: "Primary Service Track",
+  h1: "Google Play 14-Day Closed Testing Assistance",
   subtitle:
-    "Coordinate real, active Android testers on physical hardware to fulfill Google's mandatory 14-day closed testing requirement. Transparent tracking, active telemetry, qualitative feedback, and zero bot emulators.",
+    "Prepare for Google Play Production Access with guided 14-day closed testing assistance. Coordinate 20+ verified real testers on physical Android hardware, maintain continuous opt-in retention, gather authentic feedback logs, and structure reviewer-ready questionnaire responses.",
   snapshot: {
-    targetAudience: "Personal Developer Accounts (Post-Nov 13, 2023)",
-    engagementModel: "14-Day Cohort Coordination",
-    primaryFocus: "20+ Opt-In Testers & Feedback Logs",
-    googlePolicyRule: "Mandatory for personal accounts post-Nov 13, 2023 (Org accounts exempt)",
+    targetAudience: "Eligible Personal Accounts (Post-Nov 13, 2023)",
+    engagementModel: "Guided 14-Day Cohort Coordination",
+    primaryFocus: "20+ Real Opt-In Testers & Evidence Dossier",
+    googlePolicyRule: "Mandatory 14-day continuous opt-in (Org accounts exempt)",
   },
   problem: {
     title: "Why Satisfying Google's 20-Tester Rule Is Difficult for Solo Developers",
@@ -311,11 +312,11 @@ function ClosedTestingShowcase() {
       </div>
 
       <div>
-        <ClosedTestingTimeline
-          eyebrow="Step-by-Step Engagement Protocol"
-          title="The 14-Day Closed Testing Execution Roadmap"
+        <FourteenDayProcessTimeline
+          eyebrow="14-Day Roadmap"
+          title="The 14-Day Closed Testing Execution Protocol"
           description="From pre-flight AAB checks to production access questionnaire prep: each milestone is tracked with verifiable evidence."
-          showSelector={true}
+          showInspector={true}
         />
       </div>
     </div>

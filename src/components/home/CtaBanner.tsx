@@ -17,20 +17,20 @@ export function CtaBanner() {
             className="py-1 px-3.5 text-xs font-semibold rounded-full border-primary/30 bg-surface-cream text-foreground mb-4"
           >
             <ShieldCheck className="h-3.5 w-3.5 text-primary mr-1" />
-            Get Started with PlayStoreGuide
+            14-Day Testing &amp; Production Advisory
           </Badge>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-foreground leading-tight max-w-2xl mx-auto">
-            Ready to Prepare Your Android App for Google Play Release?
+            Ready to Satisfy Your 14-Day Closed Testing Requirement?
           </h2>
 
           <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Whether you need 14-day closed testing coordination, production review questionnaire guidance, or rejection recovery assistance, our technical team is ready to support your launch.
+            Discuss your app&rsquo;s closed testing requirements and target release timeline with our technical team. We coordinate verified real testers, maintain continuous retention tracking, and guide production access questionnaire preparation.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Link
-              href="/contact"
+              href="/contact?service=closed-testing"
               className={buttonVariants({
                 variant: "default",
                 size: "lg",
@@ -38,7 +38,7 @@ export function CtaBanner() {
                   "rounded-full bg-primary px-8 py-6 text-sm sm:text-base font-semibold text-primary-foreground shadow-card hover:bg-primary/90 transition-all active:scale-98 w-full sm:w-auto",
               })}
             >
-              Schedule Publishing Consultation
+              Discuss My Testing Requirements
             </Link>
 
             <Link
@@ -50,7 +50,7 @@ export function CtaBanner() {
                   "rounded-full border-border bg-surface-panel dark:bg-card px-7 py-6 text-sm sm:text-base font-medium text-foreground hover:bg-muted transition-all active:scale-98 w-full sm:w-auto",
               })}
             >
-              Explore Publishing Services
+              Explore All Advisory Services
             </Link>
           </div>
 

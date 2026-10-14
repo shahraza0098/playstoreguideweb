@@ -18,7 +18,7 @@ export const servicesData = [
   {
     icon: Users,
     title: "14-Day Closed Testing Coordination",
-    badge: "Personal Accounts",
+    badge: "Primary Service",
     href: "/services/closed-testing",
     description:
       "Fulfill Google's mandatory 20-tester requirement with verified, active opt-in users on physical Android hardware. Maintain continuous 14-day tracking with a safety buffer against drop-offs.",
@@ -113,9 +113,9 @@ export function ServicesGrid() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           align="center"
-          eyebrow="Publishing Advisory Tracks"
-          title="Structured Guidance Across Every Stage of Publishing"
-          description="We work alongside Android developers to ensure apps satisfy functional, stability, and policy criteria before requesting Google Play production rollout."
+          eyebrow="Full Advisory Portfolio"
+          title="Comprehensive Guidance Across Every Stage of Publishing"
+          description="While 14-day closed testing is our primary commercial focus, we also guide Android developers through account verification, production reviews, pre-flight audits, and rejection appeals."
         />
 
         <div className="mt-14 sm:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

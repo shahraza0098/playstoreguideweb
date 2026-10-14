@@ -95,6 +95,14 @@ export interface ServicePageData {
     readTime: string;
     summary: string;
   }>;
+  closedTestingCallout?: {
+    eyebrow?: string;
+    headline: string;
+    description: string;
+    points: string[];
+    ctaLabel?: string;
+    ctaHref?: string;
+  };
   ctaHeadline?: string;
   ctaDescription?: string;
 }
@@ -179,7 +187,7 @@ export function ServicePageTemplate({ data, interactiveShowcase }: ServicePageTe
 
               <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
                 <Link
-                  href="/contact"
+                  href={`/contact?service=${data.slug}`}
                   className={buttonVariants({
                     variant: "default",
                     size: "lg",
@@ -480,6 +488,53 @@ export function ServicePageTemplate({ data, interactiveShowcase }: ServicePageTe
         </div>
       </section>
 
+      {/* Contextual Connection: 14-Day Closed Testing Relationship */}
+      {data.closedTestingCallout && (
+        <section className="py-16 sm:py-20 bg-surface-pale-blue/60 dark:bg-muted/15 border-b border-border/80">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="rounded-3xl border-2 border-primary/30 bg-surface-panel dark:bg-card p-6 sm:p-10 shadow-floating">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-border/70">
+                <div className="space-y-1.5">
+                  <Badge
+                    variant="outline"
+                    className="border-primary/40 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider"
+                  >
+                    {data.closedTestingCallout.eyebrow || "Preparing for Production Access?"}
+                  </Badge>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-foreground">
+                    {data.closedTestingCallout.headline}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                    {data.closedTestingCallout.description}
+                  </p>
+                </div>
+                <Link
+                  href={data.closedTestingCallout.ctaHref || "/services/closed-testing"}
+                  className={buttonVariants({
+                    variant: "default",
+                    size: "lg",
+                    className:
+                      "rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-5 text-xs sm:text-sm font-bold shadow-card shrink-0 flex items-center gap-2",
+                  })}
+                >
+                  <span>{data.closedTestingCallout.ctaLabel || "Explore 14-Day Testing Assistance"}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                {data.closedTestingCallout.points.map((pt, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 p-3 rounded-xl bg-surface-cream/70 dark:bg-muted/30 border border-border/50">
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground font-medium leading-relaxed">{pt}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* 9. Pricing & Scope Engagement Card */}
       <section id="pricing" className="py-16 sm:py-24 bg-surface-pale-lavender/40 dark:bg-card/40 border-b border-border/80">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
@@ -518,7 +573,7 @@ export function ServicePageTemplate({ data, interactiveShowcase }: ServicePageTe
 
             <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
               <Link
-                href="/contact"
+                href={`/contact?service=${data.slug}`}
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
@@ -681,7 +736,7 @@ export function ServicePageTemplate({ data, interactiveShowcase }: ServicePageTe
             </p>
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3.5">
               <Link
-                href="/contact"
+                href={`/contact?service=${data.slug}`}
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",

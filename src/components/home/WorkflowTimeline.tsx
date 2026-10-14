@@ -1,7 +1,5 @@
-"use client";
-
 import React from "react";
-import { ClosedTestingTimeline } from "@/components/testing/ClosedTestingTimeline";
+import { FourteenDayProcessTimeline } from "@/components/testing/FourteenDayProcessTimeline";
 
 export function WorkflowTimeline() {
   return (
@@ -16,11 +14,11 @@ export function WorkflowTimeline() {
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <ClosedTestingTimeline
-          eyebrow="Engagement Workflow"
-          title="How Our Technical Publishing Advisory Works"
-          description="A transparent, step-by-step workflow designed to verify technical readiness, maintain tester retention, and compile documentation before requesting Google Play production rollout."
-          showSelector={true}
+        <FourteenDayProcessTimeline
+          eyebrow="14-Day Testing Workflow"
+          title="How the 14-Day Closed Testing Process Works"
+          description="A transparent phase-by-phase roadmap detailing pre-testing setup, continuous 14-day cohort tracking, feedback logging, and reviewer-ready production application preparation."
+          showInspector={true}
         />
       </div>
     </section>

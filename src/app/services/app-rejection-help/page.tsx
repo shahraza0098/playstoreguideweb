@@ -277,6 +277,20 @@ const pageData: ServicePageData = {
         "Avoid fatal verification mistakes. Practical steps for personal vs organization accounts, document formatting, and D-U-N-S synchronization.",
     },
   ],
+  closedTestingCallout: {
+    eyebrow: "Production Access Denials & Counter Resets",
+    headline: "Was Your Production Application Denied or Testing Reset?",
+    description:
+      "A significant portion of app rejections occur during the production access review due to insufficient tester engagement, generic questionnaire responses, or active tester counts dipping below the minimum. We diagnose why Google denied access and coordinate a reinforced 14-day testing cycle with verifiable evidence.",
+    points: [
+      "Diagnose Google's rejection feedback regarding testing depth and telemetry.",
+      "Recover from 14-day counter resets with a fresh cohort of 22–25 real device testers.",
+      "Fix stability crashes and ANRs identified during the initial testing attempt.",
+      "Restructure questionnaire responses with documented bug fixes and changelogs.",
+    ],
+    ctaLabel: "Restart with 14-Day Testing Assistance",
+    ctaHref: "/services/closed-testing",
+  },
   ctaHeadline: "Dealing with a Google Play Rejection or App Removal?",
   ctaDescription:
     "Contact our technical team with your rejection notice and issue ID. We will isolate the root cause and prepare an actionable recovery plan.",

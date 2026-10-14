@@ -37,28 +37,27 @@ export function HeroSection() {
                 className="py-1 px-3 text-xs font-semibold rounded-full border-primary/30 bg-surface-panel/80 dark:bg-card/80 text-foreground shadow-2xs backdrop-blur-xs"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-primary mr-1" />
-                Google Play 2026 Technical Publishing Advisory
+                Google Play Closed Testing Assistance
               </Badge>
             </div>
 
             {/* Compelling Single H1 */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-[1.12]">
-              Pass Google Play Closed Testing &amp;{" "}
+              Your 14-Day Journey to{" "}
               <span className="text-primary underline decoration-primary/30 underline-offset-6">
-                Production Review
-              </span>{" "}
-              with Confidence
+                Google Play Production Access
+              </span>
             </h1>
 
             {/* Concise Supporting Description */}
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl">
-              Legitimate technical guidance for Android developers. Fulfill Google&rsquo;s mandatory 14-day 20-tester closed track requirement, verify Play Console identity, and assemble reviewer-ready questionnaire responses.
+              Prepare for Google Play Production Access with guided 14-day closed testing assistance. Coordinate 20+ verified human testers on physical Android devices, maintain continuous opt-in retention, log authentic Play Services telemetry, and assemble reviewer-ready questionnaire responses.
             </p>
 
             {/* Two Action CTAs */}
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
               <Link
-                href="/services"
+                href="/services/closed-testing"
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
@@ -66,12 +65,12 @@ export function HeroSection() {
                     "rounded-full bg-primary px-7 py-6 text-sm font-semibold text-primary-foreground shadow-card hover:bg-primary/90 transition-all active:scale-98 flex items-center justify-center gap-2",
                 })}
               >
-                <span>Explore Advisory Services</span>
+                <span>Get 14-Day Testing Assistance</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
               <Link
-                href="/guides"
+                href="/blog/google-play-closed-testing-requirements-guide"
                 className={buttonVariants({
                   variant: "outline",
                   size: "lg",
@@ -80,12 +79,19 @@ export function HeroSection() {
                 })}
               >
                 <FileText className="h-4 w-4 text-primary" />
-                <span>Read Developer Guides</span>
+                <span>Understand the 14-Day Requirement</span>
               </Link>
             </div>
 
+            {/* Informative Eligibility Note */}
+            <div className="rounded-xl border border-border/70 bg-surface-panel/60 dark:bg-card/60 p-3 text-xs text-muted-foreground leading-relaxed max-w-xl">
+              <p>
+                <strong className="text-foreground">Policy Note:</strong> Personal developer accounts created on or after November 13, 2023 generally need at least 12–20 testers continuously opted in for 14 days before applying for production access. Eligibility and requirements differ by account type and applicable Google Play policies. Third-party testing assistance does not guarantee Google Play approval.
+              </p>
+            </div>
+
             {/* Factual Trust Statements Bar */}
-            <div className="pt-6 border-t border-border/70 grid grid-cols-2 gap-3 max-w-lg">
+            <div className="pt-4 border-t border-border/70 grid grid-cols-2 gap-3 max-w-lg">
               <div className="flex items-center gap-2 text-xs text-foreground font-medium">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <Users className="h-3.5 w-3.5" />

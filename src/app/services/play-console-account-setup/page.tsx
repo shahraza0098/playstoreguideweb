@@ -282,6 +282,20 @@ const pageData: ServicePageData = {
         "An in-depth breakdown of Google's production access questionnaire. Learn what human reviewers look for in your testing feedback and iteration history.",
     },
   ],
+  closedTestingCallout: {
+    eyebrow: "Next Step for Personal Accounts",
+    headline: "Planning Ahead for Mandatory 14-Day Closed Testing?",
+    description:
+      "If you register a personal developer account, Google automatically requires you to complete 14 continuous days of closed testing with 20+ testers before you can publish to production. (Organization accounts verified with D-U-N-S are exempt). Plan your testing cohort early to avoid post-verification delays.",
+    points: [
+      "Understand account differences: Personal (14-day testing quota) vs Organization (D-U-N-S exempt).",
+      "Avoid 14-day counter resets by preparing 22–25 real device testers in advance.",
+      "Ensure Target SDK 34/35 builds and test account credentials pass automated pre-launch checks.",
+      "Transition seamlessly from account verification into an active closed testing track.",
+    ],
+    ctaLabel: "View 14-Day Closed Testing Assistance",
+    ctaHref: "/services/closed-testing",
+  },
   ctaHeadline: "Need Guidance on Setting Up or Verifying Your Play Console?",
   ctaDescription:
     "Contact our technical advisory team to review your documents and verify D-U-N-S readiness before submitting to Google.",

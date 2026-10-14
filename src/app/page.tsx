@@ -3,18 +3,20 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { constructMetadata, generateFAQSchema } from "@/lib/seo";
 import { HeroSection } from "@/components/home/HeroSection";
-import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
-import { WhoWeHelpSection } from "@/components/home/WhoWeHelpSection";
+import { TestingEligibilitySection } from "@/components/home/TestingEligibilitySection";
+import { ClosedTestingSpotlightSection } from "@/components/home/ClosedTestingSpotlightSection";
+import { ClosedTestingMistakesSection } from "@/components/home/ClosedTestingMistakesSection";
+import { ServicesGrid } from "@/components/home/ServicesGrid";
+import { HomeFaqSection, homeFaqs } from "@/components/home/HomeFaqSection";
 import { FeaturedGuidesSection } from "@/components/home/FeaturedGuidesSection";
 import { InteractiveChecklistPreview } from "@/components/home/InteractiveChecklistPreview";
-import { HomeFaqSection, homeFaqs } from "@/components/home/HomeFaqSection";
 import { CtaBanner } from "@/components/home/CtaBanner";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Google Play Publishing & Closed Testing Assistance for Android Developers",
+  title: "Google Play 14-Day Closed Testing Assistance & Production Access Guidance",
   description:
-    "Expert technical guidance for Android developers: 14-day 20-tester closed testing coordination, Play Console account verification, production access reviews, and policy rejection troubleshooting.",
+    "Prepare for Google Play Production Access with guided 14-day closed testing assistance. 20+ verified real Android testers, continuous retention tracking, authentic telemetry, and reviewer-ready questionnaire guidance.",
   path: "/",
 });
 
@@ -25,28 +27,34 @@ export default function Home() {
     <div className="flex flex-col">
       <JsonLd data={faqSchema} />
 
-      {/* 1. Hero Section: Warm Cream Background, Two-Column Layout, Dashboard Illustration */}
+      {/* 1. Hero Section: Focused squarely on 14-Day Closed Testing & Production Access */}
       <HeroSection />
 
-      {/* 2. Advisory Services: Pure White Content Panels with Deliverables */}
-      <ServicesGrid />
-
-      {/* 3. Testing & Publishing Process: Alternating Timeline with Connected Steps */}
+      {/* 2. 14-Day Testing Process: Reusable 4-Phase Timeline from Setup to Production Review */}
       <WorkflowTimeline />
 
-      {/* 4. Target Audiences & Impact: Persona Cards with Challenges and Solutions */}
-      <WhoWeHelpSection />
+      {/* 3. Account Eligibility Matrix: Who needs closed testing vs who is exempt */}
+      <TestingEligibilitySection />
 
-      {/* 5. Featured Guides: Technical Knowledge Base Playbooks */}
-      <FeaturedGuidesSection />
+      {/* 4 & 5. Primary Service Spotlight: Inclusions, Real Device Testers & Transparent Exclusions */}
+      <ClosedTestingSpotlightSection />
 
-      {/* 6. Interactive Pre-Launch Checklist Tool Preview */}
-      <InteractiveChecklistPreview />
+      {/* 6. Common Compliance Mistakes That Delay Production Access */}
+      <ClosedTestingMistakesSection />
 
-      {/* 7. Comprehensive Transparent FAQ Section */}
+      {/* 7. Comprehensive Advisory Tracks: Secondary publishing services overview */}
+      <ServicesGrid />
+
+      {/* 8. Frequently Asked Questions about 14-Day Testing & Production Review */}
       <HomeFaqSection />
 
-      {/* 8. Final Enquiry & Consultation CTA with Contrasting Background */}
+      {/* 9. Featured Technical Guides & Playbooks */}
+      <FeaturedGuidesSection />
+
+      {/* 10. Interactive Pre-Launch Checklist Tool Preview */}
+      <InteractiveChecklistPreview />
+
+      {/* 11. Final Enquiry Banner */}
       <CtaBanner />
     </div>
   );
