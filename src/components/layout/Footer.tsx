@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ShieldCheck,
   Mail,
@@ -20,15 +21,26 @@ export function Footer() {
           <div className="lg:col-span-2 space-y-4">
             <Link
               href="/"
-              className="inline-flex items-center gap-2.5 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full w-fit group"
+              className="inline-flex items-center gap-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl w-fit group"
               aria-label="PlayStoreGuide Homepage"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm transition-transform group-hover:scale-105">
-                <ShieldCheck className="h-4.5 w-4.5" />
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-card/90 p-1 shadow-xs border border-border transition-transform group-hover:scale-105 overflow-hidden">
+                <Image
+                  src="/assets/icon.png"
+                  alt="PlayStoreGuide Brand Emblem"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-contain"
+                />
               </div>
-              <span className="text-lg font-extrabold tracking-tight">
-                PlayStore<span className="text-primary">Guide</span>
-              </span>
+              <div className="flex flex-col">
+                <span className="text-lg font-extrabold tracking-tight leading-tight">
+                  PlayStore<span className="text-primary">Guide</span>
+                </span>
+                <span className="text-[10px] tracking-wider uppercase text-muted-foreground font-semibold">
+                  Guide &bull; Prepare &bull; Publish &bull; Grow
+                </span>
+              </div>
             </Link>
 
             <p className="text-sm leading-relaxed text-muted-foreground max-w-sm">

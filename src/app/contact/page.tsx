@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
 import { Mail, ShieldCheck, Clock, Lock, Sparkles, HelpCircle, CheckCircle2 } from "lucide-react";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -64,9 +65,20 @@ export default function ContactPage() {
           {/* Left Column: Trust Signals & Consultation Overview */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-cream border border-primary/20 text-xs font-bold text-primary mb-3">
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Developer Consultation</span>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative h-10 w-10 shrink-0 rounded-xl bg-white dark:bg-card p-1 shadow-xs border border-border overflow-hidden">
+                  <Image
+                    src="/assets/icon.png"
+                    alt="PlayStoreGuide"
+                    width={40}
+                    height={40}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-cream border border-primary/20 text-xs font-bold text-primary">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Developer Advisory Desk</span>
+                </div>
               </div>
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
                 Let&rsquo;s Discuss Your Google Play Release.

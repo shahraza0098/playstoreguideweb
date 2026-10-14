@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
 import {
   ShieldCheck,
@@ -121,6 +122,32 @@ export default function AboutPage() {
                 PlayStoreGuide is an independent service. We are <strong>not affiliated with, endorsed by, sponsored by, or operated by Google LLC</strong>. Google LLC retains sole, exclusive authority over developer account verifications, application reviews, production access grants, and store ranking algorithms. We provide technical advisory, compliance auditing, and testing facilitation to help developers satisfy Google&rsquo;s published requirements; we do not sell, guarantee, or influence Google&rsquo;s internal decisions.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Brand & Advisory Identity Showcase */}
+        <div className="mt-10 rounded-3xl border border-border bg-gradient-to-br from-surface-panel via-surface-cream to-surface-panel dark:from-card dark:via-card/90 dark:to-card p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 sm:gap-8 shadow-card">
+          <div className="relative h-28 w-28 sm:h-36 sm:w-36 shrink-0 rounded-2xl bg-white dark:bg-card p-3 shadow-xs border border-border flex items-center justify-center overflow-hidden group">
+            <Image
+              src="/assets/logo.png"
+              alt="PlayStoreGuide Official Brand Logo"
+              width={144}
+              height={144}
+              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+              priority
+            />
+          </div>
+          <div className="space-y-2.5 text-center sm:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-[11px] font-bold uppercase tracking-wider text-primary border border-primary/20">
+              <Sparkles className="h-3 w-3" />
+              <span>Official Advisory Insignia</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">
+              PlayStoreGuide: Guide &bull; Prepare &bull; Publish &bull; Grow
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              Engineered specifically for Android developers navigating high-friction Google Play Console hurdles. From our comprehensive documentation to hands-on closed testing cohorts, we help turn complex Google guidelines into seamless production approvals.
+            </p>
           </div>
         </div>
 

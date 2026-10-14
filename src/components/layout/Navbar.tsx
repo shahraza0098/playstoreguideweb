@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Menu,
@@ -150,8 +151,15 @@ export function Navbar() {
           className="group flex items-center gap-2.5 rounded-full p-1 -ml-1 pr-3 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="PlayStoreGuide Homepage"
         >
-          <div className="flex h-8 w-8 sm:h-8.5 sm:w-8.5 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm transition-transform group-hover:scale-105">
-            <ShieldCheck className="h-4.5 w-4.5" />
+          <div className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-teal-500/10 border border-primary/20 p-1 shadow-xs transition-transform duration-200 group-hover:scale-105 overflow-hidden">
+            <Image
+              src="/assets/icon.png"
+              alt="PlayStoreGuide Icon"
+              width={36}
+              height={36}
+              className="h-full w-full object-contain"
+              priority
+            />
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
@@ -357,6 +365,27 @@ export function Navbar() {
             className="pointer-events-auto md:hidden mt-2 rounded-3xl border border-border bg-surface-panel/95 dark:bg-card/95 backdrop-blur-xl p-5 shadow-floating"
           >
             <div className="flex flex-col space-y-4">
+              {/* Mobile Drawer Brand Header */}
+              <div className="flex items-center gap-2.5 pb-3 border-b border-border/60">
+                <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary/10 to-teal-500/10 border border-primary/20 p-1 shadow-xs overflow-hidden">
+                  <Image
+                    src="/assets/icon.png"
+                    alt="PlayStoreGuide"
+                    width={32}
+                    height={32}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <div>
+                  <div className="text-sm font-extrabold text-foreground leading-tight">
+                    PlayStore<span className="text-primary">Guide</span>
+                  </div>
+                  <div className="text-[10px] text-muted-foreground font-medium">
+                    Google Play Advisory &amp; Testing
+                  </div>
+                </div>
+              </div>
+
               {/* Services section */}
               <div>
                 <div className="flex items-center justify-between px-2 py-1 border-b border-border/50 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">

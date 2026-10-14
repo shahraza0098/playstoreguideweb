@@ -43,6 +43,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <link rel="icon" href="/assets/favicon/favicon.ico" sizes="any" />
+        <link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png" />
+        <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+        <meta name="theme-color" content="#0284c7" />
         <JsonLd data={orgSchema} />
         <JsonLd data={websiteSchema} />
       </head>

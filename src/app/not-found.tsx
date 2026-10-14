@@ -1,13 +1,21 @@
 import React from "react";
 import Link from "next/link";
-import { ShieldAlert, Home, BookOpen, Layers } from "lucide-react";
+import Image from "next/image";
+import { Home, BookOpen, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center py-24 px-4 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted text-muted-foreground mb-6">
-        <ShieldAlert className="h-8 w-8 text-primary" />
+      <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-white dark:bg-card p-2 border border-border shadow-md mb-6 overflow-hidden">
+        <Image
+          src="/assets/icon.png"
+          alt="PlayStoreGuide"
+          width={72}
+          height={72}
+          className="h-full w-full object-contain"
+          priority
+        />
       </div>
 
       <span className="text-xs font-bold uppercase tracking-wider text-primary">

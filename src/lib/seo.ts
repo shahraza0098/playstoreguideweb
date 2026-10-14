@@ -82,6 +82,18 @@ export function constructMetadata({
       creator: "@PlayStoreGuide",
       images: [DEFAULT_OG_IMAGE],
     },
+    icons: {
+      icon: [
+        { url: "/assets/favicon/favicon.ico" },
+        { url: "/assets/favicon/favicon.svg", type: "image/svg+xml" },
+        { url: "/assets/favicon/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      ],
+      apple: [
+        { url: "/assets/favicon/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      ],
+      shortcut: "/assets/favicon/favicon.ico",
+    },
+    manifest: "/assets/favicon/site.webmanifest",
     robots: {
       index: true,
       follow: true,
@@ -103,7 +115,8 @@ export function generateOrganizationSchema() {
     "@type": "Organization",
     name: "PlayStoreGuide",
     url: SITE_URL,
-    logo: `${SITE_URL}/logo.png`,
+    logo: `${SITE_URL}/assets/logo.png`,
+    image: `${SITE_URL}/assets/icon.png`,
     description:
       "Independent technical consultancy and educational resource providing Google Play publishing guidance, closed testing coordination, policy compliance audits, and account verification support for Android developers.",
     sameAs: [],
@@ -215,7 +228,7 @@ export function generateArticleSchema({
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/logo.png`,
+        url: `${SITE_URL}/assets/logo.png`,
       },
     },
   };
