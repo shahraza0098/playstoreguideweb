@@ -87,12 +87,19 @@ function ContactFormContent({ initialService = "closed-testing", sourceContext }
 
   const validateForm = (): boolean => {
     const errors: FormFieldErrors = {};
-    if (!formData.name.trim() || formData.name.trim().length < 2) {
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+
+    if (!trimmedName || trimmedName.length < 2) {
       errors.name = "Please enter your full or professional name (at least 2 characters).";
+    } else if (trimmedName.length > 100) {
+      errors.name = "Name must be 100 characters or less.";
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+    const emailRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    if (!trimmedEmail || trimmedEmail.length > 254 || !emailRegex.test(trimmedEmail)) {
       errors.email = "Please enter a valid email address so we can reply.";
     }
 
@@ -100,8 +107,10 @@ function ContactFormContent({ initialService = "closed-testing", sourceContext }
       errors.service = "Please select the service most relevant to your request.";
     }
 
-    if (!formData.message.trim() || formData.message.trim().length < 10) {
+    if (!trimmedMessage || trimmedMessage.length < 10) {
       errors.message = "Please include a brief description of your app or questions (at least 10 characters).";
+    } else if (trimmedMessage.length > 5000) {
+      errors.message = "Message must be 5,000 characters or less.";
     }
 
     setFieldErrors(errors);
